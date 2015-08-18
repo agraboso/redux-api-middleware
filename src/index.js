@@ -92,10 +92,10 @@ export function isRSAA(action) {
   if (['GET', 'POST', 'PUT', 'DELETE'].indexOf(method.toUpperCase()) === -1) {
     return false;
   }
-  if (typeof body !== 'undefined' && isPlainObject(body)) {
+  if (typeof body !== 'undefined' && !isPlainObject(body)) {
     return false;
   }
-  if (typeof headers !== 'undefined' && isPlainObject(headers)) {
+  if (typeof headers !== 'undefined' && !isPlainObject(headers)) {
     return false;
   }
   if (typeof schema !== 'undefined' && !(schema instanceof Schema)) {
