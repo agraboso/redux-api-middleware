@@ -1,5 +1,5 @@
-redux-api
-=========
+redux-api-middleware
+====================
 
 [Redux middleware](http://rackt.github.io/redux/docs/advanced/Middleware.html) for calling an API.
 
@@ -53,7 +53,7 @@ A *Redux Standard API-calling Action* conforms to a schema that comes close to b
 A *Redux Standard API-calling Action* MUST
 
 - be a plain JavaScript object,
-- have a `[CALL_API]` property, where `CALL_API` is a `Symbol` defined in, and exported by `redux-api`.
+- have a `[CALL_API]` property, where `CALL_API` is a `Symbol` defined in, and exported by `redux-api-middleware`.
 
 A *Redux Standard API-calling Action* MAY
 
@@ -136,7 +136,7 @@ The `headers: { credentials: 'same-origin'}` property sends the authentication c
 
 ```js
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { apiMiddleware } from 'redux-api';
+import { apiMiddleware } from 'redux-api-middleware';
 import reducers from './reducers';
 
 const reducer = combineReducers(reducers);
@@ -183,7 +183,7 @@ const store = configureStore(initialState);
 
 ## Utilities
 
-Apart from the middleware above, `redux-api` exposes the following utility function.
+Apart from the middleware above, `redux-api-middleware` exposes the following utility function.
 
 ### isRSAA(action)
 
