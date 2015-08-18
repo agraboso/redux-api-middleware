@@ -108,7 +108,7 @@ export function isRSAA(action) {
     return false;
   }
   if (typeof bailout !== 'undefined' && typeof bailout !== 'function') {
-    throw new Error('Expected bailout to either be undefined or a function.');
+    return false;
   }
 
   return true;
