@@ -1,5 +1,5 @@
 {
-  "name": "redux-api",
+  "name": "redux-api-middleware",
   "version": "0.0.1",
   "description": "Redux middleware for calling an API.",
   "main": "lib/index.js",
@@ -8,9 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/agraboso/redux-api.git"
+    "url": "https://github.com/agraboso/redux-api-middleware.git"
   },
-  "homepage": "https://github.com/agraboso/redux-api",
+  "homepage": "https://github.com/agraboso/redux-api-middleware",
   "keywords": [
     "redux",
     "api",
@@ -27,6 +27,7 @@
     "babel": "^5.8.21",
     "babel-core": "^5.8.22",
     "babel-eslint": "^4.0.10",
-    "eslint": "^1.1.0"
+    "eslint": "^1.1.0",
+    "rimraf": "^2.4.2"
   }
 }

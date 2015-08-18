@@ -189,6 +189,12 @@ Aparts from the middleware above, `redux-api` exposes the following utility func
 
 Return `true` if `action` is RSAA-compliant.
 
+## Installation
+
+```
+npm install redux-api-middleware
+```
+
 ## Tests
 
 TODO
@@ -199,4 +205,4 @@ MIT
 
 ## Acknowledgements
 
-The code in this module is heavily based upon that in the [real-world](https://github.com/rackt/redux/blob/master/examples/real-world/middleware/api.js) example in the [redux](https://github.com/rackt/redux) repository, which I believe is due to [Dan Abramov](https://github.com/gaearon). Please correct me if I am wrong.
+The code in this module is *heavily* based upon that in the [real-world](https://github.com/rackt/redux/blob/master/examples/real-world/middleware/api.js) example in the [redux](https://github.com/rackt/redux) repository, which I believe is due to [Dan Abramov](https://github.com/gaearon). Please correct me if I am wrong.
