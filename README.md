@@ -183,7 +183,7 @@ const store = configureStore(initialState);
 
 ## Utilities
 
-Aparts from the middleware above, `redux-api` exposes the following utility function.
+Apart from the middleware above, `redux-api` exposes the following utility function.
 
 ### isRSAA(action)
 
