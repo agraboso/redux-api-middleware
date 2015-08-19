@@ -6,9 +6,7 @@
   "scripts": {
     "prepublish": "rimraf lib && babel src --out-dir lib"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/agraboso/redux-api-middleware.git"
+  "repository": "agraboso/redux-api-middleware"
   },
   "homepage": "https://github.com/agraboso/redux-api-middleware",
   "keywords": [
