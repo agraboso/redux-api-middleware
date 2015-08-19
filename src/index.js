@@ -64,7 +64,6 @@ function callApi(endpoint, method, headers, body, schema) {
  */
 export const CALL_API = Symbol('Call API');
 
-
 /**
  * Is the given action a Redux Standard API-calling action?
  *
@@ -74,44 +73,39 @@ export const CALL_API = Symbol('Call API');
  * @returns {boolean}
  */
 export function isRSAA(action) {
-  if (!isPlainObject(action)) {
-    return false;
-  }
+  const validRootKeys = [
+    [CALL_API],
+    'payload',
+    'meta'
+  ];
+  const validCallAPIKeys = [
+    'endpoint',
+    'method',
+    'types',
+    'body',
+    'headers',
+    'schema',
+    'bailout'
+  ];
 
   const callAPI = action[CALL_API];
-  if (typeof callAPI === 'undefined') {
+  if (!isPlainObject(action) || typeof callApi === 'undefined') {
     return false;
   }
 
   let { endpoint } = callAPI;
   const { method, body, headers, schema, types, bailout } = callAPI;
 
-  if (typeof endpoint !== 'string' && typeof endpoint !== 'function') {
-    return false;
-  }
-  if (['GET', 'POST', 'PUT', 'DELETE'].indexOf(method.toUpperCase()) === -1) {
-    return false;
-  }
-  if (typeof body !== 'undefined' && !isPlainObject(body)) {
-    return false;
-  }
-  if (typeof headers !== 'undefined' && !isPlainObject(headers)) {
-    return false;
-  }
-  if (typeof schema !== 'undefined' && !(schema instanceof Schema)) {
-    return false;
-  }
-  if (!Array.isArray(types) || types.length !== 3) {
-    return false;
-  }
-  if (!types.every(type => (typeof type === 'string' || typeof type === 'symbol'))) {
-    return false;
-  }
-  if (typeof bailout !== 'undefined' && typeof bailout !== 'function') {
-    return false;
-  }
-
-  return true;
+  return Object.keys(action).every(key => ~validRootKeys.indexOf(key)) &&
+    isPlainObject(callAPI) &&
+    Object.keys(callAPI).every(key => ~validCallAPIKeys.indexOf(key)) &&
+    (typeof endpoint === 'string' || typeof endpoint === 'function') &&
+    ~['GET', 'POST', 'PUT', 'DELETE'].indexOf(method.toUpperCase()) &&
+    (Array.isArray(types) && types.length === 3) &&
+    (typeof body === 'undefined' || isPlainObject(body)) &&
+    (typeof headers === 'undefined' || isPlainObject(headers)) &&
+    (typeof schema === 'undefined' || schema instanceof Schema) &&
+    (typeof bailout === 'undefined' || typeof bailout === 'boolean' || typeof bailout === 'function');
 }
 
 /**
