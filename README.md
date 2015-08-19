@@ -69,29 +69,56 @@ A *Redux Standard API-calling Action* MUST NOT
 The `[CALL_API]` property MUST
 
 - be a plain JavaScript Object,
-- have an `endpoint` property which is a string (representing the URL endppoint for the API request) or a function returning such string,
-- have a `method` property which is one of the strings `GET`, `POST`, `PUT` or `DELETE` (representing the HTTP method for the API request),
-- have a `types` property which is an array of length 3, representing the `REQUEST`, `SUCCESS` and `FAILURE` states of the API call, in that order (by convention, each of the `types` is usually a string constant or a `Symbol`).
+- have an `endpoint` property,
+- have a `method` property,
+- have a `types` property.
 
 The `[CALL_API]` property MAY
 
-- have a `body` property which is a plain JavaScript Object (representing the body of the API request),
-- have a `headers` property which is a plain JavaScript Object (representing the headers of the API request),
-- have a `schema` property which is a [`normalizr`](https://www.npmjs.com/package/normalizr) schema (expressing with which `normalizr` schema we should process the API response),
-- have a `bailout` property which is a function (deciding whether we should actually make the request or not).
+- have a `body` property,
+- have a `headers` property,
+- have a `schema` property,
+- have a `bailout` property.
 
 The `[CALL_API]` property MUST NOT
 
 - include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `schema` and `bailout`.
 
+### `[CALL_API].endpoint`
+
+The `[CALL_API].endpoint` property must be a string or a function. In the second case, the function SHOULD return a string. It represents the URL endpoint for the API request.
+
+### `[CALL_API].method`
+
+The `[CALL_API].method` property MUST be one of the strings `GET`, `POST`, `PUT` or `DELETE` (in any mixture of lowercase and uppercase letters). It represents the HTTP method for the API request.
+
+### `[CALL_API].types`
+
+The `[CALL_API].types` property MUST be an array of length 3, representing the `REQUEST`, `SUCCESS` and `FAILURE` states of the API call, in that order. By convention, each of the `types` is usually a string constant or a `Symbol`.
+
+### `[CALL_API].body`
+
+The optional `[CALL_API].body` property MUST be a plain JavaScript object. It represents the body of the API request.
+
+### `[CALL_API].headers`
+
+The optional `[CALL_API].headers` property MUST be a plain JavaScript object. It represents the headers of the API request.
+
+### `[CALL_API].schema`
+
+The optional `[CALL_API].schema` property MUST be a [`normalizr`](https://www.npmjs.com/package/normalizr) schema. It specifies with which `normalizr` schema we should process the API response
+
+### `[CALL_API].bailout`
+
+The optional `[CALL_API].bailout` property MUST be a boolean or a function. When it returns a falsy value, the API request will not be made, and no FSA action will be dispatched to the next middleware.
+
 ### `payload`
 
-The optional `payload` property MAY be any type of value. It represents the payload of the action.
+The optional `payload` property MAY be any type of value.
 
 ### `meta`
 
 The optional `meta` property MAY be any type of value. It is intended for any extra information that is not part of the `payload ` or the `[CALL_API]` data.
-
 
 ## What this middleware does
 
@@ -102,7 +129,6 @@ This middleware expects an RSAA and dispatches FSAs in the following way.
 - If the request is unsuccessful, an FSA with the `FAILURE` type is dispatched to the next middleware; the `payload` property of this FSA is set to the error message of the request (or the string `Something bad happened` if the latter is empty); the `meta` property of this FSA is the same as that of the original RSAA; the `error` property of this FSA is set to `true`.
 
 If the incoming action does not contain a `[CALL_API]` key, it is passed to the next middleware without any modifications.
-
 
 ## Example
 
@@ -132,7 +158,6 @@ export function fetchUser(userId, schema = userSchema) {
 The `headers: { credentials: 'same-origin'}` property sends the authentication credentials stored in cookies by an `express` server using `passport` (other options might work too).
 
 ### configureStore.js
-
 
 ```js
 import { createStore, applyMiddleware, combineReducers } from 'redux';
@@ -187,7 +212,7 @@ Apart from the middleware above, `redux-api-middleware` exposes the following ut
 
 ### isRSAA(action)
 
-Return `true` if `action` is RSAA-compliant.
+Returns `true` if `action` is RSAA-compliant.
 
 ## Installation
 
