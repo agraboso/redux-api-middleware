@@ -1,13 +1,12 @@
 {
   "name": "redux-api-middleware",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Redux middleware for calling an API.",
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "rimraf lib && babel src --out-dir lib"
   },
-  "repository": "agraboso/redux-api-middleware"
-  },
+  "repository": "agraboso/redux-api-middleware",
   "homepage": "https://github.com/agraboso/redux-api-middleware",
   "keywords": [
     "redux",
