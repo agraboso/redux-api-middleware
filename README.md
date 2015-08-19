@@ -126,7 +126,7 @@ This middleware expects an RSAA and dispatches FSAs in the following way.
 
 - An FSA with the `REQUEST` type is dispatched to the next middleware as soon as the RSAA comes in; the `payload` and `meta` properties of this FSA are those of the original RSAA.
 - If the request is successful, an FSA with the `SUCCESS` type is dispatched to the next middleware; the `payload` property of this FSA is a merge of the original RSAA's `payload` property and the JSON response from the server; the `meta` property of this FSA is that of the original RSAA.
-- If the request is unsuccessful, an FSA with the `FAILURE` type is dispatched to the next middleware; the `payload` property of this FSA is set to the error message of the request (or the string `Something bad happened` if the latter is empty); the `meta` property of this FSA is the same as that of the original RSAA; the `error` property of this FSA is set to `true`.
+- If the request is unsuccessful, an FSA with the `FAILURE` type is dispatched to the next middleware; the `payload` property of this FSA is set to the error object of the request; the `meta` property of this FSA is the same as that of the original RSAA; the `error` property of this FSA is set to `true`.
 
 If the incoming action does not contain a `[CALL_API]` key, it is passed to the next middleware without any modifications.
 
@@ -200,7 +200,7 @@ const store = configureStore(initialState);
 ```js
 {
   type: 'FETCH_USER.FAILURE',
-  payload: error.message,
+  payload: error,
   meta: { someMeta }
   error: true
 }

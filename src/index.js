@@ -149,7 +149,7 @@ export function apiMiddleware({ getState }) {
       })),
       error => next(actionWith({
         type: failureType,
-        payload: error.message || 'Something bad happened',
+        payload: error,
         error: true
       }))
     );
