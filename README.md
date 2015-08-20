@@ -224,7 +224,9 @@ npm install redux-api-middleware
 
 ## Tests
 
-TODO
+```
+npm test
+```
 
 ## License
 
