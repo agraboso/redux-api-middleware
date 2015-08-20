@@ -44,9 +44,6 @@ function callApi(endpoint, method, headers, body, schema) {
     .then(response =>
       response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
-      if (!response.ok) {
-        return Promise.reject(json);
-      }
       if (schema) {
         return Promise.resolve(normalize(json, schema));
       } else {
@@ -131,8 +128,8 @@ export function apiMiddleware({ getState }) {
     }
 
     function actionWith(data, payload) {
-      const finalPayload = { ...action.payload, ...payload };
-      const finalAction = { ...action, payload: finalPayload };
+      const finalPayload = { ...action.payload, ...{ ...payload } };
+      const finalAction = { ...action, payload: finalPayload, ...data };
       delete finalAction[CALL_API];
       return finalAction;
     }
@@ -143,9 +140,7 @@ export function apiMiddleware({ getState }) {
     return callApi(endpoint, method, headers, body, schema).then(
       response => next(actionWith({
         type: successType
-      }, {
-        payload: response
-      })),
+      }, response)),
       error => next(actionWith({
         type: failureType,
         payload: error,

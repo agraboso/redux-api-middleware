@@ -1,5 +1,6 @@
 import test from 'tape';
 import { Schema } from 'normalizr';
+import nock from 'nock';
 
 import { CALL_API, apiMiddleware, isRSAA} from '../src';
 
@@ -119,17 +120,114 @@ test('isRSAA must identify RSAA-compliant actions', function (t) {
 test('apiMiddleware must be a Redux middleware', function (t) {
   t.equal(apiMiddleware.length, 1, 'apiMiddleware must take one argument');
 
-  const doDispatch = () => {};
-  const nextHandler = apiMiddleware({ dispatch: doDispatch });
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
 
   t.ok(typeof nextHandler === 'function', 'apiMiddleware must return a function to handle next');
   t.equal(nextHandler.length, 1, 'next handler must take one argument');
 
   const doNext = () => {};
-  const actionHandler = nextHandler({ next: doNext });
+  const actionHandler = nextHandler(doNext);
 
   t.ok(typeof actionHandler === 'function', 'next handler must return a function to handle action');
   t.equal(actionHandler.length, 1, 'action handler must take one argument');
 
   t.end();
 });
+
+test('apiMiddleware must pass non-RSAA actions to the next handler', function (t) {
+  const nonRSAAAction = {};
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    t.pass('next handler called');
+    t.equal(nonRSAAAction, action, 'original action was passed to the next handler')
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(2);
+  actionHandler(nonRSAAAction);
+});
+
+test('apiMiddleware must handle a successful API request', function (t) {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, { username: 'Alice' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE']
+    },
+    payload: { someKey: 'someValue' },
+    meta: 'meta'
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'FETCH_USER.REQUEST':
+      t.pass('request FSA passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'request FSA does not have a [CALL_API] property')
+      t.deepEqual(action.payload, anAction.payload, 'request FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'request FSA has correct meta property');
+      t.notOk(action.error, 'request FSA has correct error property');
+      break;
+    case 'FETCH_USER.SUCCESS':
+      t.pass('success FSA action passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'success FSA does not have a [CALL_API] property')
+      t.deepEqual(action.payload, { ...anAction.payload, username: 'Alice' }, 'success FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'success FSA has correct meta property');
+      t.notOk(action.error, 'success FSA has correct error property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(10);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must handle an unsuccessful API request', function (t) {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(404);
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE']
+    },
+    payload: { someKey: 'someValue' },
+    meta: 'meta'
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'FETCH_USER.REQUEST':
+      t.pass('request FSA passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'request FSA does not have a [CALL_API] property')
+      t.deepEqual(action.payload, anAction.payload, 'request FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'request FSA has correct meta property');
+      t.notOk(action.error, 'failure FSA has correct error property');
+      break;
+    case 'FETCH_USER.FAILURE':
+      t.pass('failure FSA action passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'failure FSA does not have a [CALL_API] property')
+      t.ok(action.payload instanceof Error, 'failure FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'failure FSA has correct meta property');
+      t.ok(action.error, 'failure FSA has correct error property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(10);
+  actionHandler(anAction);
+});
+
+// test('apiMiddleware must process a successful API request with a schema', function (t) {});
+// test('apiMiddleware must use an endpoint function', function (t) {});
+// test('apiMiddleware must use a bailout boolean', function (t) {});
+// test('apiMiddleware must use a bailout function', function (t) {});

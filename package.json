@@ -34,6 +34,7 @@
     "babel": "^5.8.21",
     "babel-istanbul": "^0.3.17",
     "eslint": "^1.1.0",
+    "nock": "^2.10.0",
     "rimraf": "^2.4.2",
     "tap-spec": "^4.0.2",
     "tape": "^4.2.0"
