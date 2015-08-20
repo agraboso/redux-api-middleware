@@ -4,7 +4,11 @@
   "description": "Redux middleware for calling an API.",
   "main": "lib/index.js",
   "scripts": {
-    "prepublish": "rimraf lib && babel src --out-dir lib"
+    "lint": "./node_modules/.bin/eslint src",
+    "clean": "rimraf lib",
+    "build": "babel src --out-dir lib",
+    "prepublish": "npm run lint && npm run clean && npm run build",
+    "test": "./node_modules/.bin/babel-node test/index.js | node_modules/.bin/tap-spec"
   },
   "repository": "agraboso/redux-api-middleware",
   "homepage": "https://github.com/agraboso/redux-api-middleware",
@@ -27,9 +31,9 @@
   },
   "devDependencies": {
     "babel": "^5.8.21",
-    "babel-core": "^5.8.22",
-    "babel-eslint": "^4.0.10",
     "eslint": "^1.1.0",
-    "rimraf": "^2.4.2"
+    "rimraf": "^2.4.2",
+    "tap-spec": "^4.0.2",
+    "tape": "^4.2.0"
   }
 }
