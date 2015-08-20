@@ -1,6 +1,8 @@
 redux-api-middleware
 ====================
 
+[![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=master)](https://travis-ci.org/agraboso/redux-api-middleware)
+
 [Redux middleware](http://rackt.github.io/redux/docs/advanced/Middleware.html) for calling an API.
 
 This middleware receives *Redux Standard API-calling Actions* and dispatches *Flux Standard Actions* as explained below.
