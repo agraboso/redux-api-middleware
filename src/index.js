@@ -89,12 +89,11 @@ export function isRSAA(action) {
   ];
 
   const callAPI = action[CALL_API];
-  if (!isPlainObject(action) || typeof callApi === 'undefined') {
+  if (!isPlainObject(action) || typeof callAPI === 'undefined') {
     return false;
   }
 
-  let { endpoint } = callAPI;
-  const { method, body, headers, schema, types, bailout } = callAPI;
+  const { endpoint, method, body, headers, schema, types, bailout } = callAPI;
 
   return Object.keys(action).every(key => ~validRootKeys.indexOf(key)) &&
     isPlainObject(callAPI) &&
