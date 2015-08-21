@@ -41,9 +41,15 @@ function callApi(endpoint, method, headers, body, schema) {
   const requestOptions = { method, body, headers }
 
   return fetch(endpoint, requestOptions)
-    .then(response =>
-      response.json().then(json => ({ json, response }))
-    ).then(({ json, response }) => {
+    .then((response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return Promise.resolve(response);
+      } else {
+        return Promise.reject(new Error(`${response.status} - ${response.statusText}`));
+      }
+    })
+    .then(response => response.json())
+    .then((json) => {
       if (schema) {
         return Promise.resolve(normalize(json, schema));
       } else {
@@ -138,9 +144,7 @@ export function apiMiddleware({ getState }) {
     next(actionWith({ type: requestType }));
 
     return callApi(endpoint, method, headers, body, schema).then(
-      response => next(actionWith({
-        type: successType
-      }, response)),
+      response => next(actionWith({ type: successType }, response)),
       error => next(actionWith({
         type: failureType,
         payload: error,
