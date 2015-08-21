@@ -129,8 +129,9 @@ export function apiMiddleware({ getState }) {
     if (typeof endpoint === 'function') {
       endpoint = endpoint(getState());
     }
-    if (bailout && bailout(getState())) {
-      return Promise.resolve();
+    if ((typeof bailout === 'boolean' && bailout) ||
+        (typeof bailout === 'function' && bailout(getState()))) {
+      return Promise.resolve('Bailing out');
     }
 
     function actionWith(data, payload) {

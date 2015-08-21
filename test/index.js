@@ -1,5 +1,5 @@
 import test from 'tape';
-import { Schema } from 'normalizr';
+import { Schema, arrayOf } from 'normalizr';
 import nock from 'nock';
 
 import { CALL_API, apiMiddleware, isRSAA} from '../src';
@@ -210,7 +210,7 @@ test('apiMiddleware must handle an unsuccessful API request', function (t) {
       t.equal(typeof action[CALL_API], 'undefined', 'request FSA does not have a [CALL_API] property')
       t.deepEqual(action.payload, anAction.payload, 'request FSA has correct payload property');
       t.deepEqual(action.meta, anAction.meta, 'request FSA has correct meta property');
-      t.notOk(action.error, 'failure FSA has correct error property');
+      t.notOk(action.error, 'request FSA has correct error property');
       break;
     case 'FETCH_USER.FAILURE':
       t.pass('failure FSA action passed to the next handler');
@@ -227,7 +227,123 @@ test('apiMiddleware must handle an unsuccessful API request', function (t) {
   actionHandler(anAction);
 });
 
-// test('apiMiddleware must process a successful API request with a schema', function (t) {});
-// test('apiMiddleware must use an endpoint function', function (t) {});
-// test('apiMiddleware must use a bailout boolean', function (t) {});
-// test('apiMiddleware must use a bailout function', function (t) {});
+test('apiMiddleware must process a successful API response with a schema when present', function (t) {
+  const userRecord = {
+    id: 1,
+    username: 'Alice',
+    friends: [{
+      id: 2,
+      username: 'Bob'
+    }]
+  };
+  const userSchema = new Schema('users');
+  userSchema.define({
+    friends: arrayOf(userSchema)
+  });
+  const entities = {
+    users : {
+      1: {
+        id: 1,
+        username: 'Alice',
+        friends: [2]
+      },
+      2: {
+        id: 2,
+        username: 'Bob'
+      }
+    }
+  };
+
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, userRecord);
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
+      schema: userSchema
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'FETCH_USER.SUCCESS':
+      t.deepEqual(action.payload.entities, entities, 'success FSA has correct payload property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use an endpoint function when present', function (t) {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, { username: 'Alice' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: () => 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'FETCH_USER.SUCCESS':
+      t.deepEqual(action.payload, { username: 'Alice' }, 'success FSA has correct payload property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use a bailout function when present', function (t) {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, { username: 'Alice' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: () => 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
+      bailout: true
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => { t.fail(); };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction).then((message) => { t.equal(message, 'Bailing out', 'bailed out'); });
+});
+
+test('apiMiddleware must use a bailout function when present', function (t) {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, { username: 'Alice' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: () => 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
+      bailout: () => { t.pass('bailout function called'); return true; }
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => { t.fail(); };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(2);
+  actionHandler(anAction).then((message) => { t.equal(message, 'Bailing out', 'bailed out'); });
+});
