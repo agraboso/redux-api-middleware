@@ -128,7 +128,7 @@ export function apiMiddleware({ getState }) {
     }
 
     function actionWith(data, payload) {
-      const finalPayload = { ...action.payload, ...{ ...payload } };
+      const finalPayload = { ...action.payload, ...payload };
       const finalAction = { ...action, payload: finalPayload, ...data };
       delete finalAction[CALL_API];
       return finalAction;
