@@ -47,14 +47,6 @@ test('isRSAA must identify RSAA-compliant actions', function (t) {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: ''
-    }
-  }), '[CALL_API].body must be a plain JavaScript object');
-  t.notOk(isRSAA({
-    [CALL_API]: {
-      endpoint: '',
-      method: 'GET',
-      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
       body: {},
       headers: ''
     }
