@@ -92,7 +92,7 @@ The `[CALL_API].endpoint` property must be a string or a function. In the second
 
 ### `[CALL_API].method`
 
-The `[CALL_API].method` property MUST be one of the strings `GET`, `POST`, `PUT` or `DELETE` (in any mixture of lowercase and uppercase letters). It represents the HTTP method for the API request.
+The `[CALL_API].method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or `OPTIONS (in any mixture of lowercase and uppercase letters). It represents the HTTP method for the API request.
 
 ### `[CALL_API].types`
 

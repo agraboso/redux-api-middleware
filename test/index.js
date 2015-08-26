@@ -27,7 +27,7 @@ test('isRSAA must identify RSAA-compliant actions', function (t) {
       endpoint: '',
       method: ''
     }
-  }), '[CALL_API].method must be one of the strings \'GET\', \'POST\', \'PUT\' and \'DELETE\'');
+  }), '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\' or \'OPTIONS\'');
   t.notOk(isRSAA({
     [CALL_API]: {
       endpoint: '',

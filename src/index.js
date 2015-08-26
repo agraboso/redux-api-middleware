@@ -90,6 +90,15 @@ export function isRSAA(action) {
     'schema',
     'bailout'
   ];
+  const validMethods = [
+    'GET',
+    'HEAD',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+  ]
 
   const callAPI = action[CALL_API];
   if (!isPlainObject(action) || typeof callAPI === 'undefined') {
@@ -102,7 +111,7 @@ export function isRSAA(action) {
     isPlainObject(callAPI) &&
     Object.keys(callAPI).every(key => ~validCallAPIKeys.indexOf(key)) &&
     (typeof endpoint === 'string' || typeof endpoint === 'function') &&
-    ~['GET', 'POST', 'PUT', 'DELETE'].indexOf(method.toUpperCase()) &&
+    ~validMethods.indexOf(method.toUpperCase()) &&
     (Array.isArray(types) && types.length === 3) &&
     (typeof headers === 'undefined' || isPlainObject(headers)) &&
     (typeof schema === 'undefined' || schema instanceof Schema) &&
