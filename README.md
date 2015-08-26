@@ -100,7 +100,7 @@ The `[CALL_API].types` property MUST be an array of length 3, representing the `
 
 ### `[CALL_API].body`
 
-The optional `[CALL_API].body` property MUST be a plain JavaScript object. It represents the body of the API request.
+The optional `[CALL_API].body` property SHOULD be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org). It represents the body of the API request.
 
 ### `[CALL_API].headers`
 

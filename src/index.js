@@ -104,7 +104,6 @@ export function isRSAA(action) {
     (typeof endpoint === 'string' || typeof endpoint === 'function') &&
     ~['GET', 'POST', 'PUT', 'DELETE'].indexOf(method.toUpperCase()) &&
     (Array.isArray(types) && types.length === 3) &&
-    (typeof body === 'undefined' || isPlainObject(body)) &&
     (typeof headers === 'undefined' || isPlainObject(headers)) &&
     (typeof schema === 'undefined' || schema instanceof Schema) &&
     (typeof bailout === 'undefined' || typeof bailout === 'boolean' || typeof bailout === 'function');
