@@ -6,10 +6,10 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "clean": "rimraf lib coverage",
-    "cover": "./node_modules/.bin/babel-node ./node_modules/.bin/babel-istanbul cover test/index.js | ./node_modules/.bin/tap-spec",
-    "lint": "./node_modules/.bin/eslint src test",
-    "prepublish": "npm run lint && npm run clean && npm test && npm run build",
-    "test": "./node_modules/.bin/babel-node test/index.js | node_modules/.bin/tap-spec"
+    "cover": "babel-node ./node_modules/.bin/babel-istanbul cover test/index.js | tap-spec",
+    "lint": "eslint src test",
+    "prepublish": "npm run lint && npm test && npm run clean && npm run build",
+    "test": "babel-node test/index.js | tap-spec"
   },
   "repository": "agraboso/redux-api-middleware",
   "homepage": "https://github.com/agraboso/redux-api-middleware",
