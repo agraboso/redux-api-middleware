@@ -42,18 +42,24 @@ function callApi(endpoint, method, headers, body, schema) {
 
   return fetch(endpoint, requestOptions)
     .then((response) => {
-      if (response.status >= 200 && response.status < 300) {
+      if (response.ok) {
         return Promise.resolve(response);
       } else {
         return Promise.reject(new Error(`${response.status} - ${response.statusText}`));
       }
     })
-    .then(response => response.json())
-    .then((json) => {
-      if (schema) {
-        return Promise.resolve(normalize(json, schema));
+    .then(response => {
+      const contentType = response.headers.get('Content-Type');
+      if (contentType && ~contentType.indexOf('json')) {
+        return response.json().then((json) => {
+          if (schema) {
+            return Promise.resolve(normalize(json, schema));
+          } else {
+            return Promise.resolve(json);
+          }
+        });
       } else {
-        return Promise.resolve(json);
+        return Promise.resolve();
       }
     });
 }

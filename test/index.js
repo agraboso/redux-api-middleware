@@ -144,7 +144,7 @@ test('apiMiddleware must pass non-RSAA actions to the next handler', function (t
 test('apiMiddleware must handle a successful API request', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' });
+                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -169,6 +169,45 @@ test('apiMiddleware must handle a successful API request', function (t) {
       t.pass('success FSA action passed to the next handler');
       t.equal(typeof action[CALL_API], 'undefined', 'success FSA does not have a [CALL_API] property')
       t.deepEqual(action.payload, { ...anAction.payload, username: 'Alice' }, 'success FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'success FSA has correct meta property');
+      t.notOk(action.error, 'success FSA has correct error property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(10);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must handle a successful API request that returns an empty body', function (t) {
+  const api = nock('http://127.0.0.1')
+                .delete('/api/users/1')
+                .reply(204);
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'DELETE',
+      types: ['DELETE_USER.REQUEST', 'DELETE_USER.SUCCESS', 'DELETE_USER.FAILURE']
+    },
+    payload: { someKey: 'someValue' },
+    meta: 'meta'
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'DELETE_USER.REQUEST':
+      t.pass('request FSA passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'request FSA does not have a [CALL_API] property')
+      t.deepEqual(action.payload, anAction.payload, 'request FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'request FSA has correct meta property');
+      t.notOk(action.error, 'request FSA has correct error property');
+      break;
+    case 'DELETE_USER.SUCCESS':
+      t.pass('success FSA action passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'success FSA does not have a [CALL_API] property')
+      t.deepEqual(action.payload, anAction.payload, 'success FSA has correct payload property');
       t.deepEqual(action.meta, anAction.meta, 'success FSA has correct meta property');
       t.notOk(action.error, 'success FSA has correct error property');
       break;
@@ -248,7 +287,7 @@ test('apiMiddleware must process a successful API response with a schema when pr
 
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, userRecord);
+                .reply(200, userRecord, {'Content-Type': 'application/json'});
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -275,7 +314,7 @@ test('apiMiddleware must process a successful API response with a schema when pr
 test('apiMiddleware must use an endpoint function when present', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' });
+                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
   const anAction = {
     [CALL_API]: {
       endpoint: () => 'http://127.0.0.1/api/users/1',
@@ -301,7 +340,7 @@ test('apiMiddleware must use an endpoint function when present', function (t) {
 test('apiMiddleware must use a bailout function when present', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' });
+                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
   const anAction = {
     [CALL_API]: {
       endpoint: () => 'http://127.0.0.1/api/users/1',
@@ -322,7 +361,7 @@ test('apiMiddleware must use a bailout function when present', function (t) {
 test('apiMiddleware must use a bailout function when present', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' });
+                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
   const anAction = {
     [CALL_API]: {
       endpoint: () => 'http://127.0.0.1/api/users/1',
