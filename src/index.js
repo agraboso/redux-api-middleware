@@ -21,7 +21,7 @@
  * @returns undefined
  */
 
-import { normalize, Schema } from 'normalizr';
+import { normalize, Schema, arrayOf } from 'normalizr';
 import fetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
 
@@ -120,7 +120,7 @@ export function isRSAA(action) {
     ~validMethods.indexOf(method.toUpperCase()) &&
     (Array.isArray(types) && types.length === 3) &&
     (typeof headers === 'undefined' || isPlainObject(headers)) &&
-    (typeof schema === 'undefined' || schema instanceof Schema) &&
+    (typeof schema === 'undefined' || schema instanceof Schema || schema.hasOwnProperty('_itemSchema')) &&
     (typeof bailout === 'undefined' || typeof bailout === 'boolean' || typeof bailout === 'function');
 }
 
