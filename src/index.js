@@ -21,7 +21,7 @@
  * @returns undefined
  */
 
-import { normalize, Schema, arrayOf } from 'normalizr';
+import { normalize, Schema } from 'normalizr';
 import fetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
 
