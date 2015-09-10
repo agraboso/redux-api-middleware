@@ -2,7 +2,7 @@ import test from 'tape';
 import { Schema, arrayOf } from 'normalizr';
 import nock from 'nock';
 
-import { CALL_API, apiMiddleware, isRSAA} from '../src';
+import { CALL_API, apiMiddleware, isRSAA, ApiError } from '../src';
 
 test('isRSAA must identify RSAA-compliant actions', function (t) {
   t.notOk(isRSAA(''), 'RSAA actions must be plain JavaScript objects');
@@ -246,7 +246,9 @@ test('apiMiddleware must handle an unsuccessful API request', function (t) {
     case 'FETCH_USER.FAILURE':
       t.pass('failure FSA action passed to the next handler');
       t.equal(typeof action[CALL_API], 'undefined', 'failure FSA does not have a [CALL_API] property')
-      t.ok(action.payload instanceof Error, 'failure FSA has correct payload property');
+      t.ok(action.payload instanceof ApiError, 'failure FSA has correct payload property');
+      t.ok(action.payload.response instanceof Object, 'failure FSA error object includes the response object');
+      t.equal(action.payload.message, '404 - Not Found');
       t.deepEqual(action.meta, anAction.meta, 'failure FSA has correct meta property');
       t.ok(action.error, 'failure FSA has correct error property');
       break;
@@ -254,7 +256,7 @@ test('apiMiddleware must handle an unsuccessful API request', function (t) {
   };
   const actionHandler = nextHandler(doNext);
 
-  t.plan(10);
+  t.plan(12);
   actionHandler(anAction);
 });
 

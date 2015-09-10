@@ -25,6 +25,16 @@ import { normalize, Schema } from 'normalizr';
 import fetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
 
+export class ApiError extends Error {
+  constructor(response) {
+    var s = super(`${response.status} - ${response.statusText}`);
+    this.message = s.message;
+    this.stack = s.stack;
+    this.name = 'ApiError';
+    this.response = response;
+  }
+}
+
 /**
  * Fetches an API response and normalizes the resulting JSON according to schema.
  *
@@ -45,7 +55,7 @@ function callApi(endpoint, method, headers, body, schema) {
       if (response.ok) {
         return Promise.resolve(response);
       } else {
-        return Promise.reject(new Error(`${response.status} - ${response.statusText}`));
+        return Promise.reject(new ApiError(response));
       }
     })
     .then(response => {
