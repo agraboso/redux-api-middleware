@@ -25,12 +25,23 @@ import { normalize, Schema } from 'normalizr';
 import fetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
 
-export class ApiError extends Error {
-  constructor(response) {
-    var s = super(`${response.status} - ${response.statusText}`);
-    this.message = s.message;
-    this.stack = s.stack;
+/**
+ * Error class for an API response outside the 200 range
+ *
+ * @class ApiError
+ * @access private
+ * @param {} status - the status code of the API response
+ * @param {string} statusText - the status text of the API response
+ * @param {Object} response - the JSON response of the API server if the 'Content-Type'
+ *  header signals a JSON response, or the raw response object otherwise
+ */
+class ApiError extends Error {
+  constructor(status, statusText, response) {
+    super();
     this.name = 'ApiError';
+    this.status = status;
+    this.statusText = statusText;
+    this.message = `${status} - ${statusText}`;
     this.response = response;
   }
 }
@@ -55,10 +66,10 @@ function callApi(endpoint, method, headers, body, schema) {
       if (response.ok) {
         return Promise.resolve(response);
       } else {
-        return Promise.reject(new ApiError(response));
+        return Promise.reject(response);
       }
     })
-    .then(response => {
+    .then((response) => {
       const contentType = response.headers.get('Content-Type');
       if (contentType && ~contentType.indexOf('json')) {
         return response.json().then((json) => {
@@ -70,6 +81,16 @@ function callApi(endpoint, method, headers, body, schema) {
         });
       } else {
         return Promise.resolve();
+      }
+    },
+    (response) => {
+      const contentType = response.headers.get('Content-Type');
+      if (contentType && ~contentType.indexOf('json')) {
+        return response.json().then((json) => {
+          return Promise.reject(new ApiError(response.status, response.statusText, json));
+        });
+      } else {
+        return Promise.reject(new ApiError(response.status, response.statusText, response));
       }
     });
 }
