@@ -30,7 +30,7 @@ import isPlainObject from 'lodash.isplainobject';
  *
  * @class ApiError
  * @access private
- * @param {} status - the status code of the API response
+ * @param {number} status - the status code of the API response
  * @param {string} statusText - the status text of the API response
  * @param {Object} response - the JSON response of the API server if the 'Content-Type'
  *  header signals a JSON response, or the raw response object otherwise
@@ -96,7 +96,7 @@ function callApi(endpoint, method, headers, body, schema) {
 }
 
 /**
- * Action key that carries API call info interpreted by this Redux middleware.
+ * Symbol key that carries API call info interpreted by this Redux middleware.
  *
  * @constant {Symbol}
  * @access public
@@ -109,7 +109,7 @@ export const CALL_API = Symbol('Call API');
  *
  * @function isRSAA
  * @access public
- * @param action - The action to check against the RSAA definition.
+ * @param {Object} action - The action to check against the RSAA definition.
  * @returns {boolean}
  */
 export function isRSAA(action) {
