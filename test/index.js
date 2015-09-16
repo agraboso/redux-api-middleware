@@ -215,7 +215,7 @@ test('apiMiddleware must handle an unsuccessful API request that returns a non-j
       t.equal(action.payload.status, 404, 'failure FSA has an ApiError payload with the correct status code');
       t.equal(action.payload.statusText, 'Not Found', 'failure FSA has an ApiError payload with the correct status text');
       t.equal(action.payload.message, '404 - Not Found', 'failure FSA has an ApiError payload with the correct message');
-      t.ok(action.payload.response instanceof Object, 'failure FSA has an ApiError payload with the response object');
+      t.equal(action.payload.response.constructor.name, 'Response', 'failure FSA has an ApiError payload with the response object');
       t.deepEqual(action.meta, anAction.meta, 'failure FSA has correct meta property');
       t.ok(action.error, 'failure FSA has correct error property');
       break;
