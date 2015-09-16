@@ -144,9 +144,9 @@ export function isRSAA(action) {
 
   const { endpoint, method, body, headers, schema, types, bailout } = callAPI;
 
-  return Object.keys(action).every(key => ~validRootKeys.indexOf(key)) &&
+  return Object.keys(action).every((key) => ~validRootKeys.indexOf(key)) &&
     isPlainObject(callAPI) &&
-    Object.keys(callAPI).every(key => ~validCallAPIKeys.indexOf(key)) &&
+    Object.keys(callAPI).every((key) => ~validCallAPIKeys.indexOf(key)) &&
     (typeof endpoint === 'string' || typeof endpoint === 'function') &&
     ~validMethods.indexOf(method.toUpperCase()) &&
     (Array.isArray(types) && types.length === 3) &&
@@ -163,7 +163,7 @@ export function isRSAA(action) {
  * @access public
  */
 export function apiMiddleware({ getState }) {
-  return next => action => {
+  return (next) => (action) => {
     const callAPI = action[CALL_API];
     if (!isRSAA(action)) {
       return next(action);
@@ -190,8 +190,8 @@ export function apiMiddleware({ getState }) {
     next(actionWith({ type: requestType }));
 
     return callApi(endpoint, method, headers, body, schema).then(
-      response => next(actionWith({ type: successType }, response)),
-      error => next(actionWith({
+      (response) => next(actionWith({ type: successType }, response)),
+      (error) => next(actionWith({
         type: failureType,
         payload: error,
         error: true
