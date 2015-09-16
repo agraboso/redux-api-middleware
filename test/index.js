@@ -2,7 +2,7 @@ import test from 'tape';
 import { Schema, arrayOf } from 'normalizr';
 import nock from 'nock';
 
-import { CALL_API, apiMiddleware, isRSAA} from '../src';
+import { CALL_API, apiMiddleware, isRSAA } from '../src';
 
 test('isRSAA must identify RSAA-compliant actions', function (t) {
   t.notOk(isRSAA(''), 'RSAA actions must be plain JavaScript objects');
@@ -141,6 +141,92 @@ test('apiMiddleware must pass non-RSAA actions to the next handler', function (t
   actionHandler(nonRSAAAction);
 });
 
+test('apiMiddleware must handle an unsuccessful API request with a json response', function (t) {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(404, { error: 'API error' }, { 'Content-Type': 'application/json' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE']
+    },
+    payload: { someKey: 'someValue' },
+    meta: 'meta'
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'FETCH_USER.REQUEST':
+      t.pass('request FSA passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'request FSA does not have a [CALL_API] property')
+      t.deepEqual(action.payload, anAction.payload, 'request FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'request FSA has correct meta property');
+      t.notOk(action.error, 'request FSA has correct error property');
+      break;
+    case 'FETCH_USER.FAILURE':
+      t.pass('failure FSA action passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'failure FSA does not have a [CALL_API] property')
+      t.equal(action.payload.name, 'ApiError', 'failure FSA has an ApiError payload');
+      t.equal(action.payload.status, 404, 'failure FSA has an ApiError payload with the correct status code');
+      t.equal(action.payload.statusText, 'Not Found', 'failure FSA has an ApiError payload with the correct status text');
+      t.equal(action.payload.message, '404 - Not Found', 'failure FSA has an ApiError payload with the correct message');
+      t.equal(action.payload.response.error, 'API error', 'failure FSA has an ApiError payload with the correct json response');
+      t.deepEqual(action.meta, anAction.meta, 'failure FSA has correct meta property');
+      t.ok(action.error, 'failure FSA has correct error property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(14);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must handle an unsuccessful API request that returns a non-json response', function (t) {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(404, '<html><body>404 Not Found!</body></html>', { 'Content-Type': 'application/html' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE']
+    },
+    payload: { someKey: 'someValue' },
+    meta: 'meta'
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'FETCH_USER.REQUEST':
+      t.pass('request FSA passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'request FSA does not have a [CALL_API] property')
+      t.deepEqual(action.payload, anAction.payload, 'request FSA has correct payload property');
+      t.deepEqual(action.meta, anAction.meta, 'request FSA has correct meta property');
+      t.notOk(action.error, 'request FSA has correct error property');
+      break;
+    case 'FETCH_USER.FAILURE':
+      t.pass('failure FSA action passed to the next handler');
+      t.equal(typeof action[CALL_API], 'undefined', 'failure FSA does not have a [CALL_API] property')
+      t.equal(action.payload.name, 'ApiError', 'failure FSA has an ApiError payload');
+      t.equal(action.payload.status, 404, 'failure FSA has an ApiError payload with the correct status code');
+      t.equal(action.payload.statusText, 'Not Found', 'failure FSA has an ApiError payload with the correct status text');
+      t.equal(action.payload.message, '404 - Not Found', 'failure FSA has an ApiError payload with the correct message');
+      t.equal(action.payload.response.constructor.name, 'Response', 'failure FSA has an ApiError payload with the response object');
+      t.deepEqual(action.meta, anAction.meta, 'failure FSA has correct meta property');
+      t.ok(action.error, 'failure FSA has correct error property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(14);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must handle a successful API request', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
@@ -210,45 +296,6 @@ test('apiMiddleware must handle a successful API request that returns an empty b
       t.deepEqual(action.payload, anAction.payload, 'success FSA has correct payload property');
       t.deepEqual(action.meta, anAction.meta, 'success FSA has correct meta property');
       t.notOk(action.error, 'success FSA has correct error property');
-      break;
-    }
-  };
-  const actionHandler = nextHandler(doNext);
-
-  t.plan(10);
-  actionHandler(anAction);
-});
-
-test('apiMiddleware must handle an unsuccessful API request', function (t) {
-  const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(404);
-  const anAction = {
-    [CALL_API]: {
-      endpoint: 'http://127.0.0.1/api/users/1',
-      method: 'GET',
-      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE']
-    },
-    payload: { someKey: 'someValue' },
-    meta: 'meta'
-  };
-  const doGetState = () => {};
-  const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
-    switch (action.type) {
-    case 'FETCH_USER.REQUEST':
-      t.pass('request FSA passed to the next handler');
-      t.equal(typeof action[CALL_API], 'undefined', 'request FSA does not have a [CALL_API] property')
-      t.deepEqual(action.payload, anAction.payload, 'request FSA has correct payload property');
-      t.deepEqual(action.meta, anAction.meta, 'request FSA has correct meta property');
-      t.notOk(action.error, 'request FSA has correct error property');
-      break;
-    case 'FETCH_USER.FAILURE':
-      t.pass('failure FSA action passed to the next handler');
-      t.equal(typeof action[CALL_API], 'undefined', 'failure FSA does not have a [CALL_API] property')
-      t.ok(action.payload instanceof Error, 'failure FSA has correct payload property');
-      t.deepEqual(action.meta, anAction.meta, 'failure FSA has correct meta property');
-      t.ok(action.error, 'failure FSA has correct error property');
       break;
     }
   };

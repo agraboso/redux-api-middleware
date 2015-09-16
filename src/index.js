@@ -26,6 +26,27 @@ import fetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
 
 /**
+ * Error class for an API response outside the 200 range
+ *
+ * @class ApiError
+ * @access private
+ * @param {number} status - the status code of the API response
+ * @param {string} statusText - the status text of the API response
+ * @param {Object} response - the JSON response of the API server if the 'Content-Type'
+ *  header signals a JSON response, or the raw response object otherwise
+ */
+class ApiError extends Error {
+  constructor(status, statusText, response) {
+    super();
+    this.name = 'ApiError';
+    this.status = status;
+    this.statusText = statusText;
+    this.message = `${status} - ${statusText}`;
+    this.response = response;
+  }
+}
+
+/**
  * Fetches an API response and normalizes the resulting JSON according to schema.
  *
  * @function callApi
@@ -45,10 +66,10 @@ function callApi(endpoint, method, headers, body, schema) {
       if (response.ok) {
         return Promise.resolve(response);
       } else {
-        return Promise.reject(new Error(`${response.status} - ${response.statusText}`));
+        return Promise.reject(response);
       }
     })
-    .then(response => {
+    .then((response) => {
       const contentType = response.headers.get('Content-Type');
       if (contentType && ~contentType.indexOf('json')) {
         return response.json().then((json) => {
@@ -61,11 +82,21 @@ function callApi(endpoint, method, headers, body, schema) {
       } else {
         return Promise.resolve();
       }
+    },
+    (response) => {
+      const contentType = response.headers.get('Content-Type');
+      if (contentType && ~contentType.indexOf('json')) {
+        return response.json().then((json) => {
+          return Promise.reject(new ApiError(response.status, response.statusText, json));
+        });
+      } else {
+        return Promise.reject(new ApiError(response.status, response.statusText, response));
+      }
     });
 }
 
 /**
- * Action key that carries API call info interpreted by this Redux middleware.
+ * Symbol key that carries API call info interpreted by this Redux middleware.
  *
  * @constant {Symbol}
  * @access public
@@ -78,7 +109,7 @@ export const CALL_API = Symbol('Call API');
  *
  * @function isRSAA
  * @access public
- * @param action - The action to check against the RSAA definition.
+ * @param {Object} action - The action to check against the RSAA definition.
  * @returns {boolean}
  */
 export function isRSAA(action) {
@@ -113,9 +144,9 @@ export function isRSAA(action) {
 
   const { endpoint, method, body, headers, schema, types, bailout } = callAPI;
 
-  return Object.keys(action).every(key => ~validRootKeys.indexOf(key)) &&
+  return Object.keys(action).every((key) => ~validRootKeys.indexOf(key)) &&
     isPlainObject(callAPI) &&
-    Object.keys(callAPI).every(key => ~validCallAPIKeys.indexOf(key)) &&
+    Object.keys(callAPI).every((key) => ~validCallAPIKeys.indexOf(key)) &&
     (typeof endpoint === 'string' || typeof endpoint === 'function') &&
     ~validMethods.indexOf(method.toUpperCase()) &&
     (Array.isArray(types) && types.length === 3) &&
@@ -132,7 +163,7 @@ export function isRSAA(action) {
  * @access public
  */
 export function apiMiddleware({ getState }) {
-  return next => action => {
+  return (next) => (action) => {
     const callAPI = action[CALL_API];
     if (!isRSAA(action)) {
       return next(action);
@@ -159,8 +190,8 @@ export function apiMiddleware({ getState }) {
     next(actionWith({ type: requestType }));
 
     return callApi(endpoint, method, headers, body, schema).then(
-      response => next(actionWith({ type: successType }, response)),
-      error => next(actionWith({
+      (response) => next(actionWith({ type: successType }, response)),
+      (error) => next(actionWith({
         type: failureType,
         payload: error,
         error: true
