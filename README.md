@@ -137,7 +137,7 @@ If the incoming action does not contain a `[CALL_API]` key, it is passed to the 
 ### actionCreators.js
 
 ```js
-import { CALL_API } from 'redux_api';
+import { CALL_API } from 'redux-api-middleware';
 import { Schema } from 'normalizr';
 
 const userSchema = new Schema({...});
