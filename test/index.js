@@ -71,6 +71,17 @@ test('isRSAA must identify RSAA-compliant actions', function (t) {
       schema: new Schema('key'),
       bailout: ''
     }
+  }), '[CALL_API].schema can also be an array of schemas');
+  t.notOk(isRSAA({
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      body: {},
+      headers: {},
+      schema: arrayOf(new Schema('key')),
+      bailout: ''
+    }
   }), '[CALL_API].bailout must be a boolean or a function');
   t.ok(isRSAA({
     [CALL_API]: {
@@ -341,6 +352,59 @@ test('apiMiddleware must process a successful API response with a schema when pr
       method: 'GET',
       types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
       schema: userSchema
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'FETCH_USER.SUCCESS':
+      t.deepEqual(action.payload.entities, entities, 'success FSA has correct payload property');
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must process a successful API response with an array of schemas when present', function (t) {
+  const testList = [
+    {
+      id: 1,
+      username: 'Alice',
+    }, 
+    {
+      id: 2,
+      username: 'Bob'
+    }
+  ];
+  
+  const userSchema = new Schema('users');
+  
+  const entities = {
+    users : {
+      1: {
+        id: 1,
+        username: 'Alice'
+      },
+      2: {
+        id: 2,
+        username: 'Bob'
+      }
+    }
+  };
+
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, testList, {'Content-Type': 'application/json'});
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
+      schema: arrayOf(userSchema)
     }
   };
   const doGetState = () => {};
