@@ -108,7 +108,7 @@ The optional `[CALL_API].headers` property MUST be a plain JavaScript object. It
 
 ### `[CALL_API].schema`
 
-The optional `[CALL_API].schema` property MUST be a [`normalizr`](https://www.npmjs.com/package/normalizr) schema. It specifies with which `normalizr` schema we should process the API response
+The optional `[CALL_API].schema` property MUST be a [`normalizr`](https://www.npmjs.com/package/normalizr) schema, or an `arrayOf` thereof. It specifies with which `normalizr` schema we should process the API response
 
 ### `[CALL_API].bailout`
 
@@ -126,9 +126,20 @@ The optional `meta` property MAY be any type of value. It is intended for any ex
 
 This middleware expects an RSAA and dispatches FSAs in the following way.
 
-- An FSA with the `REQUEST` type is dispatched to the next middleware as soon as the RSAA comes in; the `payload` and `meta` properties of this FSA are those of the original RSAA.
-- If the request is successful, an FSA with the `SUCCESS` type is dispatched to the next middleware; the `payload` property of this FSA is a merge of the original RSAA's `payload` property and the JSON response from the server; the `meta` property of this FSA is that of the original RSAA.
-- If the request is unsuccessful, an FSA with the `FAILURE` type is dispatched to the next middleware; the `payload` property of this FSA is set to the error object of the request; the `meta` property of this FSA is the same as that of the original RSAA; the `error` property of this FSA is set to `true`.
+- An FSA with the `REQUEST` type is dispatched to the next middleware as soon as the RSAA comes in.
+  - The `payload` property of this FSA is that of the original RSAA.
+  - The `meta` property of this FSA is that of the original RSAA.
+- If the request is successful, an FSA with the `SUCCESS` type is dispatched to the next middleware.
+  - The `payload` property of this FSA is a merge of the original RSAA's `payload` property and the JSON response from the server.
+  - The `meta` property of this FSA is that of the original RSAA.
+- If the request is unsuccessful, an FSA with the `FAILURE` type is dispatched to the next middleware.
+  - The `payload` property of this FSA is an error object with the following properties:
+    - `status`: the status code of the response from the server;
+    - `statusText`: the status text of the response from the server;
+    - `message`: a join of the last two; and
+    - `response`: if the server responded with a JSON object and a json-like `Content-Type` header, `response` contains the parsed JSON object; otherwise, it is the raw response object.
+  - The `meta` property of this FSA is the same as that of the original RSAA.
+  - The `error` property of this FSA is set to `true`.
 
 If the incoming action does not contain a `[CALL_API]` key, it is passed to the next middleware without any modifications.
 
