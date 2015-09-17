@@ -151,7 +151,7 @@ export function isRSAA(action) {
     ~validMethods.indexOf(method.toUpperCase()) &&
     (Array.isArray(types) && types.length === 3) &&
     (typeof headers === 'undefined' || isPlainObject(headers)) &&
-    (typeof schema === 'undefined' || schema instanceof Schema) &&
+    (typeof schema === 'undefined' || schema instanceof Schema || schema.hasOwnProperty('_itemSchema')) &&
     (typeof bailout === 'undefined' || typeof bailout === 'boolean' || typeof bailout === 'function');
 }
 
