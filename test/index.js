@@ -374,17 +374,15 @@ test('apiMiddleware must process a successful API response with an array of sche
     {
       id: 1,
       username: 'Alice',
-    }, 
+    },
     {
       id: 2,
       username: 'Bob'
     }
   ];
-  
   const userSchema = new Schema('users');
-  
   const entities = {
-    users : {
+    users: {
       1: {
         id: 1,
         username: 'Alice'
