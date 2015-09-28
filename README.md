@@ -221,11 +221,15 @@ const store = configureStore(initialState);
 
 ## Utilities
 
-Apart from the middleware above, `redux-api-middleware` exposes the following utility function.
+Apart from the middleware above (and the `[CALL_API]` Symbol), `redux-api-middleware` exposes the following utility functions.
+
+### validateRSAA(action)
+
+Validates `action` against the RSAA definition, returning an array of validation errors.
 
 ### isRSAA(action)
 
-Returns `true` if `action` is RSAA-compliant.
+Returns `true` if `action` is RSAA-compliant, and `false` otherwise. Internally, it simply checks the length of the array of validation errors returned by `validateRSAA(action)`.
 
 ## Installation
 
