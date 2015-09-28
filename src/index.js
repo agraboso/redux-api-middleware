@@ -10,7 +10,8 @@
 
 
 import CALL_API from './CALL_API';
+import validateRSAA from './validateRSAA';
 import isRSAA from './isRSAA';
 import apiMiddleware from './apiMiddleware';
 
-export { CALL_API, isRSAA, apiMiddleware };
+export { CALL_API, validateRSAA, isRSAA, apiMiddleware };
