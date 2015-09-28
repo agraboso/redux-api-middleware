@@ -44,7 +44,7 @@ function validateRSAA(action) {
 
   const callAPI = action[CALL_API];
   if (typeof callAPI === 'undefined') {
-    validationErrors.push('Missing CALL_API key');
+    validationErrors.push('Missing [CALL_API] key');
     return validationErrors;
   }
   for (let key in action) {
@@ -56,12 +56,12 @@ function validateRSAA(action) {
     }
   }
   if (!isPlainObject(callAPI)) {
-    validationErrors.push('CALL_API property must be a plain JavaScript object');
+    validationErrors.push('[CALL_API] property must be a plain JavaScript object');
     return validationErrors;
   }
   for (let key in callAPI) {
     if (!~validCallAPIKeys.indexOf(key)) {
-      validationErrors.push(`Invalid CALL_API key: ${key}`);
+      validationErrors.push(`Invalid [CALL_API] key: ${key}`);
     }
     if (validationErrors.length) {
       return validationErrors;
@@ -70,24 +70,24 @@ function validateRSAA(action) {
 
   const { endpoint, method, body, headers, schema, types, bailout } = callAPI;
   if (typeof endpoint !== 'string' && typeof endpoint !== 'function') {
-    validationErrors.push('endpoint property must be a string or a function');
+    validationErrors.push('[CALL_API].endpoint property must be a string or a function');
   }
   if (typeof method !== 'string') {
-    validationErrors.push('method property must be a string');
+    validationErrors.push('[CALL_API].method property must be a string');
   } else if (!~validMethods.indexOf(method.toUpperCase())) {
-    validationErrors.push(`Invalid method: ${method.toUpperCase()}`);
+    validationErrors.push(`Invalid [CALL_API].method: ${method.toUpperCase()}`);
   }
   if (!Array.isArray(types) || types.length !== 3) {
-    validationErrors.push(`types property must be an array of length 3`);
+    validationErrors.push('[CALL_API].types property must be an array of length 3');
   }
   if (typeof headers !== 'undefined' && !isPlainObject(headers)) {
-    validationErrors.push('header property must be a plain JavaScript object');
+    validationErrors.push('[CALL_API].headers property must be undefined, or a plain JavaScript object');
   }
   if (typeof schema !== 'undefined' && !(schema instanceof Schema) && !(schema.hasOwnProperty('_itemSchema'))) {
-    validationErrors.push('schema property must be undefined, a normalizr schema, or an arrayOf thereof');
+    validationErrors.push('[CALL_API].schema property must be undefined, a normalizr schema, or an arrayOf thereof');
   }
   if (typeof bailout !== 'undefined' && typeof bailout !== 'boolean' && typeof bailout !== 'function') {
-    validationErrors.push('bailout property must be undefined, a boolean, or a function');
+    validationErrors.push('[CALL_API].bailout property must be undefined, a boolean, or a function');
   };
   return validationErrors;
 }
