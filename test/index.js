@@ -2,120 +2,317 @@ import test from 'tape';
 import { Schema, arrayOf } from 'normalizr';
 import nock from 'nock';
 
-import { CALL_API, apiMiddleware, isRSAA } from '../src';
+import { CALL_API, apiMiddleware, validateRSAA, isRSAA } from '../src';
 
-test('isRSAA must identify RSAA-compliant actions', function (t) {
-  t.notOk(isRSAA(''), 'RSAA actions must be plain JavaScript objects');
-  t.notOk(isRSAA({}), 'RSAA actions must have an [API_CALL] property');
-  t.notOk(isRSAA({ invalidKey: '' }), 'RSAA actions must not have properties other than [API_CALL], payload and meta');
-  t.notOk(isRSAA({
+test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
+  var action1 = '';
+  t.ok(
+    validateRSAA(action1).length === 1 &&
+    ~validateRSAA(action1).indexOf('RSAA must be a plain JavaScript object'),
+    'RSAA actions must be plain JavaScript objects (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action1),
+    'RSAA actions must be plain JavaScript objects (isRSAA)'
+  );
+
+  var action2 = {};
+  t.ok(
+    validateRSAA(action2).length === 1 &&
+    ~validateRSAA(action2).indexOf('Missing [CALL_API] key'),
+   'RSAA actions must have a [CALL_API] property (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action2),
+    'RSAA actions must have a [CALL_API] property (isRSAA)'
+  );
+
+  var action3 = {
+    [CALL_API]: {},
+    invalidKey: ''
+  };
+  t.ok(
+    validateRSAA(action3).length === 1 &&
+    ~validateRSAA(action3).indexOf('Invalid root key: invalidKey'),
+    'RSAA actions must not have properties other than [CALL_API], payload and meta (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action3),
+    'RSAA actions must not have properties other than [CALL_API], payload and meta (isRSAA)'
+  );
+
+  var action4 = {
     [CALL_API]: ''
-  }), '[CALL_API] must be a plain JavaScript object');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    validateRSAA(action4).length === 1 &&
+    ~validateRSAA(action4).indexOf('[CALL_API] property must be a plain JavaScript object'),
+    '[CALL_API] must be a plain JavaScript object (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action4),
+    '[CALL_API] must be a plain JavaScript object (isRSAA)'
+  );
+
+  var action5 = {
     [CALL_API]: { invalidKey: '' }
-  }), '[CALL_API] must not have properties other than endpoint, method, body, headers, schema, types and bailout');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    validateRSAA(action5).length === 1 &&
+    ~validateRSAA(action5).indexOf('Invalid [CALL_API] key: invalidKey'),
+    '[CALL_API] must not have properties other than endpoint, method, body, headers, schema, types and bailout (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action5),
+    '[CALL_API] must not have properties other than endpoint, method, body, headers, schema, types and bailout (isRSAA)'
+  );
+
+  var action6 = {
     [CALL_API]: {}
-  }), '[CALL_API] must have an endpoint property');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    validateRSAA(action6).length === 3 &&
+    ~validateRSAA(action6).indexOf('[CALL_API].endpoint property must be a string or a function') &&
+    ~validateRSAA(action6).indexOf('[CALL_API].method property must be a string') &&
+    ~validateRSAA(action6).indexOf('[CALL_API].types property must be an array of length 3'),
+    '[CALL_API] must have endpoint, method and types properties (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action6),
+    '[CALL_API] must have endpoint, method and types properties (isRSAA)'
+  );
+
+  var action7 = {
     [CALL_API]: {
-      endpoint: {}
+      endpoint: {},
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
-  }), '[CALL_API].endpoint must be a string or a function');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    ~validateRSAA(action7).indexOf('[CALL_API].endpoint property must be a string or a function'),
+    '[CALL_API].endpoint must be a string or a function (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action7),
+    '[CALL_API].endpoint must be a string or a function (isRSAA)'
+  );
+
+  var action8 = {
     [CALL_API]: {
       endpoint: '',
-      method: ''
+      method: 'InvalidMethod',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
-  }), '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\' or \'OPTIONS\'');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    ~validateRSAA(action8).indexOf('Invalid [CALL_API].method: INVALIDMETHOD'),
+    '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\' or \'OPTIONS\' (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action8),
+    '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\' or \'OPTIONS\' (isRSAA)'
+  );
+
+  var action9 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
-      types: ''
+      types: {}
     }
-  }), '[CALL_API].types must be an array');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    ~validateRSAA(action9).indexOf('[CALL_API].types property must be an array of length 3'),
+    '[CALL_API].types must be an array (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action9),
+    '[CALL_API].types must be an array (isRSAA)'
+  );
+
+  var action10 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
-      types: ['', '']
+      types: ['a', 'b']
     }
-  }), '[CALL_API].types must have length 3');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    ~validateRSAA(action10).indexOf('[CALL_API].types property must be an array of length 3'),
+    '[CALL_API].types must have length 3 (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action10),
+    '[CALL_API].types must have length 3 (isRSAA)'
+  );
+
+  var action11 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: {},
       headers: ''
     }
-  }), '[CALL_API].headers must be a plain JavaScript object');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    ~validateRSAA(action11).indexOf('[CALL_API].headers property must be undefined, or a plain JavaScript object'),
+    '[CALL_API].headers must be undefined, or a plain JavaScript object (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action11),
+    '[CALL_API].headers must be undefined, or a plain JavaScript object (isRSAA)'
+  );
+
+  var action12 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: {},
-      headers: {},
       schema: ''
     }
-  }), '[CALL_API].schema must be a normalizr schema');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    ~validateRSAA(action12).indexOf('[CALL_API].schema property must be undefined, a normalizr schema, or an arrayOf thereof'),
+    '[CALL_API].schema must be undefined, a normalizr schema, or an arrayOf thereof (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action12),
+    '[CALL_API].schema must be undefined, a normalizr schema, or an arrayOf thereof (isRSAA)'
+  );
+
+  var action13 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: {},
-      headers: {},
-      schema: new Schema('key'),
       bailout: ''
     }
-  }), '[CALL_API].schema can also be an array of schemas');
-  t.notOk(isRSAA({
+  };
+  t.ok(
+    ~validateRSAA(action13).indexOf('[CALL_API].bailout property must be undefined, a boolean, or a function'),
+    '[CALL_API].bailout must be undefined, a boolean or a function (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action13),
+    '[CALL_API].bailout must be undefined, a boolean or a function (isRSAA)'
+  );
+
+  var action14 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
-      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: {},
-      headers: {},
-      schema: arrayOf(new Schema('key')),
-      bailout: ''
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
-  }), '[CALL_API].bailout must be a boolean or a function');
-  t.ok(isRSAA({
-    [CALL_API]: {
-      endpoint: '',
-      method: 'GET',
-      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: {},
-      headers: {},
-      schema: new Schema('key'),
-      bailout: false
-    }
-  }), 'isRSAA must return true for an RSAA action (1)');
-  t.ok(isRSAA({
-    [CALL_API]: {
-      endpoint: '',
-      method: 'GET',
-      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: {},
-      headers: {},
-      schema: new Schema('key'),
-      bailout: (() => false)
-    }
-  }), 'isRSAA must return true for an RSAA action (2)');
-  t.ok(isRSAA({
+  };
+  t.notOk(
+    validateRSAA(action14).length,
+    '[CALL_API].endpoint may be a string (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action14),
+    '[CALL_API].endpoint may be a string (isRSAA)'
+  );
+
+  var action15 = {
     [CALL_API]: {
       endpoint: (() => ''),
       method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  t.notOk(
+    validateRSAA(action15).length,
+    '[CALL_API].endpoint may be a function (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action15),
+    '[CALL_API].endpoint may be a function (isRSAA)'
+  );
+
+  var action16 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      body: {},
-      headers: {},
-      schema: new Schema('key'),
+      headers: {}
+    }
+  };
+  t.notOk(
+    validateRSAA(action16).length,
+    '[CALL_API].headers may be a plain JavaScript object (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action16),
+    '[CALL_API].headers may be a plain JavaScript object (isRSAA)'
+  );
+
+  var action17 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      schema: new Schema('key')
+    }
+  };
+  t.notOk(
+    validateRSAA(action17).length,
+    '[CALL_API].schema may be a normalizr schema (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action17),
+    '[CALL_API].schema may be a normalizr schema (isRSAA)'
+  );
+
+  var action18 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      schema: arrayOf(new Schema('key'))
+    }
+  };
+  t.notOk(
+    validateRSAA(action18).length,
+    '[CALL_API].schema may be an arrayOf of a normalizr schema (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action18),
+    '[CALL_API].schema may be an arrayOf of a normalizr schema (isRSAA)'
+  );
+
+  var action19 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
       bailout: false
     }
-  }), 'isRSAA must return true for an RSAA action (3)');
+  };
+  t.notOk(
+    validateRSAA(action19).length,
+    '[CALL_API].bailout may be a boolean (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action19),
+    '[CALL_API].bailout may be a boolean (isRSAA)'
+  );
+
+  var action20 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      bailout: (() => false)
+    }
+  };
+  t.notOk(
+    validateRSAA(action20).length,
+    '[CALL_API].bailout may be a function (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action20),
+    '[CALL_API].bailout may be a function (isRSAA)'
+  );
 
   t.end();
 });
