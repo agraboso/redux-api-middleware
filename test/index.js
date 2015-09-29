@@ -8,7 +8,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   var action1 = '';
   t.ok(
     validateRSAA(action1).length === 1 &&
-    ~validateRSAA(action1).indexOf('RSAA must be a plain JavaScript object'),
+    validateRSAA(action1).includes('RSAA must be a plain JavaScript object'),
     'RSAA actions must be plain JavaScript objects (validateRSAA)'
   );
   t.notOk(
@@ -19,7 +19,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   var action2 = {};
   t.ok(
     validateRSAA(action2).length === 1 &&
-    ~validateRSAA(action2).indexOf('Missing [CALL_API] key'),
+    validateRSAA(action2).includes('Missing [CALL_API] key'),
    'RSAA actions must have a [CALL_API] property (validateRSAA)'
   );
   t.notOk(
@@ -33,7 +33,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   };
   t.ok(
     validateRSAA(action3).length === 1 &&
-    ~validateRSAA(action3).indexOf('Invalid root key: invalidKey'),
+    validateRSAA(action3).includes('Invalid root key: invalidKey'),
     'RSAA actions must not have properties other than [CALL_API], payload and meta (validateRSAA)'
   );
   t.notOk(
@@ -46,7 +46,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   };
   t.ok(
     validateRSAA(action4).length === 1 &&
-    ~validateRSAA(action4).indexOf('[CALL_API] property must be a plain JavaScript object'),
+    validateRSAA(action4).includes('[CALL_API] property must be a plain JavaScript object'),
     '[CALL_API] must be a plain JavaScript object (validateRSAA)'
   );
   t.notOk(
@@ -59,7 +59,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   };
   t.ok(
     validateRSAA(action5).length === 1 &&
-    ~validateRSAA(action5).indexOf('Invalid [CALL_API] key: invalidKey'),
+    validateRSAA(action5).includes('Invalid [CALL_API] key: invalidKey'),
     '[CALL_API] must not have properties other than endpoint, method, body, headers, schema, types and bailout (validateRSAA)'
   );
   t.notOk(
@@ -72,9 +72,11 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   };
   t.ok(
     validateRSAA(action6).length === 3 &&
-    ~validateRSAA(action6).indexOf('[CALL_API].endpoint property must be a string or a function') &&
-    ~validateRSAA(action6).indexOf('[CALL_API].method property must be a string') &&
-    ~validateRSAA(action6).indexOf('[CALL_API].types property must be an array of length 3'),
+    validateRSAA(action6).includes(
+      '[CALL_API].endpoint property must be a string or a function',
+      '[CALL_API].method property must be a string',
+      '[CALL_API].types property must be an array of length 3'
+    ),
     '[CALL_API] must have endpoint, method and types properties (validateRSAA)'
   );
   t.notOk(
@@ -90,7 +92,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.ok(
-    ~validateRSAA(action7).indexOf('[CALL_API].endpoint property must be a string or a function'),
+    validateRSAA(action7).includes('[CALL_API].endpoint property must be a string or a function'),
     '[CALL_API].endpoint must be a string or a function (validateRSAA)'
   );
   t.notOk(
@@ -106,7 +108,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.ok(
-    ~validateRSAA(action8).indexOf('Invalid [CALL_API].method: INVALIDMETHOD'),
+    validateRSAA(action8).includes('Invalid [CALL_API].method: INVALIDMETHOD'),
     '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\' or \'OPTIONS\' (validateRSAA)'
   );
   t.notOk(
@@ -122,7 +124,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.ok(
-    ~validateRSAA(action9).indexOf('[CALL_API].types property must be an array of length 3'),
+    validateRSAA(action9).includes('[CALL_API].types property must be an array of length 3'),
     '[CALL_API].types must be an array (validateRSAA)'
   );
   t.notOk(
@@ -138,7 +140,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.ok(
-    ~validateRSAA(action10).indexOf('[CALL_API].types property must be an array of length 3'),
+    validateRSAA(action10).includes('[CALL_API].types property must be an array of length 3'),
     '[CALL_API].types must have length 3 (validateRSAA)'
   );
   t.notOk(
@@ -155,7 +157,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.ok(
-    ~validateRSAA(action11).indexOf('[CALL_API].headers property must be undefined, or a plain JavaScript object'),
+    validateRSAA(action11).includes('[CALL_API].headers property must be undefined, or a plain JavaScript object'),
     '[CALL_API].headers must be undefined, or a plain JavaScript object (validateRSAA)'
   );
   t.notOk(
@@ -172,7 +174,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.ok(
-    ~validateRSAA(action12).indexOf('[CALL_API].schema property must be undefined, a normalizr schema, or an arrayOf thereof'),
+    validateRSAA(action12).includes('[CALL_API].schema property must be undefined, a normalizr schema, or an arrayOf thereof'),
     '[CALL_API].schema must be undefined, a normalizr schema, or an arrayOf thereof (validateRSAA)'
   );
   t.notOk(
@@ -189,7 +191,7 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.ok(
-    ~validateRSAA(action13).indexOf('[CALL_API].bailout property must be undefined, a boolean, or a function'),
+    validateRSAA(action13).includes('[CALL_API].bailout property must be undefined, a boolean, or a function'),
     '[CALL_API].bailout must be undefined, a boolean or a function (validateRSAA)'
   );
   t.notOk(
