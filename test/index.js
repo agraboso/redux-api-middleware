@@ -1,5 +1,5 @@
 import test from 'tape';
-import { Schema, arrayOf } from 'normalizr';
+import { Schema, normalize, arrayOf } from 'normalizr';
 import nock from 'nock';
 
 import { CALL_API, apiMiddleware, validateRSAA, isRSAA } from '../src';
@@ -170,16 +170,16 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      schema: ''
+      transform: ''
     }
   };
   t.ok(
-    validateRSAA(action12).includes('[CALL_API].schema property must be undefined, a normalizr schema, or an arrayOf thereof'),
-    '[CALL_API].schema must be undefined, a normalizr schema, or an arrayOf thereof (validateRSAA)'
+    validateRSAA(action12).includes('[CALL_API].transform property must be undefined, or a function'),
+    '[CALL_API].transform property must be undefined, or a function (validateRSAA)'
   );
   t.notOk(
     isRSAA(action12),
-    '[CALL_API].schema must be undefined, a normalizr schema, or an arrayOf thereof (isRSAA)'
+    '[CALL_API].transform property must be undefined, or a function (isRSAA)'
   );
 
   var action13 = {
@@ -253,36 +253,19 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      schema: new Schema('key')
+      transform: () => {}
     }
   };
   t.notOk(
     validateRSAA(action17).length,
-    '[CALL_API].schema may be a normalizr schema (validateRSAA)'
+    '[CALL_API].transform may be a function (validateRSAA)'
   );
   t.ok(
     isRSAA(action17),
-    '[CALL_API].schema may be a normalizr schema (isRSAA)'
+    '[CALL_API].transform may be a function (isRSAA)'
   );
 
   var action18 = {
-    [CALL_API]: {
-      endpoint: '',
-      method: 'GET',
-      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
-      schema: arrayOf(new Schema('key'))
-    }
-  };
-  t.notOk(
-    validateRSAA(action18).length,
-    '[CALL_API].schema may be an arrayOf of a normalizr schema (validateRSAA)'
-  );
-  t.ok(
-    isRSAA(action18),
-    '[CALL_API].schema may be an arrayOf of a normalizr schema (isRSAA)'
-  );
-
-  var action19 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
@@ -291,15 +274,15 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.notOk(
-    validateRSAA(action19).length,
+    validateRSAA(action18).length,
     '[CALL_API].bailout may be a boolean (validateRSAA)'
   );
   t.ok(
-    isRSAA(action19),
+    isRSAA(action18),
     '[CALL_API].bailout may be a boolean (isRSAA)'
   );
 
-  var action20 = {
+  var action19 = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
@@ -308,11 +291,11 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
     }
   };
   t.notOk(
-    validateRSAA(action20).length,
+    validateRSAA(action19).length,
     '[CALL_API].bailout may be a function (validateRSAA)'
   );
   t.ok(
-    isRSAA(action20),
+    isRSAA(action19),
     '[CALL_API].bailout may be a function (isRSAA)'
   );
 
@@ -394,7 +377,7 @@ test('apiMiddleware must handle an unsuccessful API request with a json response
   actionHandler(anAction);
 });
 
-test('apiMiddleware must handle an unsuccessful API request that returns a non-json response', function (t) {
+test('apiMiddleware must handle an unsuccessful API request with a non-json response', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
                 .reply(404, '<html><body>404 Not Found!</body></html>', { 'Content-Type': 'application/html' });
@@ -515,7 +498,7 @@ test('apiMiddleware must handle a successful API request that returns an empty b
   actionHandler(anAction);
 });
 
-test('apiMiddleware must process a successful API response with a schema when present', function (t) {
+test('apiMiddleware must process a successful API response with a transform function when present', function (t) {
   const userRecord = {
     id: 1,
     username: 'Alice',
@@ -550,58 +533,7 @@ test('apiMiddleware must process a successful API response with a schema when pr
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
-      schema: userSchema
-    }
-  };
-  const doGetState = () => {};
-  const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
-    switch (action.type) {
-    case 'FETCH_USER.SUCCESS':
-      t.deepEqual(action.payload.entities, entities, 'success FSA has correct payload property');
-      break;
-    }
-  };
-  const actionHandler = nextHandler(doNext);
-
-  t.plan(1);
-  actionHandler(anAction);
-});
-
-test('apiMiddleware must process a successful API response with an array of schemas when present', function (t) {
-  const testList = [
-    {
-      id: 1,
-      username: 'Alice',
-    },
-    {
-      id: 2,
-      username: 'Bob'
-    }
-  ];
-  const userSchema = new Schema('users');
-  const entities = {
-    users: {
-      1: {
-        id: 1,
-        username: 'Alice'
-      },
-      2: {
-        id: 2,
-        username: 'Bob'
-      }
-    }
-  };
-
-  const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(200, testList, {'Content-Type': 'application/json'});
-  const anAction = {
-    [CALL_API]: {
-      endpoint: 'http://127.0.0.1/api/users/1',
-      method: 'GET',
-      types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
-      schema: arrayOf(userSchema)
+      transform: (json) => normalize(json, userSchema)
     }
   };
   const doGetState = () => {};
@@ -645,7 +577,7 @@ test('apiMiddleware must use an endpoint function when present', function (t) {
   actionHandler(anAction);
 });
 
-test('apiMiddleware must use a bailout function when present', function (t) {
+test('apiMiddleware must use a bailout boolean when present', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
                 .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});

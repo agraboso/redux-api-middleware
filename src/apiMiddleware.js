@@ -31,7 +31,7 @@ function apiMiddleware({ getState }) {
     }
 
     let { endpoint } = callAPI;
-    const { method, body, headers, schema, types, bailout } = callAPI;
+    const { method, body, headers, transform, types, bailout } = callAPI;
     if (typeof endpoint === 'function') {
       endpoint = endpoint(getState());
     }
@@ -50,8 +50,14 @@ function apiMiddleware({ getState }) {
     const [requestType, successType, failureType] = types;
     next(actionWith({ type: requestType }));
 
-    return callApi(endpoint, method, headers, body, schema).then(
-      (response) => next(actionWith({ type: successType }, response)),
+    return callApi(endpoint, method, headers, body).then(
+      (response) => {
+        if (transform) {
+          next(actionWith({ type: successType }, transform(response)));
+        } else {
+          next(actionWith({ type: successType }, response));
+        }
+      },
       (error) => next(actionWith({
         type: failureType,
         payload: error,

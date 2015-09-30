@@ -1,4 +1,3 @@
-import { normalize } from 'normalizr';
 import fetch from 'isomorphic-fetch';
 import ApiError from './ApiError';
 
@@ -11,10 +10,9 @@ import ApiError from './ApiError';
  * @param {string} method - The HTTP method for the request
  * @param {boolean} [auth=false] - Whether to send authentication credentials or not
  * @param {Object} [body] - The body of the request
- * @param {Schema} [schema] - The normalizr schema with which to parse the response
  * @returns {Promise}
  */
-function callApi(endpoint, method, headers, body, schema) {
+function callApi(endpoint, method, headers, body) {
   const requestOptions = { method, body, headers }
 
   return fetch(endpoint, requestOptions)
@@ -29,11 +27,7 @@ function callApi(endpoint, method, headers, body, schema) {
       const contentType = response.headers.get('Content-Type');
       if (contentType && ~contentType.indexOf('json')) {
         return response.json().then((json) => {
-          if (schema) {
-            return Promise.resolve(normalize(json, schema));
-          } else {
-            return Promise.resolve(json);
-          }
+          return Promise.resolve(json)
         });
       } else {
         return Promise.resolve();

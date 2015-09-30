@@ -24,7 +24,7 @@ function validateRSAA(action) {
     'types',
     'body',
     'headers',
-    'schema',
+    'transform',
     'bailout'
   ];
   const validMethods = [
@@ -68,7 +68,7 @@ function validateRSAA(action) {
     }
   }
 
-  const { endpoint, method, body, headers, schema, types, bailout } = callAPI;
+  const { endpoint, method, body, headers, transform, types, bailout } = callAPI;
   if (typeof endpoint !== 'string' && typeof endpoint !== 'function') {
     validationErrors.push('[CALL_API].endpoint property must be a string or a function');
   }
@@ -83,8 +83,8 @@ function validateRSAA(action) {
   if (typeof headers !== 'undefined' && !isPlainObject(headers)) {
     validationErrors.push('[CALL_API].headers property must be undefined, or a plain JavaScript object');
   }
-  if (typeof schema !== 'undefined' && !(schema instanceof Schema) && !(schema.hasOwnProperty('_itemSchema'))) {
-    validationErrors.push('[CALL_API].schema property must be undefined, a normalizr schema, or an arrayOf thereof');
+  if (typeof transform !== 'undefined' && typeof transform !== 'function') {
+    validationErrors.push('[CALL_API].transform property must be undefined, or a function');
   }
   if (typeof bailout !== 'undefined' && typeof bailout !== 'boolean' && typeof bailout !== 'function') {
     validationErrors.push('[CALL_API].bailout property must be undefined, a boolean, or a function');
