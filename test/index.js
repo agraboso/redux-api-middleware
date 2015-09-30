@@ -423,7 +423,7 @@ test('apiMiddleware must handle an unsuccessful API request with a non-json resp
 test('apiMiddleware must handle a successful API request', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
+                .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -527,7 +527,7 @@ test('apiMiddleware must process a successful API response with a transform func
 
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, userRecord, {'Content-Type': 'application/json'});
+                .reply(200, userRecord, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -554,7 +554,7 @@ test('apiMiddleware must process a successful API response with a transform func
 test('apiMiddleware must use an endpoint function when present', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
+                .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: () => 'http://127.0.0.1/api/users/1',
@@ -580,7 +580,7 @@ test('apiMiddleware must use an endpoint function when present', function (t) {
 test('apiMiddleware must use a bailout boolean when present', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
+                .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: () => 'http://127.0.0.1/api/users/1',
@@ -601,7 +601,7 @@ test('apiMiddleware must use a bailout boolean when present', function (t) {
 test('apiMiddleware must use a bailout function when present', function (t) {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
-                .reply(200, { username: 'Alice' }, {'Content-Type': 'application/json'});
+                .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: () => 'http://127.0.0.1/api/users/1',
