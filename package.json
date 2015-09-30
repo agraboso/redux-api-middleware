@@ -27,17 +27,17 @@
   "license": "MIT",
   "dependencies": {
     "isomorphic-fetch": "^2.1.1",
-    "lodash.isplainobject": "^3.2.0",
-    "normalizr": "^1.0.0"
+    "lodash.isplainobject": "^3.2.0"
   },
   "devDependencies": {
-    "babel": "^5.8.21",
-    "babel-istanbul": "^0.3.17",
+    "babel": "^5.8.23",
+    "babel-istanbul": "^0.3.20",
     "coveralls": "^2.11.4",
-    "eslint": "^1.1.0",
-    "nock": "^2.10.0",
-    "rimraf": "^2.4.2",
-    "tap-spec": "^4.0.2",
+    "eslint": "^1.5.1",
+    "nock": "^2.13.0",
+    "normalizr": "^1.0.0",
+    "rimraf": "^2.4.3",
+    "tap-spec": "^4.1.0",
     "tape": "^4.2.0"
   }
 }
