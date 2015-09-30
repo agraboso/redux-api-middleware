@@ -79,12 +79,12 @@ The `[CALL_API]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
-- have a `schema` property,
+- have a `transform` property,
 - have a `bailout` property.
 
 The `[CALL_API]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `schema` and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `transform` and `bailout`.
 
 ### `[CALL_API].endpoint`
 
@@ -106,9 +106,9 @@ The optional `[CALL_API].body` property SHOULD be a valid body according to the 
 
 The optional `[CALL_API].headers` property MUST be a plain JavaScript object. It represents the headers of the API request.
 
-### `[CALL_API].schema`
+### `[CALL_API].transform`
 
-The optional `[CALL_API].schema` property MUST be a [`normalizr`](https://www.npmjs.com/package/normalizr) schema, or an `arrayOf` thereof. It specifies with which `normalizr` schema we should process the API response
+The optional `[CALL_API].transform` property MUST be a function. It is used to process the JSON response of a successful API request.
 
 ### `[CALL_API].bailout`
 
@@ -130,7 +130,7 @@ This middleware expects an RSAA and dispatches FSAs in the following way.
   - The `payload` property of this FSA is that of the original RSAA.
   - The `meta` property of this FSA is that of the original RSAA.
 - If the request is successful, an FSA with the `SUCCESS` type is dispatched to the next middleware.
-  - The `payload` property of this FSA is a merge of the original RSAA's `payload` property and the JSON response from the server.
+  - The `payload` property of this FSA is a merge of the original RSAA's `payload` property and the JSON response from the server (optionally processed by `[CALL_API].transform`).
   - The `meta` property of this FSA is that of the original RSAA.
 - If the request is unsuccessful, an FSA with the `FAILURE` type is dispatched to the next middleware.
   - The `payload` property of this FSA is an error object with the following properties:
@@ -149,7 +149,7 @@ If the incoming action does not contain a `[CALL_API]` key, it is passed to the 
 
 ```js
 import { CALL_API } from 'redux-api-middleware';
-import { Schema } from 'normalizr';
+import { Schema, normalize } from 'normalizr';
 
 const userSchema = new Schema({...});
 
@@ -160,7 +160,7 @@ export function fetchUser(userId, schema = userSchema) {
       endpoint: `/users/${userId}`,
       method: 'GET',
       headers: { credentials: 'same-origin'},
-      schema
+      transform: (response) => normalize(json, schema)
     },
     payload: { somePayload },
     meta: { someMeta }
@@ -205,7 +205,7 @@ const store = configureStore(initialState);
 ```js
 {
   type: 'FETCH_USER.SUCCESS',
-  payload: { ...somePayload, response },
+  payload: { ...somePayload, transformedResponse },
   meta: { someMeta }
 }
 ```
@@ -242,6 +242,31 @@ npm install redux-api-middleware
 ```
 npm test
 ```
+
+## Upgrading from <0.6.0
+
+In previous versions, `[CALL_API]` had an optional `schema` key that would use a [`normalizr`](https://www.npmjs.com/package/normalizr) schema (or an `arrayOf` thereof) to process the JSON response of a successful API request. This has been now replaced with the optional `transform` key, so you can do any post-processing you like.
+
+Upgrading is easy: just rewrite your RSAA-actions
+```js
+{
+  [CALL_API]: {
+    ...
+    schema = someSchema,
+    ...
+  }  
+}
+```
+as follows:
+```js
+{
+  [CALL_API]: {
+    ...
+    transform = (response) => normalize(response, someSchema),
+    ...
+}
+```
+(and remember to import `normalizr`).
 
 ## License
 
