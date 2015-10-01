@@ -1,5 +1,4 @@
 import CALL_API from './CALL_API';
-import { normalize, Schema } from 'normalizr';
 import isPlainObject from 'lodash.isplainobject';
 
 /**
