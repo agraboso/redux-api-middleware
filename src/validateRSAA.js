@@ -23,6 +23,7 @@ function validateRSAA(action) {
     'types',
     'body',
     'headers',
+    'credentials',
     'transform',
     'bailout'
   ];
@@ -34,7 +35,12 @@ function validateRSAA(action) {
     'PATCH',
     'DELETE',
     'OPTIONS'
-  ]
+  ];
+  const validCredentials = [
+    'omit',
+    'same-origin',
+    'include'
+  ];
 
   if (!isPlainObject(action)) {
     validationErrors.push('RSAA must be a plain JavaScript object');
@@ -67,7 +73,7 @@ function validateRSAA(action) {
     }
   }
 
-  const { endpoint, method, body, headers, transform, types, bailout } = callAPI;
+  const { endpoint, method, body, headers, credentials, transform, types, bailout } = callAPI;
   if (typeof endpoint !== 'string' && typeof endpoint !== 'function') {
     validationErrors.push('[CALL_API].endpoint property must be a string or a function');
   }
@@ -81,6 +87,13 @@ function validateRSAA(action) {
   }
   if (typeof headers !== 'undefined' && !isPlainObject(headers)) {
     validationErrors.push('[CALL_API].headers property must be undefined, or a plain JavaScript object');
+  }
+  if (typeof credentials !== 'undefined') {
+    if (typeof credentials !== 'string') {
+      validationErrors.push('[CALL_API].credentials property must be undefined, or a string');
+    } else if (!~validCredentials.indexOf(credentials)) {
+      validationErrors.push(`Invalid [CALL_API].credentials: ${credentials}`);
+    }
   }
   if (typeof transform !== 'undefined' && typeof transform !== 'function') {
     validationErrors.push('[CALL_API].transform property must be undefined, or a function');

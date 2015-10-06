@@ -60,11 +60,11 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   t.ok(
     validateRSAA(action5).length === 1 &&
     validateRSAA(action5).includes('Invalid [CALL_API] key: invalidKey'),
-    '[CALL_API] must not have properties other than endpoint, method, body, headers, schema, types and bailout (validateRSAA)'
+    '[CALL_API] must not have properties other than endpoint, method, body, headers, credentials, schema, types and bailout (validateRSAA)'
   );
   t.notOk(
     isRSAA(action5),
-    '[CALL_API] must not have properties other than endpoint, method, body, headers, schema, types and bailout (isRSAA)'
+    '[CALL_API] must not have properties other than endpoint, method, body, headers, credentials, schema, types and bailout (isRSAA)'
   );
 
   var action6 = {
@@ -297,6 +297,57 @@ test('validateRSAA/isRSAA must identify RSAA-compliant actions', function (t) {
   t.ok(
     isRSAA(action19),
     '[CALL_API].bailout may be a function (isRSAA)'
+  );
+
+  var action20 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      credentials: {}
+    }
+  };
+  t.ok(
+    validateRSAA(action20).includes('[CALL_API].credentials property must be undefined, or a string'),
+    '[CALL_API].credentials property must be undefined, or a string (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action20),
+    '[CALL_API].credentials property must be undefined, or a string (isRSAA)'
+  );
+
+  var action21 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      credentials: 'InvalidCredentials'
+    }
+  };
+  t.ok(
+    validateRSAA(action21).includes('Invalid [CALL_API].credentials: InvalidCredentials'),
+    '[CALL_API].credentials must be one of the strings \'omit\', \'same-origin\' or \'include\' (validateRSAA)'
+  );
+  t.notOk(
+    isRSAA(action21),
+    '[CALL_API].credentials must be one of the strings \'omit\', \'same-origin\' or \'include\' (isRSAA)'
+  );
+
+  var action22 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      credentials: 'same-origin'
+    }
+  };
+  t.notOk(
+    validateRSAA(action22).length,
+    '[CALL_API].credentials may be set to \'same-origin\' (validateRSAA)'
+  );
+  t.ok(
+    isRSAA(action22),
+    '[CALL_API].credentials may be set to \'same-origin\' (isRSAA)'
   );
 
   t.end();

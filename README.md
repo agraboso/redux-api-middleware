@@ -79,12 +79,13 @@ The `[CALL_API]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
+- have a `credentials` property,
 - have a `transform` property,
 - have a `bailout` property.
 
 The `[CALL_API]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `transform` and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `credentials`, `transform` and `bailout`.
 
 ### `[CALL_API].endpoint`
 
@@ -105,6 +106,10 @@ The optional `[CALL_API].body` property SHOULD be a valid body according to the 
 ### `[CALL_API].headers`
 
 The optional `[CALL_API].headers` property MUST be a plain JavaScript object. It represents the headers of the API request.
+
+### `[CALL_API].credentials`
+
+The optional `[CALL_API].credentials` property MUST be one of the strings `omit`, `same-origin` or `include`. it indicates whether or not to send cookies. `omit` is the default, and doesn't send any cookies. `same-origin` only send cookies for the current domain. `include` always send cookies, even for cross-origin calls.
 
 ### `[CALL_API].transform`
 
@@ -159,7 +164,7 @@ export function fetchUser(userId, schema = userSchema) {
       types: ['FETCH_USER.REQUEST', 'FETCH_USER.SUCCESS', 'FETCH_USER.FAILURE'],
       endpoint: `/users/${userId}`,
       method: 'GET',
-      headers: { credentials: 'same-origin'},
+      credentials: 'same-origin',
       transform: (response) => normalize(json, schema)
     },
     payload: { somePayload },
@@ -168,7 +173,7 @@ export function fetchUser(userId, schema = userSchema) {
 }
 ```
 
-The `headers: { credentials: 'same-origin'}` property sends the authentication credentials stored in cookies by an `express` server using `passport` (other options might work too).
+The `credentials: 'same-origin'` property sends the authentication credentials stored in cookies by an `express` server using `passport` (other options might work too).
 
 ### configureStore.js
 
