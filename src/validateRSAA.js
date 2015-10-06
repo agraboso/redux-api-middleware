@@ -47,7 +47,7 @@ function validateRSAA(action) {
     return validationErrors;
   }
   for (let key in action) {
-    if (!validRootKeys.includes(key)) {
+    if (!~validRootKeys.indexOf(key)) {
       validationErrors.push(`Invalid root key: ${key}`);
     }
     if (validationErrors.length) {
@@ -59,7 +59,7 @@ function validateRSAA(action) {
     return validationErrors;
   }
   for (let key in callAPI) {
-    if (!validCallAPIKeys.includes(key)) {
+    if (!~validCallAPIKeys.indexOf(key)) {
       validationErrors.push(`Invalid [CALL_API] key: ${key}`);
     }
     if (validationErrors.length) {
@@ -73,7 +73,7 @@ function validateRSAA(action) {
   }
   if (typeof method !== 'string') {
     validationErrors.push('[CALL_API].method property must be a string');
-  } else if (!validMethods.includes(method.toUpperCase())) {
+  } else if (!~validMethods.indexOf(method.toUpperCase())) {
     validationErrors.push(`Invalid [CALL_API].method: ${method.toUpperCase()}`);
   }
   if (!Array.isArray(types) || types.length !== 3) {
