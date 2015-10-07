@@ -8,12 +8,13 @@ import ApiError from './ApiError';
  * @access private
  * @param {string} endpoint - The URL endpoint for the request
  * @param {string} method - The HTTP method for the request
- * @param {boolean} [auth=false] - Whether to send authentication credentials or not
+ * @param {object} [headers] - The HTTP headers for the request
+ * @param {string} [credentials] - Whether to send authentication credentials or not
  * @param {Object} [body] - The body of the request
  * @returns {Promise}
  */
-function callApi(endpoint, method, headers, body) {
-  const requestOptions = { method, body, headers }
+function callApi(endpoint, method, headers, credentials, body) {
+  const requestOptions = { method, body, headers, credentials }
 
   return fetch(endpoint, requestOptions)
     .then((response) => {
