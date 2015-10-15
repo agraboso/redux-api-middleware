@@ -1,7 +1,7 @@
 /**
  * Symbol key that carries API call info interpreted by this Redux middleware.
  *
- * @constant {Symbol}
+ * @constant {symbol}
  * @access public
  * @default
  */
