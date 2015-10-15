@@ -1,17 +1,47 @@
 /**
  * Redux middleware for calling an API
- * @module apiMiddleware
- * @requires normalizr
+ * @module redux-api-middleware
  * @requires isomorphic-fetch
- * @exports {Symbol} CALL_API
+ * @requires lodash.isplainobject
+ * @exports {symbol} CALL_API
  * @exports {function} isRSAA
+ * @exports {function} validateRSAA
+ * @exports {function} isValidRSAA
+ * @exports {error} InvalidRSAA
+ * @exports {error} RequestError
+ * @exports {error} ApiError
+ * @exports {function} getJSON
  * @exports {ReduxMiddleWare} apiMiddleware
  */
 
+/**
+ * @typedef {function} ReduxMiddleware
+ * @param {object} store
+ * @returns {ReduxNextHandler}
+ *
+ * @typedef {function} ReduxNextHandler
+ * @param {function} next
+ * @returns {ReduxActionHandler}
+ *
+ * @typedef {function} ReduxActionHandler
+ * @param {object} action
+ * @returns undefined
+ */
 
 import CALL_API from './CALL_API';
-import validateRSAA from './validateRSAA';
-import isRSAA from './isRSAA';
-import apiMiddleware from './apiMiddleware';
+import { isRSAA, validateRSAA, isValidRSAA } from './validation';
+import { InvalidRSAA, RequestError, ApiError } from './errors';
+import { getJSON } from './util';
+import { apiMiddleware } from './middleware';
 
-export { CALL_API, validateRSAA, isRSAA, apiMiddleware };
+export {
+  CALL_API,
+  isRSAA,
+  validateRSAA,
+  isValidRSAA,
+  InvalidRSAA,
+  RequestError,
+  ApiError,
+  getJSON,
+  apiMiddleware
+};
