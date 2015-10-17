@@ -92,14 +92,15 @@ function apiMiddleware({ getState }) {
       }
     }
 
+    // We can now dispatch the request FSA
+    next(await actionWith(
+      requestType,
+      [action, getState()]
+    ));
+
     try {
       // Make the API call
       var res = await fetch(endpoint, { method, body, credentials, headers });
-
-      next(await actionWith(
-        requestType,
-        [action, getState()]
-      ));
     } catch(e) {
       // The request was malformed, or there was a network error
       return next(await actionWith(
