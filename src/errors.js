@@ -15,6 +15,21 @@ class InvalidRSAA extends Error {
 }
 
 /**
+ * Error class for a custom `payload` or `meta` function throwing
+ *
+ * @class InternalError
+ * @access public
+ * @param {string} message - the error message
+ */
+class InternalError extends Error {
+  constructor(message) {
+    super();
+    this.name = 'InternalError';
+    this.message = message;
+  }
+}
+
+/**
  * Error class for an error raised trying to make an API call
  *
  * @class RequestError
@@ -50,4 +65,4 @@ class ApiError extends Error {
   }
 }
 
-export { InvalidRSAA, RequestError, ApiError };
+export { InvalidRSAA, InternalError, RequestError, ApiError };

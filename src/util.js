@@ -1,4 +1,4 @@
-import { ApiError } from './errors';
+import { InternalError, ApiError } from './errors';
 
 /**
  * Extract JSON body from a server response
@@ -66,19 +66,30 @@ function normalizeTypeDescriptors(types) {
  * @returns {object}
  */
 async function actionWith(descriptor, args) {
-  return {
-    ...descriptor,
-    payload: await (
+  try {
+    descriptor.payload = await (
       typeof descriptor.payload === 'function' ?
       descriptor.payload(...args) :
       descriptor.payload
-    ),
-    meta: await (
+    );
+  } catch (e) {
+    descriptor.payload = new InternalError(e.message);
+    descriptor.error = true;
+  }
+
+  try {
+    descriptor.meta = await (
       typeof descriptor.meta === 'function' ?
       descriptor.meta(...args) :
       descriptor.meta
-    )
-  };
+    );
+  } catch (e) {
+    delete descriptor.meta;
+    descriptor.payload = new InternalError(e.message);
+    descriptor.error = true;
+  }
+
+  return descriptor;
 }
 
 export { getJSON, normalizeTypeDescriptors, actionWith };

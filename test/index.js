@@ -4,7 +4,7 @@ import nock from 'nock';
 
 import CALL_API from '../src/CALL_API';
 import { isRSAA, isValidTypeDescriptor, validateRSAA, isValidRSAA } from '../src/validation';
-import { InvalidRSAA, RequestError, ApiError } from '../src/errors';
+import { InvalidRSAA, InternalError, RequestError, ApiError } from '../src/errors';
 import { getJSON, normalizeTypeDescriptors, actionWith } from '../src/util';
 import { apiMiddleware } from '../src/middleware';
 
@@ -500,6 +500,27 @@ test('InvalidRSAA', (t) => {
   t.end();
 });
 
+test('InternalError', (t) => {
+  const error = new InternalError('error thrown in payload function');
+
+  t.ok(
+    error instanceof Error,
+    'is an error object'
+  );
+  t.equal(
+    error.name,
+    'InternalError',
+    'has correct name property'
+  );
+  t.equal(
+    error.message,
+    'error thrown in payload function',
+    'has correct message'
+  );
+
+  t.end();
+});
+
 test('RequestError', (t) => {
   const error = new RequestError('Network request failed');
 
@@ -691,8 +712,6 @@ test('normalizeTypeDescriptors', (t) => {
 });
 
 test('actionWith', async (t) => {
-  t.plan(8);
-
   const descriptor1 = {
     type: 'REQUEST',
     payload: 'somePayload',
@@ -739,8 +758,44 @@ test('actionWith', async (t) => {
         'meta function must receive its arguments'
       );
     }
-  }
+  };
   const fsa2 = await actionWith(descriptor2, passedArgs);
+
+  const descriptor3 = {
+    type: 'REQUEST',
+    payload: (...args) => {
+      throw new Error('error in payload function');
+    }
+  };
+  const fsa3 = await actionWith(descriptor3, passedArgs);
+  t.equal(
+    fsa3.payload.message,
+    'error in payload function',
+    'must set FSA payload property to an error if a custom payload function throws'
+  );
+  t.ok(
+    fsa3.error,
+    'must set FSA error property to true if a custom payload function throws'
+  );
+
+  const descriptor4 = {
+    type: 'REQUEST',
+    meta: (...args) => {
+      throw new Error('error in meta function');
+    }
+  };
+  const fsa4 = await actionWith(descriptor4, passedArgs);
+  t.equal(
+    fsa4.payload.message,
+    'error in meta function',
+    'must set FSA payload property to an error if a custom meta function throws'
+  );
+  t.ok(
+    fsa4.error,
+    'must set FSA error property to true if a custom meta function throws'
+  );
+
+  t.end();
 });
 
 test('apiMiddleware must be a Redux middleware', (t) => {

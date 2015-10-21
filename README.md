@@ -218,6 +218,8 @@ A *type descriptor* is a plain JavaScript object that will be used as a blueprin
 
 They may also have `payload` and `meta` properties, which may be of any type. Functions passed as `payload` and `meta` properties of type descriptors will be evaluated at runtime. The signature of these functions should be different depending on whether the type descriptor refers to *request*, *success* or *failure* FSAs &mdash; keep reading.
 
+If a custom `payload` and `meta` function throws an error, `redux-api-middleware` will dispatch an FSA with its `error` property set to `true`, and an `InternalError` object as its `payload`.
+
 A noteworthy feature of `redux-api-middleware` is that it accepts Promises (or function that return them) in `payload` and `meta` properties of type descriptors, and it will wait for them to resolve before dispatching the FSA &mdash; so no need to use anything like `redux-promise`.
 
 #### *Request* type descriptors
@@ -423,6 +425,15 @@ An error class extending the native `Error` object. Its constructor takes an arr
 - `name: 'InvalidRSAA'`;
 - `validationErrors`: the argument of the call to its constructor; and
 - `message: 'Invalid RSAA'`.
+
+#### `InternalError`
+
+An error class extending the native `Error` object. Its constructor takes a string, intended to contain an error message.
+
+`InternalError` objects have two properties:
+
+- `name: 'InternalError'`;
+- `message`: the argument of the call to its constructor.
 
 #### `RequestError`
 

@@ -8,6 +8,7 @@
  * @exports {function} validateRSAA
  * @exports {function} isValidRSAA
  * @exports {error} InvalidRSAA
+ * @exports {error} InternalError
  * @exports {error} RequestError
  * @exports {error} ApiError
  * @exports {function} getJSON
@@ -30,7 +31,7 @@
 
 import CALL_API from './CALL_API';
 import { isRSAA, validateRSAA, isValidRSAA } from './validation';
-import { InvalidRSAA, RequestError, ApiError } from './errors';
+import { InvalidRSAA, InternalError, RequestError, ApiError } from './errors';
 import { getJSON } from './util';
 import { apiMiddleware } from './middleware';
 
@@ -40,6 +41,7 @@ export {
   validateRSAA,
   isValidRSAA,
   InvalidRSAA,
+  InternalError,
   RequestError,
   ApiError,
   getJSON,
