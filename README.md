@@ -28,7 +28,7 @@ redux-api-middleware
 
 This middleware receives [*Redux Standard API-calling Actions*](#redux-standard-api-calling-actions) (RSAAs) and dispatches [*Flux Standard Actions*](#flux-standard-actions) (FSAs) to the next middleware.
 
-RSAAs are identified by the presence a `[CALL_API]` property, where [`CALL_API`](#call_api) is a `Symbol` defined in, and exported by `redux-api-middleware`. They contain information describing an API call and three different types of FSAs, known as the *request*, *success* and *failure* FSAs.
+RSAAs are identified by the presence of a `[CALL_API]` property, where [`CALL_API`](#call_api) is a `Symbol` defined in, and exported by `redux-api-middleware`. They contain information describing an API call and three different types of FSAs, known as the *request*, *success* and *failure* FSAs.
 
 ### A simple example
 
@@ -179,7 +179,7 @@ A more useful possibility is to give `[CALL_API].bailout` a function. At runtime
 
 The `[CALL_API].types` property controls the output of `redux-api-middleware`. The simplest form it can take is an array of length 3 consisting of string constants (or symbols), as in our [example](#a-simple-example) above. This results in the default behavior we now describe.
 
-1. When `redux-api-middleware` receives an action, if first checks whether it has a `[CALL_API]` property. If it does not, it was clearly not intended for processing with `redux-api-middleware`, and so it is unceremoniously passed on to the next middleware.
+1. When `redux-api-middleware` receives an action, it first checks whether it has a `[CALL_API]` property. If it does not, it was clearly not intended for processing with `redux-api-middleware`, and so it is unceremoniously passed on to the next middleware.
 
 2. It is now time to validate the action against the [RSAA definition](#redux-standard-api-calling-actions). If there are any validation errors, a *request* FSA will be dispatched (if at all possible) with the following properties:
     - `type`: the string constant in the first position of the `[CALL_API].types` array;
@@ -201,7 +201,7 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
     - `payload`: a [`RequestError`](#requesterror) object containing an error message;
     - `error: true`.
 
-4. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will dispatched with the following properties:
+4. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
   - `type`: the string constant in the second position of the `[CALL_API].types` array;
   - `payload`: if the `Content-Type` header of the response is set to something JSONy (see [*Success* type descriptors](#success-type-descriptors) below), the parsed JSON response of the server, or undefined otherwise.
 
@@ -214,7 +214,7 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
 
 It is possible to customize the output of `redux-api-middleware` by replacing one or more of the string constants (or symbols) in `[CALL_API].types` by a type descriptor.
 
-A *type descriptor* is a plain JavaScript object that will be used as a blueprint for the dispatched FSAs. As such, types descriptors must have a `type` property, intended to house the string constant or symbol specifying the `type` of the resulting FSAs.
+A *type descriptor* is a plain JavaScript object that will be used as a blueprint for the dispatched FSAs. As such, type descriptors must have a `type` property, intended to house the string constant or symbol specifying the `type` of the resulting FSAs.
 
 They may also have `payload` and `meta` properties, which may be of any type. Functions passed as `payload` and `meta` properties of type descriptors will be evaluated at runtime. The signature of these functions should be different depending on whether the type descriptor refers to *request*, *success* or *failure* FSAs &mdash; keep reading.
 
