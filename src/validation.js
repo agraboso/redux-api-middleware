@@ -95,11 +95,6 @@ function validateRSAA(action) {
   if (!isPlainObject(callAPI)) {
     validationErrors.push('[CALL_API] property must be a plain JavaScript object');
   }
-  for (let key in callAPI) {
-    if (!~validCallAPIKeys.indexOf(key)) {
-      validationErrors.push(`Invalid [CALL_API] key: ${key}`);
-    }
-  }
 
   const { endpoint, method, headers, credentials, types, bailout } = callAPI;
   if (typeof endpoint === 'undefined') {
