@@ -1097,11 +1097,15 @@ test('apiMiddleware must dispatch an error request FSA on a request error', (t) 
       types: [
         {
           type: 'REQUEST',
-          payload: 'ignoredPayload',
-          meta: 'someMeta'
+          payload: 'someRequestPayload',
+          meta: 'someRequestMeta'
         },
         'SUCCESS',
-        'FAILURE'
+        {
+          type: 'FAILURE',
+          payload: 'ignoredFailurePayload',
+          meta: 'someFailureMeta'
+        }
       ]
     }
   };
@@ -1110,50 +1114,49 @@ test('apiMiddleware must dispatch an error request FSA on a request error', (t) 
   const doNext = (action) => {
     switch (action.type) {
     case 'REQUEST':
-      if (!action.error) {
-        t.pass('next handler called');
-        t.equal(
-          action.type,
-          'REQUEST',
-          'dispatched non-error FSA has correct type property'
-        );
-        t.equal(
-          action.payload,
-          'ignoredPayload',
-          'dispatched non-error FSA has correct payload property'
-        );
-        t.equal(
-          action.meta,
-          'someMeta',
-          'dispatched non-error FSA has correct meta property'
-        );
-        t.notOk(
-          action.error,
-          'dispatched non-error FSA has correct error property'
-        );
-        break;
-      } else {
-        t.pass('next handler called');
-        t.equal(
-          action.type,
-          'REQUEST',
-          'dispatched error FSA has correct type property'
-        );
-        t.equal(
-          action.payload.name,
-          'RequestError',
-          'dispatched error FSA has correct payload property'
-        );
-        t.equal(
-          action.meta,
-          'someMeta',
-          'dispatched error FSA has correct meta property'
-        );
-        t.ok(
-          action.error,
-          'dispatched error FSA has correct error property'
-        );
-      }
+      t.pass('next handler called');
+      t.equal(
+        action.type,
+        'REQUEST',
+        'dispatched request FSA has correct type property'
+      );
+      t.equal(
+        action.payload,
+        'someRequestPayload',
+        'dispatched request FSA has correct payload property'
+      );
+      t.equal(
+        action.meta,
+        'someRequestMeta',
+        'dispatched request FSA has correct meta property'
+      );
+      t.notOk(
+        action.error,
+        'dispatched request FSA has correct error property'
+      );
+      break;
+    case 'FAILURE':
+      t.pass('next handler called');
+      t.equal(
+        action.type,
+        'FAILURE',
+        'dispatched failure FSA has correct type property'
+      );
+      t.equal(
+        action.payload.name,
+        'RequestError',
+        'dispatched failure FSA has correct payload property'
+      );
+      t.equal(
+        action.meta,
+        'someFailureMeta',
+        'dispatched failure FSA has correct meta property'
+      );
+      t.ok(
+        action.error,
+        'dispatched failure FSA has correct error property'
+      );
+      break;
     }
   };
   const actionHandler = nextHandler(doNext);
