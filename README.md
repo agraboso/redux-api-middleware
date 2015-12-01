@@ -188,20 +188,26 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
 
   `redux-api-middleware` will perform no further operations. In particular, no API call will be made, and the incoming RSAA will die here.
 
-3. Now that `redux-api-middleware` is sure it has received a valid RSAA, it will try making the API call. If everything is alright, a *request* FSA will be dispatched with the following property:
-  - `type`: the string constant in the first position of the `[CALL_API].types` array.
-
-  But errors may pop up at this stage, for several reasons:
-  - `redux-api-middleware` has to call those of `[CALL_API].bailout`, `[CALL_API].endpoint` and `[CALL_API].headers` that happen to be a function, which may throw an error;
-  - `isomorphic-fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[CALL_API].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
-  - a network failure occurs (the network is unreachable, the server responds with an error,...).
-
-  If such an error occurs, a different *request* FSA will be dispatched (*instead* of the one described above). It will contain the following properties:
+3. Next, `redux-api-middleware` prepares the API call and has to call those of `[CALL_API].bailout`, `[CALL_API].endpoint` and `[CALL_API].headers` that happen to be a function. If any of these throw an error, a *request* FSA will be dispatched with the following properties:
     - `type`: the string constant in the first position of the `[CALL_API].types` array;
     - `payload`: a [`RequestError`](#requesterror) object containing an error message;
     - `error: true`.
 
-4. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
+  Processing stops here and `redux-api-middleware` will perform no further operations. In particular, no API call will be made, and the incoming RSAA will die here.
+
+4. Now that `redux-api-middleware` is sure it has received a valid RSAA, and has successfully prepared the API call, it will try making the API call. A *request* FSA will be dispatched with the following property:
+  - `type`: the string constant in the first position of the `[CALL_API].types` array.
+
+  But errors may pop up at this stage, for several reasons:
+  - `isomorphic-fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[CALL_API].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
+  - a network failure occurs (the network is unreachable, the server responds with an error,...).
+
+  If such an error occurs, a *failure* FSA will be dispatched (after the *request* FSA described above) and processing stops here. The FSA will contain the following properties:
+    - `type`: the string constant in the third position of the `[CALL_API].types` array;
+    - `payload`: a [`RequestError`](#requesterror) object containing an error message;
+    - `error: true`.
+
+5. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
   - `type`: the string constant in the second position of the `[CALL_API].types` array;
   - `payload`: if the `Content-Type` header of the response is set to something JSONy (see [*Success* type descriptors](#success-type-descriptors) below), the parsed JSON response of the server, or undefined otherwise.
 
@@ -282,7 +288,7 @@ By default, *request* FSAs will not contain `payload` and `meta` properties.
 
 Error *request* FSAs might need to obviate these custom settings though.
   - *Request* FSAs resulting from invalid RSAAs (step 2 in [Lifecycle](#lifecycle) above) cannot be customized. `redux-api-middleware` will try to dispatch an error *request* FSA, but it might not be able to (it may happen that the invalid RSAA does not contain a value that can be used as the *request* FSA `type` property, in which case `redux-api-middleware` will let the RSAA die silently).
-  - *Request* FSAs resulting in request errors (step 3 in [Lifecycle](#lifecycle) above) will honor the user-provided `meta`, but will ignore the user-provided `payload`, which is reserved for the default error object.
+  - *Request* FSAs resulting from errors while preparing the API call (step 3 in [Lifecycle](#lifecycle) above) will honor the user-provided `meta`, but will ignore the user-provided `payload`, which is reserved for the default error object.
 
 #### *Success* type descriptors
 
@@ -351,7 +357,7 @@ By default, *success* FSAs will not contain a `meta` property, while their `payl
 
 #### *Failure* type descriptors
 
-`payload` and `meta` functions will be passed the RSAA action itself, the state of your Redux store, and the raw server response &mdash; exactly as for *success* type descriptors. The `error` property of dispatched *failure* FSAs will always be set to `true`.
+`payload` and `meta` functions will be passed the RSAA action itself, the state of your Redux store, and the raw server response if available. The `error` property of dispatched *failure* FSAs will always be set to `true`.
 
 For example, if you want the status code and status message of a unsuccessful API call in the `meta` property of your *failure* FSA, do the following.
 
@@ -382,6 +388,7 @@ For example, if you want the status code and status message of a unsuccessful AP
   }
 }
 ```
+
 By default, *failure* FSAs will not contain a `meta` property, while their `payload` property will be evaluated from
 ```js
 (action, state, res) =>
@@ -389,6 +396,9 @@ By default, *failure* FSAs will not contain a `meta` property, while their `payl
     (json) => new ApiError(res.status, res.statusText, json)
   )
 ```
+
+*Failure* FSAs without a server response need to obviate these custom settings though.
+  - *Failure* FSAs resulting from network failures or errors thrown by `isomorphic-fetch` (step 4 in [Lifecycle](#lifecycle) above) will honor the user-provided `meta`, but will ignore the user-provided `payload`, which is reserved for the default error object.
 
 ## Reference
 

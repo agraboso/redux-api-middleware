@@ -97,6 +97,8 @@ function apiMiddleware({ getState }) {
       requestType,
       [action, getState()]
     ));
+    // As we have dispatched the request FSA, all other
+    // dispatches must now be either success or failure
 
     try {
       // Make the API call
@@ -105,7 +107,7 @@ function apiMiddleware({ getState }) {
       // The request was malformed, or there was a network error
       return next(await actionWith(
         {
-          ...requestType,
+          ...failureType,
           payload: new RequestError(e.message),
           error: true
         },
