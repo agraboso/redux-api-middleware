@@ -103,7 +103,7 @@ function apiMiddleware({ getState }) {
       var res = await fetch(endpoint, { 
         method,
         // Stringify body if needed
-        body: typeof body === 'string' ? body : JSON.stringify(body),
+        body: typeof body === 'undefined' || typeof body === 'string' ? body : JSON.stringify(body),
         credentials,
         headers
       });
