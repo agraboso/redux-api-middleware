@@ -171,9 +171,9 @@ It must be one of the following strings:
 
 In some cases, the data you would like to fetch from the server may already be cached in you Redux store. Or you may decide that the current user does not have the necessary permissions to make some request.
 
-You can tell `redux-api-middleware` to not make the API call through `[CALL_API].bailout`. You can set this property to a boolean value, and `redux-api-middleware` will bail out if it is `false`: the RSAA will die here, and no FSA will be passed on to the next middleware.
+You can tell `redux-api-middleware` to not make the API call through `[CALL_API].bailout`. If the value is `true`, the RSAA will die here, and no FSA will be passed on to the next middleware.
 
-A more useful possibility is to give `[CALL_API].bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, and the truthiness of its return value will be used to determine whether to make the call or not.
+A more useful possibility is to give `[CALL_API].bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, if the return value of the function is `true`, the API call will not be made.
 
 ### Lifecycle
 
