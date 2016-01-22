@@ -292,7 +292,7 @@ For example, if you want to process the JSON response of the server using [`norm
 
 ```js
 import { Schema, arrayOf } from 'normalizr';
-const schema = new Schema('user');
+const user = new Schema('user');
 
 // Input RSAA
 {
