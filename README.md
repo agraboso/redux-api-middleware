@@ -518,7 +518,7 @@ A *Redux Standard API-calling Action* MUST
 
 A *Redux Standard API-calling Action* MUST NOT
 
-- include properties other than `[CALL-API]`.
+- include properties other than `[CALL_API]`.
 
 #### `[CALL_API]`
 
