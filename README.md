@@ -197,18 +197,18 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
   If such an error occurs, a different *request* FSA will be dispatched (*instead* of the one described above). It will contain the following properties:
-    - `type`: the string constant in the first position of the `[CALL_API].types` array;
-    - `payload`: a [`RequestError`](#requesterror) object containing an error message;
-    - `error: true`.
+  - `type`: the string constant in the first position of the `[CALL_API].types` array;
+  - `payload`: a [`RequestError`](#requesterror) object containing an error message;
+  - `error: true`.
 
 4. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
   - `type`: the string constant in the second position of the `[CALL_API].types` array;
   - `payload`: if the `Content-Type` header of the response is set to something JSONy (see [*Success* type descriptors](#success-type-descriptors) below), the parsed JSON response of the server, or undefined otherwise.
 
   If the status code of the response falls outside that 200 range, a *failure* FSA will dispatched instead, with the following properties:
-    - `type`: the string constant in the third position of the `[CALL_API].types` array;
-    - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
-    - `error: true`.
+  - `type`: the string constant in the third position of the `[CALL_API].types` array;
+  - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
+  - `error: true`.
 
 ### Customizing the dispatched FSAs
 
