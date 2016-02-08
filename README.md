@@ -291,8 +291,8 @@ Error *request* FSAs might need to obviate these custom settings though.
 For example, if you want to process the JSON response of the server using [`normalizr`](https://github.com/gaearon/normalizr), you can do it as follows.
 
 ```js
-import { Schema, arrayOf } from 'normalizr';
-const schema = new Schema('user');
+import { Schema, arrayOf, normalize } from 'normalizr';
+const userSchema = new Schema('users');
 
 // Input RSAA
 {
@@ -307,7 +307,7 @@ const schema = new Schema('user');
           const contentType = res.headers.get('Content-Type');
           if (contentType && ~contentType.indexOf('json')) {
             // Just making sure res.json() does not raise an error
-            return res.json().then((json) => normalize(json, { users: arrayOf(user) }));
+            return res.json().then((json) => normalize(json, { users: arrayOf(userSchema) }));
           }
         }
       },
@@ -340,7 +340,7 @@ const schema = new Schema('user');
 The above pattern of parsing the JSON body of the server response is probably quite common, so `redux-api-middleware` exports a utility function `getJSON` which allows for the above `payload` function to be written as
 ```js
 (action, state, res) => {
-  getJSON(res).then((json) => normalize(json, { users: arrayOf(user) }));
+  getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
 }
 ```
 
