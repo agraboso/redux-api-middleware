@@ -197,18 +197,18 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
   If such an error occurs, a different *request* FSA will be dispatched (*instead* of the one described above). It will contain the following properties:
-    - `type`: the string constant in the first position of the `[CALL_API].types` array;
-    - `payload`: a [`RequestError`](#requesterror) object containing an error message;
-    - `error: true`.
+  - `type`: the string constant in the first position of the `[CALL_API].types` array;
+  - `payload`: a [`RequestError`](#requesterror) object containing an error message;
+  - `error: true`.
 
 4. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
   - `type`: the string constant in the second position of the `[CALL_API].types` array;
   - `payload`: if the `Content-Type` header of the response is set to something JSONy (see [*Success* type descriptors](#success-type-descriptors) below), the parsed JSON response of the server, or undefined otherwise.
 
   If the status code of the response falls outside that 200 range, a *failure* FSA will dispatched instead, with the following properties:
-    - `type`: the string constant in the third position of the `[CALL_API].types` array;
-    - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
-    - `error: true`.
+  - `type`: the string constant in the third position of the `[CALL_API].types` array;
+  - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
+  - `error: true`.
 
 ### Customizing the dispatched FSAs
 
@@ -291,8 +291,8 @@ Error *request* FSAs might need to obviate these custom settings though.
 For example, if you want to process the JSON response of the server using [`normalizr`](https://github.com/gaearon/normalizr), you can do it as follows.
 
 ```js
-import { Schema, arrayOf } from 'normalizr';
-const schema = new Schema('user');
+import { Schema, arrayOf, normalize } from 'normalizr';
+const userSchema = new Schema('users');
 
 // Input RSAA
 {
@@ -307,7 +307,7 @@ const schema = new Schema('user');
           const contentType = res.headers.get('Content-Type');
           if (contentType && ~contentType.indexOf('json')) {
             // Just making sure res.json() does not raise an error
-            return res.json().then((json) => normalize(json, { users: arrayOf(user) }));
+            return res.json().then((json) => normalize(json, { users: arrayOf(userSchema) }));
           }
         }
       },
@@ -340,7 +340,7 @@ const schema = new Schema('user');
 The above pattern of parsing the JSON body of the server response is probably quite common, so `redux-api-middleware` exports a utility function `getJSON` which allows for the above `payload` function to be written as
 ```js
 (action, state, res) => {
-  getJSON(res).then((json) => normalize(json, { users: arrayOf(user) }));
+  getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
 }
 ```
 
@@ -518,7 +518,7 @@ A *Redux Standard API-calling Action* MUST
 
 A *Redux Standard API-calling Action* MUST NOT
 
-- include properties other than `[CALL-API]`.
+- include properties other than `[CALL_API]`.
 
 #### `[CALL_API]`
 
