@@ -171,9 +171,9 @@ It must be one of the following strings:
 
 In some cases, the data you would like to fetch from the server may already be cached in you Redux store. Or you may decide that the current user does not have the necessary permissions to make some request.
 
-You can tell `redux-api-middleware` to not make the API call through `[CALL_API].bailout`. You can set this property to a boolean value, and `redux-api-middleware` will bail out if it is `false`: the RSAA will die here, and no FSA will be passed on to the next middleware.
+You can tell `redux-api-middleware` to not make the API call through `[CALL_API].bailout`. If the value is `true`, the RSAA will die here, and no FSA will be passed on to the next middleware.
 
-A more useful possibility is to give `[CALL_API].bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, and the truthiness of its return value will be used to determine whether to make the call or not.
+A more useful possibility is to give `[CALL_API].bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, if the return value of the function is `true`, the API call will not be made.
 
 ### Lifecycle
 
@@ -182,16 +182,16 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
 1. When `redux-api-middleware` receives an action, it first checks whether it has a `[CALL_API]` property. If it does not, it was clearly not intended for processing with `redux-api-middleware`, and so it is unceremoniously passed on to the next middleware.
 
 2. It is now time to validate the action against the [RSAA definition](#redux-standard-api-calling-actions). If there are any validation errors, a *request* FSA will be dispatched (if at all possible) with the following properties:
-    - `type`: the string constant in the first position of the `[CALL_API].types` array;
-    - `payload`: an [`InvalidRSAA`](#invalidrsaa) object containing a list of said validation errors;
-    - `error: true`.
+  - `type`: the string constant in the first position of the `[CALL_API].types` array;
+  - `payload`: an [`InvalidRSAA`](#invalidrsaa) object containing a list of said validation errors;
+  - `error: true`.
 
   `redux-api-middleware` will perform no further operations. In particular, no API call will be made, and the incoming RSAA will die here.
 
 3. Next, `redux-api-middleware` prepares the API call and has to call those of `[CALL_API].bailout`, `[CALL_API].endpoint` and `[CALL_API].headers` that happen to be a function. If any of these throw an error, a *request* FSA will be dispatched with the following properties:
-    - `type`: the string constant in the first position of the `[CALL_API].types` array;
-    - `payload`: a [`RequestError`](#requesterror) object containing an error message;
-    - `error: true`.
+  - `type`: the string constant in the first position of the `[CALL_API].types` array;
+  - `payload`: a [`RequestError`](#requesterror) object containing an error message;
+  - `error: true`.
 
   Processing stops here and `redux-api-middleware` will perform no further operations. In particular, no API call will be made, and the incoming RSAA will die here.
 
@@ -203,18 +203,18 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
   If such an error occurs, a *failure* FSA will be dispatched (after the *request* FSA described above) and processing stops here. The FSA will contain the following properties:
-    - `type`: the string constant in the third position of the `[CALL_API].types` array;
-    - `payload`: a [`RequestError`](#requesterror) object containing an error message;
-    - `error: true`.
+  - `type`: the string constant in the third position of the `[CALL_API].types` array;
+  - `payload`: a [`RequestError`](#requesterror) object containing an error message;
+  - `error: true`.
 
 5. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
   - `type`: the string constant in the second position of the `[CALL_API].types` array;
   - `payload`: if the `Content-Type` header of the response is set to something JSONy (see [*Success* type descriptors](#success-type-descriptors) below), the parsed JSON response of the server, or undefined otherwise.
 
   If the status code of the response falls outside that 200 range, a *failure* FSA will dispatched instead, with the following properties:
-    - `type`: the string constant in the third position of the `[CALL_API].types` array;
-    - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
-    - `error: true`.
+  - `type`: the string constant in the third position of the `[CALL_API].types` array;
+  - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
+  - `error: true`.
 
 ### Customizing the dispatched FSAs
 
@@ -297,8 +297,8 @@ Error *request* FSAs might need to obviate these custom settings though.
 For example, if you want to process the JSON response of the server using [`normalizr`](https://github.com/gaearon/normalizr), you can do it as follows.
 
 ```js
-import { Schema, arrayOf } from 'normalizr';
-const schema = new Schema('user');
+import { Schema, arrayOf, normalize } from 'normalizr';
+const userSchema = new Schema('users');
 
 // Input RSAA
 {
@@ -313,7 +313,7 @@ const schema = new Schema('user');
           const contentType = res.headers.get('Content-Type');
           if (contentType && ~contentType.indexOf('json')) {
             // Just making sure res.json() does not raise an error
-            return res.json().then((json) => normalize(json, { users: arrayOf(user) }));
+            return res.json().then((json) => normalize(json, { users: arrayOf(userSchema) }));
           }
         }
       },
@@ -346,7 +346,7 @@ const schema = new Schema('user');
 The above pattern of parsing the JSON body of the server response is probably quite common, so `redux-api-middleware` exports a utility function `getJSON` which allows for the above `payload` function to be written as
 ```js
 (action, state, res) => {
-  getJSON(res).then((json) => normalize(json, { users: arrayOf(user) }));
+  getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
 }
 ```
 
@@ -528,7 +528,7 @@ A *Redux Standard API-calling Action* MUST
 
 A *Redux Standard API-calling Action* MUST NOT
 
-- include properties other than `[CALL-API]`.
+- include properties other than `[CALL_API]`.
 
 #### `[CALL_API]`
 
