@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
 
-import CALL_API from './CALL_API';
+import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
 import { InvalidRSAA, RequestError, ApiError } from './errors' ;
 import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
@@ -14,7 +14,7 @@ import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
  */
 function apiMiddleware({ getState }) {
   return (next) => async (action) => {
-    // Do not process actions without a [CALL_API] property
+    // Do not process actions without an [RSAA] property
     if (!isRSAA(action)) {
       return next(action);
     }
@@ -22,7 +22,7 @@ function apiMiddleware({ getState }) {
     // Try to dispatch an error request FSA for invalid RSAAs
     const validationErrors = validateRSAA(action);
     if (validationErrors.length) {
-      const callAPI = action[CALL_API];
+      const callAPI = action[RSAA];
       if (callAPI.types && Array.isArray(callAPI.types)) {
         let requestType = callAPI.types[0];
         if (requestType && requestType.type) {
@@ -38,7 +38,7 @@ function apiMiddleware({ getState }) {
     }
 
     // Parse the validated RSAA action
-    const callAPI = action[CALL_API];
+    const callAPI = action[RSAA];
     var { endpoint, headers } = callAPI;
     const { method, body, credentials, bailout, types } = callAPI;
     const [requestType, successType, failureType] = normalizeTypeDescriptors(types);
@@ -53,14 +53,14 @@ function apiMiddleware({ getState }) {
       return next(await actionWith(
         {
           ...requestType,
-          payload: new RequestError('[CALL_API].bailout function failed'),
+          payload: new RequestError('[RSAA].bailout function failed'),
           error: true
         },
         [action, getState()]
       ));
     }
 
-    // Process [CALL_API].endpoint function
+    // Process [RSAA].endpoint function
     if (typeof endpoint === 'function') {
       try {
         endpoint = endpoint(getState());
@@ -68,7 +68,7 @@ function apiMiddleware({ getState }) {
         return next(await actionWith(
           {
             ...requestType,
-            payload: new RequestError('[CALL_API].endpoint function failed'),
+            payload: new RequestError('[RSAA].endpoint function failed'),
             error: true
           },
           [action, getState()]
@@ -76,7 +76,7 @@ function apiMiddleware({ getState }) {
       }
     }
 
-    // Process [CALL_API].headers function
+    // Process [RSAA].headers function
     if (typeof headers === 'function') {
       try {
         headers = headers(getState());
@@ -84,7 +84,7 @@ function apiMiddleware({ getState }) {
         return next(await actionWith(
           {
             ...requestType,
-            payload: new RequestError('[CALL_API].headers function failed'),
+            payload: new RequestError('[RSAA].headers function failed'),
             error: true
           },
           [action, getState()]
