@@ -598,6 +598,12 @@ $ npm install && npm test
 
 MIT
 
+## Projects using redux-api-middleware
+
+- [react-trebuchet](https://github.com/barrystaes/react-slingshot/tree/test-bottlesapi-apimiddleware) (experimental/opinionated fork of react-slingshot for SPA frontends using REST JSON API backends)
+
+If your opensource project uses (or works with) `redux-api-middleware` we would be happy to list it here!
+
 ## Acknowledgements
 
 The code in this module was originally extracted from the [real-world](https://github.com/rackt/redux/blob/master/examples/real-world/middleware/api.js) example in the [redux](https://github.com/rackt/redux) repository, due to [Dan Abramov](https://github.com/gaearon). It has evolved thanks to issues filed by, and pull requests contributed by, other developers.
