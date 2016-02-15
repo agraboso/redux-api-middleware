@@ -7,7 +7,7 @@
     "build": "babel src --out-dir lib",
     "clean": "rimraf lib coverage",
     "cover": "babel-node ./node_modules/.bin/babel-istanbul cover test/index.js | tap-spec",
-    "lint": "eslint src test",
+    "lint": "./node_modules/eslint/bin/eslint.js src test",
     "prepublish": "npm run lint && npm test && npm run clean && npm run build",
     "test": "babel-node test/index.js | tap-spec"
   },
