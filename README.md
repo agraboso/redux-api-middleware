@@ -340,7 +340,7 @@ const userSchema = new Schema('users');
 The above pattern of parsing the JSON body of the server response is probably quite common, so `redux-api-middleware` exports a utility function `getJSON` which allows for the above `payload` function to be written as
 ```js
 (action, state, res) => {
-  getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
+  return getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
 }
 ```
 
