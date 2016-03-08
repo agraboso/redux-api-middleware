@@ -1,8 +1,8 @@
-import CALL_API from './CALL_API';
+import RSAA from './RSAA';
 import isPlainObject from 'lodash.isplainobject';
 
 /**
- * Is the given action a plain JavaScript object with a [CALL_API] property?
+ * Is the given action a plain JavaScript object with an [RSAA] property?
  *
  * @function isRSAA
  * @access public
@@ -10,7 +10,7 @@ import isPlainObject from 'lodash.isplainobject';
  * @returns {boolean}
  */
 function isRSAA(action) {
-  return isPlainObject(action) && action.hasOwnProperty(CALL_API);
+  return isPlainObject(action) && action.hasOwnProperty(RSAA);
 }
 
 /**
@@ -81,58 +81,58 @@ function validateRSAA(action) {
   ]
 
   if (!isRSAA(action)) {
-    validationErrors.push('RSAAs must be plain JavaScript objects with a [CALL_API] property');
+    validationErrors.push('RSAAs must be plain JavaScript objects with an [RSAA] property');
     return validationErrors;
   }
 
   for (let key in action) {
-    if (key !== [CALL_API]) {
+    if (key !== RSAA) {
       validationErrors.push(`Invalid root key: ${key}`);
     }
   }
 
-  const callAPI = action[CALL_API];
+  const callAPI = action[RSAA];
   if (!isPlainObject(callAPI)) {
-    validationErrors.push('[CALL_API] property must be a plain JavaScript object');
+    validationErrors.push('[RSAA] property must be a plain JavaScript object');
   }
   for (let key in callAPI) {
     if (!~validCallAPIKeys.indexOf(key)) {
-      validationErrors.push(`Invalid [CALL_API] key: ${key}`);
+      validationErrors.push(`Invalid [RSAA] key: ${key}`);
     }
   }
 
   const { endpoint, method, headers, credentials, types, bailout } = callAPI;
   if (typeof endpoint === 'undefined') {
-    validationErrors.push('[CALL_API] must have an endpoint property');
+    validationErrors.push('[RSAA] must have an endpoint property');
   } else if (typeof endpoint !== 'string' && typeof endpoint !== 'function') {
-    validationErrors.push('[CALL_API].endpoint property must be a string or a function');
+    validationErrors.push('[RSAA].endpoint property must be a string or a function');
   }
   if (typeof method === 'undefined') {
-    validationErrors.push('[CALL_API] must have a method property');
+    validationErrors.push('[RSAA] must have a method property');
   } else if (typeof method !== 'string') {
-    validationErrors.push('[CALL_API].method property must be a string');
+    validationErrors.push('[RSAA].method property must be a string');
   } else if (!~validMethods.indexOf(method.toUpperCase())) {
-    validationErrors.push(`Invalid [CALL_API].method: ${method.toUpperCase()}`);
+    validationErrors.push(`Invalid [RSAA].method: ${method.toUpperCase()}`);
   }
 
   if (typeof headers !== 'undefined' && !isPlainObject(headers) && typeof headers !== 'function') {
-    validationErrors.push('[CALL_API].headers property must be undefined, a plain JavaScript object, or a function');
+    validationErrors.push('[RSAA].headers property must be undefined, a plain JavaScript object, or a function');
   }
   if (typeof credentials !== 'undefined') {
     if (typeof credentials !== 'string') {
-      validationErrors.push('[CALL_API].credentials property must be undefined, or a string');
+      validationErrors.push('[RSAA].credentials property must be undefined, or a string');
     } else if (!~validCredentials.indexOf(credentials)) {
-      validationErrors.push(`Invalid [CALL_API].credentials: ${credentials}`);
+      validationErrors.push(`Invalid [RSAA].credentials: ${credentials}`);
     }
   }
   if (typeof bailout !== 'undefined' && typeof bailout !== 'boolean' && typeof bailout !== 'function') {
-    validationErrors.push('[CALL_API].bailout property must be undefined, a boolean, or a function');
+    validationErrors.push('[RSAA].bailout property must be undefined, a boolean, or a function');
   }
 
   if (typeof types === 'undefined') {
-    validationErrors.push('[CALL_API] must have a types property');
+    validationErrors.push('[RSAA] must have a types property');
   } else if (!Array.isArray(types) || types.length !== 3) {
-    validationErrors.push('[CALL_API].types property must be an array of length 3');
+    validationErrors.push('[RSAA].types property must be an array of length 3');
   } else {
     const [requestType, successType, failureType] = types;
     if (typeof requestType !== 'string' && typeof requestType !== 'symbol' && !isValidTypeDescriptor(requestType)) {
