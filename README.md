@@ -1,7 +1,10 @@
 redux-api-middleware
 ====================
 
-[![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=master)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=master&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=master)
+## This `next` branch is 2.0.0-beta in development!
+Aught to be stable but still in development while we iron out bugs. 
+
+[![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=next)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=next&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=next)
 
 [Redux middleware](http://rackt.github.io/redux/docs/advanced/Middleware.html) for calling an API.
 
@@ -340,7 +343,7 @@ const userSchema = new Schema('users');
 The above pattern of parsing the JSON body of the server response is probably quite common, so `redux-api-middleware` exports a utility function `getJSON` which allows for the above `payload` function to be written as
 ```js
 (action, state, res) => {
-  getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
+  return getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
 }
 ```
 
@@ -593,6 +596,10 @@ TODO
 ```
 $ npm install && npm test
 ```
+
+## Upgrading from v1.0.x
+
+TODO
 
 ## License
 

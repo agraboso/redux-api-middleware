@@ -10,8 +10,9 @@ import { InternalError, ApiError } from './errors';
  */
 async function getJSON(res) {
   const contentType = res.headers.get('Content-Type');
+  const emptyCodes = [204, 205];
 
-  if (contentType && ~contentType.indexOf('json')) {
+  if (!~emptyCodes.indexOf(res.status) && contentType && ~contentType.indexOf('json')) {
     return await res.json();
   } else {
     return await Promise.resolve();
