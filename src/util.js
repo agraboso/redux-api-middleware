@@ -25,7 +25,7 @@ async function getJSON(res) {
  *
  * @function normalizeTypeDescriptors
  * @access private
- * @param {array} types - The [CALL_API].types from a validated RSAA
+ * @param {array} types - The [RSAA].types from a validated RSAA
  * @returns {array}
  */
 function normalizeTypeDescriptors(types) {

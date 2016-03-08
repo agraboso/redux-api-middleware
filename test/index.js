@@ -2,7 +2,7 @@ import test from 'tape';
 import { Schema, normalize, arrayOf } from 'normalizr';
 import nock from 'nock';
 
-import CALL_API from '../src/CALL_API';
+import RSAA from '../src/RSAA';
 import { isRSAA, isValidTypeDescriptor, validateRSAA, isValidRSAA } from '../src/validation';
 import { InvalidRSAA, InternalError, RequestError, ApiError } from '../src/errors';
 import { getJSON, normalizeTypeDescriptors, actionWith } from '../src/util';
@@ -18,11 +18,11 @@ test('isRSAA must identify RSAAs', (t) => {
   const action2 = {};
   t.notOk(
     isRSAA(action2),
-    'RSAAs must have a [CALL_API] property'
+    'RSAAs must have an [RSAA] property'
   );
 
   const action3 = {
-    [CALL_API]: {}
+    [RSAA]: {}
   };
   t.ok(
     isRSAA(action3),
@@ -85,117 +85,117 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   const action1 = '';
   t.ok(
     validateRSAA(action1).length === 1 &&
-    validateRSAA(action1).includes('RSAAs must be plain JavaScript objects with a [CALL_API] property'),
-    'RSAAs must be plain JavaScript objects with a [CALL_API] property (validateRSAA)'
+    validateRSAA(action1).includes('RSAAs must be plain JavaScript objects with an [RSAA] property'),
+    'RSAAs must be plain JavaScript objects with an [RSAA] property (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action1),
-    'RSAAs must be plain JavaScript objects with a [CALL_API] property (isValidRSAA)'
+    'RSAAs must be plain JavaScript objects with an [RSAA] property (isValidRSAA)'
   );
 
   const action2 = {
-    [CALL_API]: {},
+    [RSAA]: {},
     invalidKey: ''
   };
   t.ok(
     validateRSAA(action2).includes('Invalid root key: invalidKey'),
-    'RSAAs must not have properties other than [CALL_API] (validateRSAA)'
+    'RSAAs must not have properties other than [RSAA] (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action2),
-    'RSAAs must not have properties other than [CALL_API] (isValidRSAA)'
+    'RSAAs must not have properties other than [RSAA] (isValidRSAA)'
   );
 
   const action3 = {
-    [CALL_API]: ''
+    [RSAA]: ''
   };
   t.ok(
-    validateRSAA(action3).includes('[CALL_API] property must be a plain JavaScript object'),
-    '[CALL_API] property must be a plain JavaScript object (validateRSAA)'
+    validateRSAA(action3).includes('[RSAA] property must be a plain JavaScript object'),
+    '[RSAA] property must be a plain JavaScript object (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action3),
-    '[CALL_API] property must be a plain JavaScript object (isValidRSAA)'
+    '[RSAA] property must be a plain JavaScript object (isValidRSAA)'
   );
 
   const action4 = {
-    [CALL_API]: { invalidKey: '' }
+    [RSAA]: { invalidKey: '' }
   };
   t.ok(
-    validateRSAA(action4).includes('Invalid [CALL_API] key: invalidKey'),
-    '[CALL_API] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (validateRSAA)'
+    validateRSAA(action4).includes('Invalid [RSAA] key: invalidKey'),
+    '[RSAA] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action4),
-    '[CALL_API] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (isValidRSAA)'
+    '[RSAA] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (isValidRSAA)'
   );
 
   const action5 = {
-    [CALL_API]: {}
+    [RSAA]: {}
   };
   t.ok(
     validateRSAA(action5).includes(
-      '[CALL_API] must have an endpoint property',
-      '[CALL_API] must have a method property',
-      '[CALL_API] must have a types property'
+      '[RSAA] must have an endpoint property',
+      '[RSAA] must have a method property',
+      '[RSAA] must have a types property'
     ),
-    '[CALL_API] must have endpoint, method, and types properties (validateRSAA)'
+    '[RSAA] must have endpoint, method, and types properties (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action5),
-    '[CALL_API] must have endpoint, method, and types properties (isValidRSAA)'
+    '[RSAA] must have endpoint, method, and types properties (isValidRSAA)'
   );
 
   const action6 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: {},
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
   };
   t.ok(
-    validateRSAA(action6).includes('[CALL_API].endpoint property must be a string or a function'),
-    '[CALL_API].endpoint must be a string or a function (validateRSAA)'
+    validateRSAA(action6).includes('[RSAA].endpoint property must be a string or a function'),
+    '[RSAA].endpoint must be a string or a function (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action6),
-    '[CALL_API].endpoint must be a string or a function (isValidRSAA)'
+    '[RSAA].endpoint must be a string or a function (isValidRSAA)'
   );
 
   const action7 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: {},
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
   };
   t.ok(
-    validateRSAA(action7).includes('[CALL_API].method property must be a string'),
-    '[CALL_API].method property must be a string (validateRSAA)'
+    validateRSAA(action7).includes('[RSAA].method property must be a string'),
+    '[RSAA].method property must be a string (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action7),
-    '[CALL_API].method property must be a string (isValidRSAA)'
+    '[RSAA].method property must be a string (isValidRSAA)'
   );
 
   const action8 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'InvalidMethod',
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
   };
   t.ok(
-    validateRSAA(action8).includes('Invalid [CALL_API].method: INVALIDMETHOD'),
-    '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\', or \'OPTIONS\' (validateRSAA)'
+    validateRSAA(action8).includes('Invalid [RSAA].method: INVALIDMETHOD'),
+    '[RSAA].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\', or \'OPTIONS\' (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action8),
-    '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\', or \'OPTIONS\' (isValidRSAA)'
+    '[RSAA].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\', or \'OPTIONS\' (isValidRSAA)'
   );
 
   const action9 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -203,16 +203,16 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action9).includes('[CALL_API].headers property must be undefined, a plain JavaScript object, or a function'),
-    '[CALL_API].headers property must be undefined, a plain JavaScript object, or a function (validateRSAA)'
+    validateRSAA(action9).includes('[RSAA].headers property must be undefined, a plain JavaScript object, or a function'),
+    '[RSAA].headers property must be undefined, a plain JavaScript object, or a function (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action9),
-    '[CALL_API].headers property must be undefined, a plain JavaScript object, or a function (isValidRSAA)'
+    '[RSAA].headers property must be undefined, a plain JavaScript object, or a function (isValidRSAA)'
   );
 
   const action10 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -220,16 +220,16 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action10).includes('[CALL_API].credentials property must be undefined, or a string'),
-    '[CALL_API].credentials property must be undefined or a string (validateRSAA)'
+    validateRSAA(action10).includes('[RSAA].credentials property must be undefined, or a string'),
+    '[RSAA].credentials property must be undefined or a string (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action10),
-    '[CALL_API].credentials property must be undefined or a string (isValidRSAA)'
+    '[RSAA].credentials property must be undefined or a string (isValidRSAA)'
   );
 
   const action11 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -237,16 +237,16 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action11).includes('Invalid [CALL_API].credentials: InvalidCredentials'),
-    '[CALL_API].credentials property must be one of the string \'omit\', \'same-origin\', or \'include\' (validateRSAA)'
+    validateRSAA(action11).includes('Invalid [RSAA].credentials: InvalidCredentials'),
+    '[RSAA].credentials property must be one of the string \'omit\', \'same-origin\', or \'include\' (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action11),
-    '[CALL_API].credentials property must be one of the string \'omit\', \'same-origin\', or \'include\' (isValidRSAA)'
+    '[RSAA].credentials property must be one of the string \'omit\', \'same-origin\', or \'include\' (isValidRSAA)'
   );
 
   const action12 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -254,48 +254,48 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action12).includes('[CALL_API].bailout property must be undefined, a boolean, or a function'),
-    '[CALL_API].bailout must be undefined, a boolean, or a function (validateRSAA)'
+    validateRSAA(action12).includes('[RSAA].bailout property must be undefined, a boolean, or a function'),
+    '[RSAA].bailout must be undefined, a boolean, or a function (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action12),
-    '[CALL_API].bailout must be undefined, a boolean, or a function (isValidRSAA)'
+    '[RSAA].bailout must be undefined, a boolean, or a function (isValidRSAA)'
   );
 
   const action13 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: {}
     }
   };
   t.ok(
-    validateRSAA(action13).includes('[CALL_API].types property must be an array of length 3'),
-    '[CALL_API].types property must be an array (validateRSAA)'
+    validateRSAA(action13).includes('[RSAA].types property must be an array of length 3'),
+    '[RSAA].types property must be an array (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action13),
-    '[CALL_API].types property must be an array (isRSAA)'
+    '[RSAA].types property must be an array (isRSAA)'
   )
 
   const action14 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['a', 'b']
     }
   };
   t.ok(
-    validateRSAA(action14).includes('[CALL_API].types property must be an array of length 3'),
-    '[CALL_API].types property must have length 3 (validateRSAA)'
+    validateRSAA(action14).includes('[RSAA].types property must be an array of length 3'),
+    '[RSAA].types property must have length 3 (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action14),
-    '[CALL_API].types property must have length 3 (isRSAA)'
+    '[RSAA].types property must have length 3 (isRSAA)'
   )
 
   const action15 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: [{}, {}, {}]
@@ -307,15 +307,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
       'Invalid success type',
       'Invalid failure type'
     ),
-    'Each element in [CALL_API].types property must be a string, a symbol, or a type descriptor (validateRSAA)'
+    'Each element in [RSAA].types property must be a string, a symbol, or a type descriptor (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action15),
-    'Each element in [CALL_API].types property must be a string, a symbol, or a type descriptor (isRSAA)'
+    'Each element in [RSAA].types property must be a string, a symbol, or a type descriptor (isRSAA)'
   )
 
   const action16 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
@@ -324,15 +324,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action16).length,
     0,
-    '[CALL_API].endpoint may be a string (validateRSAA)'
+    '[RSAA].endpoint may be a string (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action16),
-    '[CALL_API].endpoint may be a string (isValidRSAA)'
+    '[RSAA].endpoint may be a string (isValidRSAA)'
   )
 
   const action17 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: () => '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
@@ -341,15 +341,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action17).length,
     0,
-    '[CALL_API].endpoint may be a function (validateRSAA)'
+    '[RSAA].endpoint may be a function (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action17),
-    '[CALL_API].endpoint may be a function (isValidRSAA)'
+    '[RSAA].endpoint may be a function (isValidRSAA)'
   );
 
   const action18 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -359,15 +359,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action18).length,
     0,
-    '[CALL_API].headers may be a plain JavaScript object (validateRSAA)'
+    '[RSAA].headers may be a plain JavaScript object (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action18),
-    '[CALL_API].headers may be a plain JavaScript object (isRSAA)'
+    '[RSAA].headers may be a plain JavaScript object (isRSAA)'
   );
 
   const action19 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -377,15 +377,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action19).length,
     0,
-    '[CALL_API].headers may be a function (validateRSAA)'
+    '[RSAA].headers may be a function (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action19),
-    '[CALL_API].headers may be a function (isRSAA)'
+    '[RSAA].headers may be a function (isRSAA)'
   );
 
   const action20 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -395,15 +395,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action20).length,
     0,
-    '[CALL_API].bailout may be a boolean (validateRSAA)'
+    '[RSAA].bailout may be a boolean (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action20),
-    '[CALL_API].bailout may be a boolean (isRSAA)'
+    '[RSAA].bailout may be a boolean (isRSAA)'
   );
 
   const action21 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -413,15 +413,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action21).length,
     0,
-    '[CALL_API].bailout may be a function (validateRSAA)'
+    '[RSAA].bailout may be a function (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action21),
-    '[CALL_API].bailout may be a function (isRSAA)'
+    '[RSAA].bailout may be a function (isRSAA)'
   );
 
   const action22 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: [Symbol(), Symbol(), Symbol()]
@@ -430,15 +430,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action22).length,
     0,
-    'Each element in [CALL_API].types may be a symbol (validateRSAA)'
+    'Each element in [RSAA].types may be a symbol (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action22),
-    'Each element in [CALL_API].types may be a symbol (isRSAA)'
+    'Each element in [RSAA].types may be a symbol (isRSAA)'
   );
 
   const action23 = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       types: [
@@ -463,11 +463,11 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.equal(
     validateRSAA(action23).length,
     0,
-    'Each element in [CALL_API].types may be a type descriptor (validateRSAA)'
+    'Each element in [RSAA].types may be a type descriptor (validateRSAA)'
   );
   t.ok(
     isValidRSAA(action23),
-    'Each element in [CALL_API].types may be a type descriptor (isRSAA)'
+    'Each element in [RSAA].types may be a type descriptor (isRSAA)'
   );
 
   t.end();
@@ -837,7 +837,7 @@ test('apiMiddleware must be a Redux middleware', (t) => {
   t.end();
 });
 
-test('apiMiddleware must pass actions without a [CALL_API] property to the next handler', (t) => {
+test('apiMiddleware must pass actions without an [RSAA] property to the next handler', (t) => {
   const anAction = {};
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
@@ -857,7 +857,7 @@ test('apiMiddleware must pass actions without a [CALL_API] property to the next 
 
 test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a string request type', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       types: ['REQUEST']
     }
   };
@@ -893,7 +893,7 @@ test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with 
 
 test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a descriptor request type', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       types: [
         {
           type: 'REQUEST'
@@ -933,7 +933,7 @@ test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with 
 
 test('apiMiddleware must do nothing for an invalid RSAA without a request type', (t) => {
   const anAction = {
-    [CALL_API]: {}
+    [RSAA]: {}
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
@@ -949,9 +949,9 @@ test('apiMiddleware must do nothing for an invalid RSAA without a request type',
   }, 200);
 });
 
-test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout fails', (t) => {
+test('apiMiddleware must dispatch an error request FSA when [RSAA].bailout fails', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       bailout: () => { throw new Error(); },
@@ -977,7 +977,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout f
     );
     t.equal(
       action.payload.message,
-      '[CALL_API].bailout function failed',
+      '[RSAA].bailout function failed',
       'dispatched FSA has correct payload property'
     );
     t.equal(
@@ -996,9 +996,9 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout f
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint fails', (t) => {
+test('apiMiddleware must dispatch an error request FSA when [RSAA].endpoint fails', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: () => { throw new Error(); },
       method: 'GET',
       types: [
@@ -1023,7 +1023,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint 
     );
     t.equal(
       action.payload.message,
-      '[CALL_API].endpoint function failed',
+      '[RSAA].endpoint function failed',
       'dispatched FSA has correct payload property'
     );
     t.equal(
@@ -1042,9 +1042,9 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers fails', (t) => {
+test('apiMiddleware must dispatch an error request FSA when [RSAA].headers fails', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: '',
       method: 'GET',
       headers: () => { throw new Error(); },
@@ -1070,7 +1070,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers f
     );
     t.equal(
       action.payload.message,
-      '[CALL_API].headers function failed',
+      '[RSAA].headers function failed',
       'dispatched FSA has correct payload property'
     );
     t.equal(
@@ -1091,7 +1091,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers f
 
 test('apiMiddleware must dispatch an error request FSA on a request error', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1', // We haven't mocked this
       method: 'GET',
       types: [
@@ -1162,9 +1162,9 @@ test('apiMiddleware must dispatch an error request FSA on a request error', (t) 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must use a [CALL_API].bailout boolean when present', (t) => {
+test('apiMiddleware must use an [RSAA].bailout boolean when present', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
@@ -1185,14 +1185,14 @@ test('apiMiddleware must use a [CALL_API].bailout boolean when present', (t) => 
   }, 200);
 });
 
-test('apiMiddleware must use a [CALL_API].bailout function when present', (t) => {
+test('apiMiddleware must use an [RSAA].bailout function when present', (t) => {
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE'],
       bailout: () => {
-        t.pass('[CALL_API].bailout function called');
+        t.pass('[RSAA].bailout function called');
         return true;
       }
     }
@@ -1208,14 +1208,14 @@ test('apiMiddleware must use a [CALL_API].bailout function when present', (t) =>
   actionHandler(anAction);
 });
 
-test('apiMiddleware must use an [CALL_API].endpoint function when present', (t) => {
+test('apiMiddleware must use an [RSAA].endpoint function when present', (t) => {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
                 .reply(200);
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: () => {
-        t.pass('[CALL_API].endpoint function called');
+        t.pass('[RSAA].endpoint function called');
         return 'http://127.0.0.1/api/users/1';
       },
       method: 'GET',
@@ -1231,16 +1231,16 @@ test('apiMiddleware must use an [CALL_API].endpoint function when present', (t) 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must use an [CALL_API].headers function when present', (t) => {
+test('apiMiddleware must use an [RSAA].headers function when present', (t) => {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')
                 .reply(200);
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       headers: () => {
-        t.pass('[CALL_API].headers function called')
+        t.pass('[RSAA].headers function called')
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
@@ -1259,7 +1259,7 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
                 .get('/api/users/1')
                 .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: [
@@ -1327,7 +1327,7 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with an
                 .get('/api/users/1')
                 .reply(200, {}, { 'Content-Type': 'application/json' });
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: [
@@ -1395,7 +1395,7 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
                 .get('/api/users/1')
                 .reply(200);
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: [
@@ -1464,7 +1464,7 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
                 .get('/api/users/1')
                 .reply(404, { error: 'Resource not found' }, { 'Content-Type': 'application/json' });
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: [
@@ -1532,7 +1532,7 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
                 .get('/api/users/1')
                 .reply(404, {}, { 'Content-Type': 'application/json' });
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: [
@@ -1600,7 +1600,7 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
                 .get('/api/users/1')
                 .reply(404);
   const anAction = {
-    [CALL_API]: {
+    [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       types: [

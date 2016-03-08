@@ -9,6 +9,7 @@
     "experimentalObjectRestSpread": true,
     "modules": true
   },
+  "root": true,
   "rules": {
     "babel/arrow-parens": [2, "always"],
     "no-underscore-dangle": 0,
