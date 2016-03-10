@@ -92,7 +92,7 @@ We have tiptoed around error-handling issues here. For a thorough walkthrough of
 $ npm install redux-api-middleware --save
 ```
 
-To use it, wrap the standard Redux store with it. Here is an example setup. For more information (for example, on how to add several middlewares), consult the [Redux documentation](http://rackt.github.io/redux/index.html).
+To use it, wrap the standard Redux store with it. Here is an example setup. For more information (for example, on how to add several middlewares), consult the [Redux documentation](http://redux.js.org).
 
 #### configureStore.js
 
