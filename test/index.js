@@ -6,7 +6,7 @@ import CALL_API from '../src/CALL_API';
 import { isRSAA, isValidTypeDescriptor, validateRSAA, isValidRSAA } from '../src/validation';
 import { InvalidRSAA, InternalError, RequestError, ApiError } from '../src/errors';
 import { getJSON, normalizeTypeDescriptors, actionWith } from '../src/util';
-import { apiMiddleware } from '../src/middleware';
+import { apiMiddleware, apiMiddlewareHooks } from '../src/middleware';
 
 test('isRSAA must identify RSAAs', (t) => {
   const action1 = '';
@@ -1660,5 +1660,91 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
   const actionHandler = nextHandler(doNext);
 
   t.plan(8);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must call the before function before handle RSAA action', (t) => {
+  const api = nock('http://127.0.0.1')
+                .post('/api/users', { name: 'john' })
+                .reply(200, {}, { 'Content-Type': 'application/json' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users',
+      method: 'POST',
+      types: [
+        'REQUEST',
+        'SUCCESS',
+        'FAILURE',
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const beforeHook = (action) => {
+    t.pass('hook function before has been called');
+    const callAPI = action[CALL_API];
+    return {
+      ...action,
+      [CALL_API]: {
+        ...callAPI,
+        body: JSON.stringify({ name: 'john' }),
+      }
+    };
+  };
+  const afterHook = (action) => { return action; };
+  const theApiMiddleware = apiMiddlewareHooks({ before: beforeHook, after: afterHook })
+  const nextHandler = theApiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'SUCCESS':
+      t.pass('hooks function before must return RSAA action')
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(2);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must call the after function after handle RSAA action', (t) => {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, {}, { 'Content-Type': 'application/json' });
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: [
+        'REQUEST',
+        'SUCCESS',
+        'FAILURE',
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const beforeHook = (action) => { return action; };
+  const afterHook = (action) => {
+    t.pass('hook function after has been called');
+    return {
+      ...action,
+      payload: 'user1'
+    };
+  };
+  const theApiMiddleware = apiMiddlewareHooks({ before: beforeHook, after: afterHook })
+  const nextHandler = theApiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'SUCCESS':
+      t.equal(
+        action.payload,
+        'user1',
+        'hooks function after must return FSA action'
+      );
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(2);
   actionHandler(anAction);
 });
