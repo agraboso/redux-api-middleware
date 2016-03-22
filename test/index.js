@@ -1663,7 +1663,7 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
   actionHandler(anAction);
 });
 
-test('apiMiddleware must allow fetch to be passed in', t => {
+test('apiMiddleware must allow fetch to be passed in', (t) => {
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
