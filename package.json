@@ -28,7 +28,8 @@
   "dependencies": {
     "babel-runtime": "^5.8.25",
     "isomorphic-fetch": "^2.1.1",
-    "lodash.isplainobject": "^3.2.0"
+    "lodash.isplainobject": "^3.2.0",
+    "lodash.isfunction": "3.0.8"
   },
   "devDependencies": {
     "babel": "^5.8.23",

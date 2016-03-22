@@ -1662,3 +1662,63 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
   t.plan(8);
   actionHandler(anAction);
 });
+
+test('apiMiddleware must allow fetch to be passed in', t => {
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      body: {
+        some: 'arbitrary JSON'
+      },
+      credentials: 'include',
+      headers: {
+        'X-Testing-Header': 'yeah'
+      }
+    }
+  };
+  const mockFetch = (endpoint, { method, body, credentials, headers }) => {
+    t.pass('apiMiddleware executed the passed-in fetch');
+    t.equal(
+      endpoint,
+      'http://127.0.0.1/api/users/1',
+      'passed-in fetch executed with proper endpoint'
+    );
+    t.equal(
+      method,
+      'GET',
+      'passed-in fetch executed with proper method'
+    );
+    t.deepEqual(
+      body,
+      { some: 'arbitrary JSON' },
+      'passed-in fetch executed with proper body'
+    );
+    t.equal(
+      credentials,
+      'include',
+      'passed-in fetch executed with proper credentials'
+    );
+    t.deepEqual(
+      headers,
+      { 'X-Testing-Header': 'yeah' },
+      'passed-in fetch executed with proper headers'
+    );
+    return Promise.resolve({ 
+      ok: true,
+      status: 404,
+      headers: { 'Content-Type': 'application/json' },
+      json: Promise.resolve({ more: 'mocks' }),
+    });
+  };
+  const doNext = (action) => {
+    t.pass('apiMiddleware with custom fetch executed next state');
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware(mockFetch)({ getState: doGetState });
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(8);
+  actionHandler(anAction);
+});
