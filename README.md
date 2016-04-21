@@ -600,7 +600,7 @@ MIT
 
 ## Projects using redux-api-middleware
 
-- [react-trebuchet](https://github.com/barrystaes/react-slingshot/tree/test-bottlesapi-apimiddleware) (experimental/opinionated fork of react-slingshot for SPA frontends using REST JSON API backends)
+- [react-trebuchet](https://github.com/barrystaes/react-trebuchet/tree/test-bottledapi-apireduxmiddleware) (experimental/opinionated fork of react-slingshot for SPA frontends using REST JSON API backends)
 
 If your opensource project uses (or works with) `redux-api-middleware` we would be happy to list it here!
 
