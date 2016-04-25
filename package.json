@@ -42,5 +42,10 @@
     "rimraf": "^2.4.3",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.1"
-  }
+  },
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "lib/"
+  ]
 }
