@@ -95,7 +95,7 @@ We have tiptoed around error-handling issues here. For a thorough walkthrough of
 $ npm install redux-api-middleware --save
 ```
 
-To use it, wrap the standard Redux store with it. Here is an example setup. For more information (for example, on how to add several middlewares), consult the [Redux documentation](http://rackt.github.io/redux/index.html).
+To use it, wrap the standard Redux store with it. Here is an example setup. For more information (for example, on how to add several middlewares), consult the [Redux documentation](http://redux.js.org).
 
 #### configureStore.js
 
@@ -607,7 +607,7 @@ MIT
 
 ## Projects using redux-api-middleware
 
-- [react-trebuchet](https://github.com/barrystaes/react-slingshot/tree/test-bottlesapi-apimiddleware) (experimental/opinionated fork of react-slingshot for SPA frontends using REST JSON API backends)
+- [react-trebuchet](https://github.com/barrystaes/react-trebuchet/tree/test-bottledapi-apireduxmiddleware) (experimental/opinionated fork of react-slingshot for SPA frontends using REST JSON API backends)
 
 If your opensource project uses (or works with) `redux-api-middleware` we would be happy to list it here!
 
