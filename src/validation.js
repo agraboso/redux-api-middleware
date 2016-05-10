@@ -60,6 +60,7 @@ function validateRSAA(action) {
     'endpoint',
     'method',
     'body',
+    'params',
     'headers',
     'credentials',
     'bailout',
