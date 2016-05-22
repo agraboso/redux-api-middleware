@@ -56,7 +56,7 @@ function apiMiddleware({ getState, dispatch }) {
           payload: new RequestError('[CALL_API].bailout function failed'),
           error: true
         },
-        [action, getState()]
+        [action, getState(), dispatch]
       ));
     }
 
@@ -71,7 +71,7 @@ function apiMiddleware({ getState, dispatch }) {
             payload: new RequestError('[CALL_API].endpoint function failed'),
             error: true
           },
-          [action, getState()]
+          [action, getState(), dispatch]
         ));
       }
     }
@@ -87,7 +87,7 @@ function apiMiddleware({ getState, dispatch }) {
             payload: new RequestError('[CALL_API].headers function failed'),
             error: true
           },
-          [action, getState()]
+          [action, getState(), dispatch]
         ));
       }
     }
@@ -95,7 +95,7 @@ function apiMiddleware({ getState, dispatch }) {
     // We can now dispatch the request FSA
     next(await actionWith(
       requestType,
-      [action, getState()]
+      [action, getState(), dispatch]
     ));
 
     try {
@@ -109,7 +109,7 @@ function apiMiddleware({ getState, dispatch }) {
           payload: new RequestError(e.message),
           error: true
         },
-        [action, getState()]
+        [action, getState(), dispatch]
       ));
     }
 
@@ -117,7 +117,7 @@ function apiMiddleware({ getState, dispatch }) {
     if (res.ok) {
       return next(await actionWith(
         successType,
-        [action, getState(), res]
+        [action, getState(), res, dispatch]
       ));
     } else {
       return next(await actionWith(
@@ -125,7 +125,7 @@ function apiMiddleware({ getState, dispatch }) {
           ...failureType,
           error: true
         },
-        [action, getState(), res]
+        [action, getState(), res, dispatch]
       ));
     }
   }
