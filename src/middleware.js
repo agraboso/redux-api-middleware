@@ -12,7 +12,7 @@ import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
  * @type {ReduxMiddleware}
  * @access public
  */
-function apiMiddleware({ getState }) {
+function apiMiddleware({ getState, dispatch }) {
   return (next) => async (action) => {
     // Do not process actions without a [CALL_API] property
     if (!isRSAA(action)) {
@@ -46,7 +46,7 @@ function apiMiddleware({ getState }) {
     // Should we bail out?
     try {
       if ((typeof bailout === 'boolean' && bailout) ||
-          (typeof bailout === 'function' && bailout(getState()))) {
+          (typeof bailout === 'function' && bailout(getState(), dispatch))) {
         return;
       }
     } catch (e) {
