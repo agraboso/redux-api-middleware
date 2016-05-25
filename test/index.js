@@ -855,6 +855,18 @@ test('apiMiddleware must pass actions without a [CALL_API] property to the next 
   actionHandler(anAction);
 });
 
+test('apiMiddleware mustn\'t return a promise on actions without a [CALL_API] property ', (t) => {
+  const anAction = {};
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => action;
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  const noProm = actionHandler(anAction);
+  t.notEqual(typeof noProm.then, 'function', 'no promise returned');
+});
+
 test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a string request type', (t) => {
   const anAction = {
     [CALL_API]: {
