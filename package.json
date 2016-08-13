@@ -26,26 +26,25 @@
   },
   "license": "MIT",
   "dependencies": {
-    "babel-plugin-transform-runtime": "^6.5.2",
-    "babel-runtime": "^6.5.0",
+    "babel-plugin-transform-runtime": "^6.12.0",
+    "babel-runtime": "^6.11.6",
     "isomorphic-fetch": "^2.1.1",
-    "lodash.isplainobject": "^3.2.0"
+    "lodash.isplainobject": "^4.0.6"
   },
   "devDependencies": {
-    "babel-cli": "^6.5.1",
-    "babel-eslint": "^4.1.8",
-    "babel-istanbul": "^0.6.0",
-    "babel-preset-es2015": "^6.5.0",
+    "babel-cli": "^6.11.4",
+    "babel-eslint": "^6.1.2",
+    "babel-istanbul": "^0.11.0",
+    "babel-preset-es2015": "^6.13.2",
     "babel-preset-stage-0": "^6.5.0",
-    "coveralls": "^2.11.4",
-    "eslint": "^2.0.0",
-    "eslint-plugin-babel": "^3.1.0",
-    "estraverse-fb": "^1.3.1",
-    "nock": "^2.15.0",
-    "normalizr": "^1.1.0",
-    "rimraf": "^2.4.3",
-    "tap-spec": "^4.1.0",
-    "tape": "^4.2.1"
+    "coveralls": "^2.11.12",
+    "eslint": "^3.3.0",
+    "eslint-plugin-babel": "^3.3.0",
+    "nock": "^8.0.0",
+    "normalizr": "^2.2.1",
+    "rimraf": "^2.5.4",
+    "tap-spec": "^4.1.1 ",
+    "tape": "^4.6.0"
   },
   "files": [
     "README.md",

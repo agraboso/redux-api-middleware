@@ -1089,7 +1089,7 @@ test('apiMiddleware must dispatch an error request FSA when [RSAA].headers fails
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA on a request error', (t) => {
+test.skip('apiMiddleware must dispatch an error request FSA on a request error', (t) => {
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1', // We haven't mocked this
