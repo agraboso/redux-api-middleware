@@ -1,9 +1,8 @@
 language: node_js
 node_js:
-  - "4.2.1"
-  - "0.12"
-  - "iojs-v3.3.1"
-  - "iojs-v2.5.0"
+  - "6.3.1"
+  - "5.12.0"
+  - "4.4.7"
 script:
   - npm run cover
 after_success:
