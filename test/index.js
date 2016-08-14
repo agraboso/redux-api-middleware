@@ -1,4 +1,5 @@
 import test from 'tape';
+import fetch from 'isomorphic-fetch';
 import { Schema, normalize, arrayOf } from 'normalizr';
 import nock from 'nock';
 

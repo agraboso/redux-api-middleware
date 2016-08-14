@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
 
 import RSAA from './RSAA';
