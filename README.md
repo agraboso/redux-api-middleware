@@ -2,7 +2,7 @@ redux-api-middleware
 ====================
 
 ## This `next` branch is 2.0.0-beta in development!
-Aught to be stable but still in development while we iron out bugs. 
+Things are in a fluid state and we cannot make guarantees that this will work properly. This `README` might not be completely up-to-date &mdash; in fact, we have just removed `isomorphic-fetch` in favor of a global `fetch` (except in test), so please polyfill it.
 
 [![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=next)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=next&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=next)
 
