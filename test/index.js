@@ -1042,6 +1042,55 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint 
   actionHandler(anAction);
 });
 
+test('apiMiddleware must dispatch an error request FSA when [CALL_API].body fails', (t) => {
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      body: () => {
+        throw new Error
+      },
+      method: 'GET',
+      types: [
+        {
+          type: 'REQUEST',
+          payload: 'ignoredPayload',
+          meta: 'someMeta'
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    t.pass('next handler called');
+    t.equal(
+      action.type,
+      'REQUEST',
+      'dispatched FSA has correct type property'
+    );
+    t.equal(
+      action.payload.message,
+      '[CALL_API].body function failed',
+      'dispatched FSA has correct payload property'
+    );
+    t.equal(
+      action.meta,
+      'someMeta',
+      'dispatched FSA has correct meta property'
+    );
+    t.ok(
+      action.error,
+      'dispatched FSA has correct error property'
+    );
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(5);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers fails', (t) => {
   const anAction = {
     [CALL_API]: {
