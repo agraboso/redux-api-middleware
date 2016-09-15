@@ -123,11 +123,11 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   };
   t.ok(
     validateRSAA(action4).includes('Invalid [CALL_API] key: invalidKey'),
-    '[CALL_API] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (validateRSAA)'
+    '[CALL_API] must not have properties other than endpoint, method, types, body, headers, credentials, options and bailout (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action4),
-    '[CALL_API] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (isValidRSAA)'
+    '[CALL_API] must not have properties other than endpoint, method, types, body, headers, credentials, options and bailout (isValidRSAA)'
   );
 
   const action5 = {
@@ -468,6 +468,59 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.ok(
     isValidRSAA(action23),
     'Each element in [CALL_API].types may be a type descriptor (isRSAA)'
+  );
+
+  const action24 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      options: ''
+    }
+  };
+  t.ok(
+      validateRSAA(action24).includes('[CALL_API].options property must be undefined, a plain JavaScript object, or a function'),
+      '[CALL_API].options property must be undefined, a plain JavaScript object, or a function (validateRSAA)'
+  );
+  t.notOk(
+      isValidRSAA(action24),
+      '[CALL_API].options property must be undefined, a plain JavaScript object, or a function (isValidRSAA)'
+  );
+
+  const action25 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      options: {}
+    }
+  };
+  t.equal(
+      validateRSAA(action25).length,
+      0,
+      '[CALL_API].options may be a plain JavaScript object (validateRSAA)'
+  );
+  t.ok(
+      isValidRSAA(action25),
+      '[CALL_API].options may be a plain JavaScript object (isRSAA)'
+  );
+
+  const action26 = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      options: () => {}
+    }
+  };
+  t.equal(
+      validateRSAA(action26).length,
+      0,
+      '[CALL_API].options may be a function (validateRSAA)'
+  );
+  t.ok(
+      isValidRSAA(action26),
+      '[CALL_API].options may be a function (isRSAA)'
   );
 
   t.end();
@@ -1089,6 +1142,53 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers f
   actionHandler(anAction);
 });
 
+test('apiMiddleware must dispatch an error request FSA when [CALL_API].options fails', (t) => {
+  const anAction = {
+    [CALL_API]: {
+      endpoint: '',
+      method: 'GET',
+      options: () => { throw new Error(); },
+      types: [
+        {
+          type: 'REQUEST',
+          payload: 'ignoredPayload',
+          meta: 'someMeta'
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    t.pass('next handler called');
+    t.equal(
+        action.type,
+        'REQUEST',
+        'dispatched FSA has correct type property'
+    );
+    t.equal(
+        action.payload.message,
+        '[CALL_API].options function failed',
+        'dispatched FSA has correct payload property'
+    );
+    t.equal(
+        action.meta,
+        'someMeta',
+        'dispatched FSA has correct meta property'
+    );
+    t.ok(
+        action.error,
+        'dispatched FSA has correct error property'
+    );
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(5);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must dispatch an error request FSA on a request error', (t) => {
   const anAction = {
     [CALL_API]: {
@@ -1241,6 +1341,29 @@ test('apiMiddleware must use an [CALL_API].headers function when present', (t) =
       method: 'GET',
       headers: () => {
         t.pass('[CALL_API].headers function called')
+      },
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {};
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use an [CALL_API].options function when present', (t) => {
+  const api = nock('http://127.0.0.1')
+      .get('/api/users/1')
+      .reply(200);
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      options: () => {
+        t.pass('[CALL_API].options function called')
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
