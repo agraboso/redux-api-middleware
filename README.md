@@ -540,12 +540,13 @@ The `[RSAA]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
+- have a `options` property,
 - have a `credentials` property,
 - have a `bailout` property.
 
 The `[RSAA]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `credentials`, and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, and `bailout`.
 
 #### `[RSAA].endpoint`
 
@@ -563,7 +564,13 @@ The optional `[RSAA].body` property SHOULD be a valid body according to the the 
 
 The optional `[RSAA].headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
 
+#### `[RSAA].options`
+
+The optional `[RSAA].options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The options object can contain any options supported by [node-fetch](https://github.com/bitinn/node-fetch#options).
+
 #### `[RSAA].credentials`
+>>>>>>> Adds the options parameter to the documentation
 
 The optional `[RSAA].credentials` property MUST be one of the strings `omit`, `same-origin` or `include`.
 
