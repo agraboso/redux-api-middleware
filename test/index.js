@@ -1231,6 +1231,30 @@ test('apiMiddleware must use an [CALL_API].endpoint function when present', (t) 
   actionHandler(anAction);
 });
 
+test('apiMiddleware must use an [CALL_API].body function when present', (t) => {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200);
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      body: () => {
+        t.pass('[CALL_API].body function called');
+        return 'body';
+      },
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {};
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must use an [CALL_API].headers function when present', (t) => {
   const api = nock('http://127.0.0.1')
                 .get('/api/users/1')

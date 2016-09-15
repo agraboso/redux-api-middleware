@@ -39,8 +39,8 @@ function apiMiddleware({ getState }) {
 
     // Parse the validated RSAA action
     const callAPI = action[CALL_API];
-    var { endpoint, headers } = callAPI;
-    const { method, body, credentials, bailout, types } = callAPI;
+    var { endpoint, body, headers } = callAPI;
+    const { method, credentials, bailout, types } = callAPI;
     const [requestType, successType, failureType] = normalizeTypeDescriptors(types);
 
     // Should we bail out?
@@ -69,6 +69,22 @@ function apiMiddleware({ getState }) {
           {
             ...requestType,
             payload: new RequestError('[CALL_API].endpoint function failed'),
+            error: true
+          },
+          [action, getState()]
+        ));
+      }
+    }
+
+    // Process [CALL_API].endpoint function
+    if (typeof body === 'function') {
+      try {
+        body = body(getState());
+      } catch (e) {
+        return next(await actionWith(
+          {
+            ...requestType,
+            payload: new RequestError('[CALL_API].body function failed'),
             error: true
           },
           [action, getState()]
