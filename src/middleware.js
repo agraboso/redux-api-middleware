@@ -98,12 +98,12 @@ function apiMiddleware({ getState }) {
         options = options(getState());
       } catch (e) {
         return next(await actionWith(
-            {
-              ...requestType,
-              payload: new RequestError('[CALL_API].options function failed'),
-              error: true
-            },
-            [action, getState()]
+          {
+            ...requestType,
+            payload: new RequestError('[CALL_API].options function failed'),
+            error: true
+          },
+          [action, getState()]
         ));
       }
     }
