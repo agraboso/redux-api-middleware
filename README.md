@@ -164,7 +164,30 @@ It is usually an object, with the keys specifying the header names and the value
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of headers as above.
 
+<<<<<<< HEAD
 #### `[RSAA].credentials`
+=======
+#### `[CALL_API].options`
+
+The fetch options for the API call. See [node-fetch](https://github.com/bitinn/node-fetch#options) for more information.
+
+It is usually an object with the options keys/values. For example, you can specify a network timeout for node.js code
+in the following way.
+
+```js
+{
+  [CALL_API]: {
+    ...
+    options: { timeout: 3000 }
+    ...
+  }
+}
+```
+
+It may also be a function taking the state of your Redux store as its argument, and returning an object of options as above.
+
+#### `[CALL_API].credentials`
+>>>>>>> Adds options parameter documentation and examples
 
 Whether or not to send cookies with the API call.
 
