@@ -533,12 +533,13 @@ The `[CALL_API]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
+- have a `options` property,
 - have a `credentials` property,
 - have a `bailout` property.
 
 The `[CALL_API]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `credentials`, and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, and `bailout`.
 
 #### `[CALL_API].endpoint`
 
@@ -555,6 +556,11 @@ The optional `[CALL_API].body` property SHOULD be a valid body according to the 
 #### `[CALL_API].headers`
 
 The optional `[CALL_API].headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+
+#### `[CALL_API].options`
+
+The optional `[CALL_API].options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The options object can contain any options supported by [node-fetch](https://github.com/bitinn/node-fetch#options).
 
 #### `[CALL_API].credentials`
 
