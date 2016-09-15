@@ -76,7 +76,7 @@ function apiMiddleware({ getState }) {
       }
     }
 
-    // Process [CALL_API].endpoint function
+    // Process [CALL_API].body function
     if (typeof body === 'function') {
       try {
         body = body(getState());
