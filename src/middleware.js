@@ -38,7 +38,7 @@ function apiMiddleware({ getState }) {
 
     // Parse the validated RSAA action
     const callAPI = action[RSAA];
-    var { endpoint, headers } = callAPI;
+    var { endpoint, headers, options = {} } = callAPI;
     const { method, body, credentials, bailout, types } = callAPI;
     const [requestType, successType, failureType] = normalizeTypeDescriptors(types);
 
@@ -91,6 +91,22 @@ function apiMiddleware({ getState }) {
       }
     }
 
+    // Process [CALL_API].options function
+    if (typeof options === 'function') {
+      try {
+        options = options(getState());
+      } catch (e) {
+        return next(await actionWith(
+          {
+            ...requestType,
+            payload: new RequestError('[CALL_API].options function failed'),
+            error: true
+          },
+            [action, getState()]
+        ));
+      }
+    }
+
     // We can now dispatch the request FSA
     next(await actionWith(
       requestType,
@@ -99,7 +115,10 @@ function apiMiddleware({ getState }) {
 
     try {
       // Make the API call
-      var res = await fetch(endpoint, { method, body, credentials, headers });
+      var res = await fetch(endpoint, {
+        ...options,
+        method, body, credentials, headers
+      });
     } catch(e) {
       // The request was malformed, or there was a network error
       return next(await actionWith(
