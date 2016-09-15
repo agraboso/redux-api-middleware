@@ -137,7 +137,7 @@ It must be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or
 
 The body of the API call.
 
-`redux-api-middleware` uses [`isomorphic-fetch`](https://github.com/matthew-andrews/isomorphic-fetch) to make the API call. `[CALL_API].body` should hence be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
+`redux-api-middleware` uses [`isomorphic-fetch`](https://github.com/matthew-andrews/isomorphic-fetch) to make the API call. `[CALL_API].body` should hence be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
 
 #### `[CALL_API].headers`
 
@@ -552,7 +552,7 @@ The `[CALL_API]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
-- have a `options` property,
+- have an `options` property,
 - have a `credentials` property,
 - have a `bailout` property.
 
@@ -570,7 +570,7 @@ The `[CALL_API].method` property MUST be one of the strings `GET`, `HEAD`, `POST
 
 #### `[CALL_API].body`
 
-The optional `[CALL_API].body` property SHOULD be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org).
+The optional `[CALL_API].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org).
 
 #### `[CALL_API].headers`
 
