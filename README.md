@@ -164,10 +164,7 @@ It is usually an object, with the keys specifying the header names and the value
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of headers as above.
 
-<<<<<<< HEAD
-#### `[RSAA].credentials`
-=======
-#### `[CALL_API].options`
+#### `[RSAA].options`
 
 The fetch options for the API call. See [node-fetch](https://github.com/bitinn/node-fetch#options) for more information.
 
@@ -176,7 +173,7 @@ in the following way.
 
 ```js
 {
-  [CALL_API]: {
+  [RSAA]: {
     ...
     options: { timeout: 3000 }
     ...
@@ -186,8 +183,7 @@ in the following way.
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of options as above.
 
-#### `[CALL_API].credentials`
->>>>>>> Adds options parameter documentation and examples
+#### `[RSAA].credentials`
 
 Whether or not to send cookies with the API call.
 
@@ -563,7 +559,7 @@ The `[RSAA]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
-- have a `options` property,
+- have an `options` property,
 - have a `credentials` property,
 - have a `bailout` property.
 
@@ -581,7 +577,7 @@ The `[RSAA].method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `
 
 #### `[RSAA].body`
 
-The optional `[RSAA].body` property SHOULD be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org).
+The optional `[RSAA].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org).
 
 #### `[RSAA].headers`
 
@@ -593,7 +589,6 @@ The optional `[RSAA].options` property MUST be a plain JavaScript object or a fu
 The options object can contain any options supported by [node-fetch](https://github.com/bitinn/node-fetch#options).
 
 #### `[RSAA].credentials`
->>>>>>> Adds the options parameter to the documentation
 
 The optional `[RSAA].credentials` property MUST be one of the strings `omit`, `same-origin` or `include`.
 
