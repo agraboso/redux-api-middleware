@@ -102,7 +102,7 @@ function apiMiddleware({ getState }) {
             payload: new RequestError('[CALL_API].options function failed'),
             error: true
           },
-            [action, getState()]
+          [action, getState()]
         ));
       }
     }
