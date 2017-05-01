@@ -99,7 +99,13 @@ function apiMiddleware({ getState }) {
 
     try {
       // Make the API call
-      var res = await fetch(endpoint, { method, body, credentials, headers });
+      var res = await fetch(endpoint, { 
+        method,
+        // Stringify body if needed
+        body: typeof body === 'undefined' || typeof body === 'string' ? body : JSON.stringify(body),
+        credentials,
+        headers
+      });
     } catch(e) {
       // The request was malformed, or there was a network error
       return next(await actionWith(
