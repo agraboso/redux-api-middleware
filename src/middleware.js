@@ -1,10 +1,9 @@
 import fetch from 'isomorphic-fetch';
-import isPlainObject from 'lodash.isplainobject';
 
 import CALL_API from './CALL_API';
 import { isRSAA, validateRSAA } from './validation';
 import { InvalidRSAA, RequestError, ApiError } from './errors' ;
-import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
+import { normalizeTypeDescriptors, actionWith } from './util';
 
 /**
  * A Redux middleware that processes RSAA actions.
