@@ -137,7 +137,7 @@ It must be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or
 
 The body of the API call.
 
-`redux-api-middleware` uses [`isomorphic-fetch`](https://github.com/matthew-andrews/isomorphic-fetch) to make the API call. `[CALL_API].body` should hence be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
+`redux-api-middleware` uses [`isomorphic-fetch`](https://github.com/matthew-andrews/isomorphic-fetch) to make the API call. `[CALL_API].body` should hence be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
 
 #### `[CALL_API].headers`
 
@@ -156,6 +156,25 @@ It is usually an object, with the keys specifying the header names and the value
 ```
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of headers as above.
+
+#### `[CALL_API].options`
+
+The fetch options for the API call. See [node-fetch](https://github.com/bitinn/node-fetch#options) for more information.
+
+It is usually an object with the options keys/values. For example, you can specify a network timeout for node.js code
+in the following way.
+
+```js
+{
+  [CALL_API]: {
+    ...
+    options: { timeout: 3000 }
+    ...
+  }
+}
+```
+
+It may also be a function taking the state of your Redux store as its argument, and returning an object of options as above.
 
 #### `[CALL_API].credentials`
 
@@ -533,12 +552,13 @@ The `[CALL_API]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
+- have an `options` property,
 - have a `credentials` property,
 - have a `bailout` property.
 
 The `[CALL_API]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `credentials`, and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, and `bailout`.
 
 #### `[CALL_API].endpoint`
 
@@ -550,11 +570,16 @@ The `[CALL_API].method` property MUST be one of the strings `GET`, `HEAD`, `POST
 
 #### `[CALL_API].body`
 
-The optional `[CALL_API].body` property SHOULD be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org).
+The optional `[CALL_API].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org).
 
 #### `[CALL_API].headers`
 
 The optional `[CALL_API].headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+
+#### `[CALL_API].options`
+
+The optional `[CALL_API].options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The options object can contain any options supported by [node-fetch](https://github.com/bitinn/node-fetch#options).
 
 #### `[CALL_API].credentials`
 
