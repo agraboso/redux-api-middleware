@@ -1,5 +1,6 @@
-import fetch from 'isomorphic-fetch';
+import isomorphicFetch from 'isomorphic-fetch';
 import isPlainObject from 'lodash.isplainobject';
+import isFunction from 'lodash.isfunction';
 
 import CALL_API from './CALL_API';
 import { isRSAA, validateRSAA } from './validation';
@@ -12,7 +13,14 @@ import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
  * @type {ReduxMiddleware}
  * @access public
  */
-function apiMiddleware({ getState }) {
+let fetch = isomorphicFetch;
+function apiMiddleware(storeOrFetch) {
+  if (isFunction(storeOrFetch)) {
+    fetch = storeOrFetch;
+    return apiMiddleware;
+  }
+  const { getState } = storeOrFetch;
+
   return (next) => async (action) => {
     // Do not process actions without a [CALL_API] property
     if (!isRSAA(action)) {

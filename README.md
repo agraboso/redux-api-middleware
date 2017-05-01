@@ -1,9 +1,11 @@
 redux-api-middleware
 ====================
+![deprecated](https://cloud.githubusercontent.com/assets/1039473/22737318/9c125686-edd0-11e6-88fb-231cd4397ac9.png)
 
 [![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=master)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=master&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=master)
 
 [Redux middleware](http://rackt.github.io/redux/docs/advanced/Middleware.html) for calling an API.
+
 
 ## Table of contents
 
