@@ -62,6 +62,11 @@ function validateRSAA(action) {
     'body',
     'headers',
     'credentials',
+    'mode',
+    'cache',
+    'redirect',
+    'referrer',
+    'integrity',
     'bailout',
     'types'
   ];
@@ -78,7 +83,25 @@ function validateRSAA(action) {
     'omit',
     'same-origin',
     'include'
-  ]
+  ];
+  const validMode = [
+    'cors',
+    'no-cors',
+    'same-origin'
+  ];
+  const validCache = [
+    'default',
+    'no-store',
+    'reload',
+    'no-cache',
+    'force-cache',
+    'only-if-cached'
+  ];
+  const validRedirect = [
+    'follow',
+    'error',
+    'manual'
+  ];
 
   if (!isRSAA(action)) {
     validationErrors.push('RSAAs must be plain JavaScript objects with a [CALL_API] property');
@@ -101,7 +124,10 @@ function validateRSAA(action) {
     }
   }
 
-  const { endpoint, method, headers, credentials, types, bailout } = callAPI;
+  const {
+    endpoint, method, headers, credentials, mode, cache, redirect, referrer,
+    integrity, types, bailout
+  } = callAPI;
   if (typeof endpoint === 'undefined') {
     validationErrors.push('[CALL_API] must have an endpoint property');
   } else if (typeof endpoint !== 'string' && typeof endpoint !== 'function') {
@@ -123,6 +149,37 @@ function validateRSAA(action) {
       validationErrors.push('[CALL_API].credentials property must be undefined, or a string');
     } else if (!~validCredentials.indexOf(credentials)) {
       validationErrors.push(`Invalid [CALL_API].credentials: ${credentials}`);
+    }
+  }
+  if (typeof mode !== 'undefined') {
+    if (typeof mode !== 'string') {
+      validationErrors.push('[CALL_API].mode property must be undefined, or a string');
+    } else if (!~validMode.indexOf(mode)) {
+      validationErrors.push(`Invalid [CALL_API].mode: ${mode}`);
+    }
+  }
+  if (typeof cache !== 'undefined') {
+    if (typeof cache !== 'string') {
+      validationErrors.push('[CALL_API].cache property must be undefined, or a string');
+    } else if (!~validCache.indexOf(cache)) {
+      validationErrors.push(`Invalid [CALL_API].cache: ${cache}`);
+    }
+  }
+  if (typeof redirect !== 'undefined') {
+    if (typeof redirect !== 'string') {
+      validationErrors.push('[CALL_API].redirect property must be undefined, or a string');
+    } else if (!~validRedirect.indexOf(redirect)) {
+      validationErrors.push(`Invalid [CALL_API].redirect: ${redirect}`);
+    }
+  }
+  if (typeof referrer !== 'undefined') {
+    if (typeof referrer !== 'string') {
+      validationErrors.push('[CALL_API].referrer property must be undefined, or a string');
+    }
+  }
+  if (typeof integrity !== 'undefined') {
+    if (typeof integrity !== 'string') {
+      validationErrors.push('[CALL_API].integrity property must be undefined, or a string');
     }
   }
   if (typeof bailout !== 'undefined' && typeof bailout !== 'boolean' && typeof bailout !== 'function') {
