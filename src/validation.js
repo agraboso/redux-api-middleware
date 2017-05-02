@@ -85,16 +85,12 @@ function validateRSAA(action) {
     return validationErrors;
   }
 
-  for (let key in action) {
-    if (key !== [CALL_API]) {
-      validationErrors.push(`Invalid root key: ${key}`);
-    }
-  }
 
   const callAPI = action[CALL_API];
   if (!isPlainObject(callAPI)) {
     validationErrors.push('[CALL_API] property must be a plain JavaScript object');
   }
+
   for (let key in callAPI) {
     if (!~validCallAPIKeys.indexOf(key)) {
       validationErrors.push(`Invalid [CALL_API] key: ${key}`);
