@@ -197,7 +197,7 @@ The `[CALL_API].types` property controls the output of `redux-api-middleware`. T
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
   If such an error occurs, a different *request* FSA will be dispatched (*instead* of the one described above). It will contain the following properties:
-  - `type`: the string constant in the first position of the `[CALL_API].types` array;
+  - `type`: the string constant in the third position of the `[CALL_API].types` array;
   - `payload`: a [`RequestError`](#requesterror) object containing an error message;
   - `error: true`.
 
