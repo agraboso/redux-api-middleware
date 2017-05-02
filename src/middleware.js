@@ -5,6 +5,15 @@ import { isRSAA, validateRSAA } from './validation';
 import { InvalidRSAA, RequestError, ApiError } from './errors' ;
 import { normalizeTypeDescriptors, actionWith } from './util';
 
+const hooks = {};
+
+function apiMiddlewareHooks({ before, after }) {
+  if (typeof before === 'function') hooks.before = before;
+  if (typeof after === 'function') hooks.after = after;
+
+  return apiMiddleware;
+}
+
 /**
  * A Redux middleware that processes RSAA actions.
  *
@@ -36,11 +45,22 @@ function apiMiddleware({ getState }) {
       return;
     }
 
+    if (typeof hooks.before === 'function') {
+      action = hooks.before(action);
+    }
+
     // Parse the validated RSAA action
     const callAPI = action[CALL_API];
     var { endpoint, headers } = callAPI;
     const { method, body, credentials, bailout, types } = callAPI;
     const [requestType, successType, failureType] = normalizeTypeDescriptors(types);
+    const handleDescriptor = (descriptor, callback) => {
+      if (typeof callback === 'function') {
+        return callback(descriptor);
+      }
+
+      return descriptor;
+    };
 
     // Should we bail out?
     try {
@@ -102,32 +122,35 @@ function apiMiddleware({ getState }) {
       var res = await fetch(endpoint, { method, body, credentials, headers: headers || {} });
     } catch(e) {
       // The request was malformed, or there was a network error
-      return next(await actionWith(
+      const descriptor = await actionWith(
         {
           ...requestType,
           payload: new RequestError(e.message),
           error: true
         },
         [action, getState()]
-      ));
+      );
+      return next(handleDescriptor(descriptor, hooks.after));
     }
 
     // Process the server response
     if (res.ok) {
-      return next(await actionWith(
+      const descriptor = await actionWith(
         successType,
         [action, getState(), res]
-      ));
+      );
+      return next(handleDescriptor(descriptor, hooks.after));
     } else {
-      return next(await actionWith(
+      const descriptor = await actionWith(
         {
           ...failureType,
           error: true
         },
         [action, getState(), res]
-      ));
+      );
+      return next(handleDescriptor(descriptor, hooks.after));
     }
   }
 }
 
-export { apiMiddleware };
+export { apiMiddleware, apiMiddlewareHooks };
