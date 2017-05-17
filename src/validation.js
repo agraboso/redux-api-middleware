@@ -120,7 +120,7 @@ function validateRSAA(action) {
     validationErrors.push('[RSAA].headers property must be undefined, a plain JavaScript object, or a function');
   }
   if (typeof options !== 'undefined' && !isPlainObject(options) && typeof options !== 'function') {
-    validationErrors.push('[CALL_API].options property must be undefined, a plain JavaScript object, or a function');
+    validationErrors.push('[RSAA].options property must be undefined, a plain JavaScript object, or a function');
   }
   if (typeof credentials !== 'undefined') {
     if (typeof credentials !== 'string') {

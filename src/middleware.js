@@ -91,7 +91,7 @@ function apiMiddleware({ getState }) {
       }
     }
 
-    // Process [CALL_API].options function
+    // Process [RSAA].options function
     if (typeof options === 'function') {
       try {
         options = options(getState());
@@ -99,7 +99,7 @@ function apiMiddleware({ getState }) {
         return next(await actionWith(
           {
             ...requestType,
-            payload: new RequestError('[CALL_API].options function failed'),
+            payload: new RequestError('[RSAA].options function failed'),
             error: true
           },
           [action, getState()]
