@@ -3,11 +3,23 @@ import fetch from 'isomorphic-fetch';
 import { Schema, normalize, arrayOf } from 'normalizr';
 import nock from 'nock';
 
-import RSAA from '../src/RSAA';
-import { isRSAA, isValidTypeDescriptor, validateRSAA, isValidRSAA } from '../src/validation';
-import { InvalidRSAA, InternalError, RequestError, ApiError } from '../src/errors';
-import { getJSON, normalizeTypeDescriptors, actionWith } from '../src/util';
-import { apiMiddleware } from '../src/middleware';
+// Public package exports
+import {
+  RSAA, CALL_API,
+  isRSAA, validateRSAA, isValidRSAA,
+  InvalidRSAA, InternalError, RequestError, ApiError,
+  getJSON,
+  apiMiddleware
+} from '../src';
+
+// Private module exports
+import { isValidTypeDescriptor } from '../src/validation';
+import { normalizeTypeDescriptors, actionWith } from '../src/util';
+
+test('CALL_API is aliased to RSAA', (t) => {
+  t.equal(RSAA, CALL_API);
+  t.end();
+});
 
 test('isRSAA must identify RSAAs', (t) => {
   const action1 = '';
@@ -1390,6 +1402,79 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with an
   t.plan(8);
   actionHandler(anAction);
 });
+
+test('apiMiddleware must dispatch a success FSA with an error state on a successful API call with an invalid JSON response', (t) => {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200, '', { 'Content-Type': 'application/json' });
+
+  const error = new InternalError('Expected error - simulating invalid JSON');
+
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: [
+        {
+          type: 'REQUEST',
+          payload: 'requestPayload',
+          meta: 'requestMeta'
+        },
+        {
+          type: 'SUCCESS',
+          meta: 'successMeta',
+          payload: () => { throw error; },
+        },
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    switch (action.type) {
+    case 'REQUEST':
+      t.pass('request FSA passed to the next handler');
+      t.equal(
+        action.payload,
+        'requestPayload',
+        'request FSA has correct payload property'
+      );
+      t.equal(
+        action.meta,
+        'requestMeta',
+        'request FSA has correct meta property'
+      );
+      t.notOk(
+        action.error,
+        'request FSA has correct error property'
+      );
+      break;
+    case 'SUCCESS':
+      t.pass('success FSA passed to the next handler');
+      t.deepEqual(
+        action.payload,
+        error,
+        'success FSA has correct payload property'
+      );
+      t.equal(
+        action.meta,
+        'successMeta',
+        'success FSA has correct meta property'
+      );
+      t.ok(
+        action.error,
+        'success FSA has correct error property'
+      );
+      break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(8);
+  actionHandler(anAction);
+});
+
 
 test('apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response', (t) => {
   const api = nock('http://127.0.0.1')

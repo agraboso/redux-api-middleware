@@ -2,7 +2,8 @@ redux-api-middleware
 ====================
 
 ## This `next` branch is 2.0.0-beta in development!
-Things are in a fluid state and we cannot make guarantees that this will work properly. This `README` might not be completely up-to-date &mdash; in fact, we have just removed `isomorphic-fetch` in favor of a global `fetch` (except in test), so please polyfill it.
+
+See [Upgrading from v1.0.x](#upgrading-from-v1.0.x) for details on upgrading, and issues for the [2.0 milestone here](https://github.com/agraboso/redux-api-middleware/issues?utf8=%E2%9C%93&q=milestone%3A2.0.0%20)
 
 [![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=next)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=next&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=next)
 
@@ -24,8 +25,9 @@ Things are in a fluid state and we cannot make guarantees that this will work pr
   - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
 5. [History](#history)
 6. [Tests](#tests)
-7. [License](License)
-8. [Acknowledgements](#acknowledgements)
+7. [Upgrading from v1.0.x](#upgrading-from-v1.0.x)
+8. [License](License)
+9. [Acknowledgements](#acknowledgements)
 
 ## Introduction
 
@@ -96,6 +98,8 @@ $ npm install redux-api-middleware --save
 ```
 
 To use it, wrap the standard Redux store with it. Here is an example setup. For more information (for example, on how to add several middlewares), consult the [Redux documentation](http://redux.js.org).
+
+Note: `redux-api-middleware` depends on a [global Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) being available, and may require a polyfill for your runtime environment(s).
 
 #### configureStore.js
 
@@ -599,7 +603,9 @@ $ npm install && npm test
 
 ## Upgrading from v1.0.x
 
-TODO
+- The `CALL_API` symbol is replaced with the `RSAA` string as the top-level RSAA action key. `CALL_API` is aliased to the new value as of 2.0, but this will ultimately be deprecated.
+- `redux-api-middleware` no longer brings its own `fetch` implementation and depends on a global `fetch` to be provided in the runtime
+- A new `options` config is added to pass your `fetch` implementation extra options other than `method`, `headers`, `body` and `credentials`
 
 ## License
 
