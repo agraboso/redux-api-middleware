@@ -1,6 +1,5 @@
 import test from 'tape';
-import fetch from 'isomorphic-fetch';
-import { Schema, normalize, arrayOf } from 'normalizr';
+import 'isomorphic-fetch';
 import nock from 'nock';
 
 // Public package exports

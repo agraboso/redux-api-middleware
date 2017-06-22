@@ -1,9 +1,7 @@
-import isPlainObject from 'lodash.isplainobject';
-
 import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
-import { InvalidRSAA, RequestError, ApiError } from './errors';
-import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
+import { InvalidRSAA, RequestError } from './errors';
+import { normalizeTypeDescriptors, actionWith } from './util';
 
 /**
  * A Redux middleware that processes RSAA actions.
