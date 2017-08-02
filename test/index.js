@@ -3,36 +3,37 @@ import { Schema, normalize, arrayOf } from 'normalizr';
 import nock from 'nock';
 
 import CALL_API from '../src/CALL_API';
-import { isRSAA, isValidTypeDescriptor, validateRSAA, isValidRSAA } from '../src/validation';
-import { InvalidRSAA, InternalError, RequestError, ApiError } from '../src/errors';
+import {
+  isRSAA,
+  isValidTypeDescriptor,
+  validateRSAA,
+  isValidRSAA
+} from '../src/validation';
+import {
+  InvalidRSAA,
+  InternalError,
+  RequestError,
+  ApiError
+} from '../src/errors';
 import { getJSON, normalizeTypeDescriptors, actionWith } from '../src/util';
 import { apiMiddleware } from '../src/middleware';
 
-test('isRSAA must identify RSAAs', (t) => {
+test('isRSAA must identify RSAAs', t => {
   const action1 = '';
-  t.notOk(
-    isRSAA(action1),
-    'RSAAs must be plain JavaScript objects'
-  );
+  t.notOk(isRSAA(action1), 'RSAAs must be plain JavaScript objects');
 
   const action2 = {};
-  t.notOk(
-    isRSAA(action2),
-    'RSAAs must have a [CALL_API] property'
-  );
+  t.notOk(isRSAA(action2), 'RSAAs must have a [CALL_API] property');
 
   const action3 = {
     [CALL_API]: {}
   };
-  t.ok(
-    isRSAA(action3),
-    'isRSAA must return true for an RSAA'
-  );
+  t.ok(isRSAA(action3), 'isRSAA must return true for an RSAA');
 
   t.end();
 });
 
-test('isValidTypeDescriptor must identify conformant type descriptors', (t) => {
+test('isValidTypeDescriptor must identify conformant type descriptors', t => {
   var descriptor1 = '';
   t.notOk(
     isValidTypeDescriptor(descriptor1),
@@ -65,27 +66,23 @@ test('isValidTypeDescriptor must identify conformant type descriptors', (t) => {
   var descriptor5 = {
     type: ''
   };
-  t.ok(
-    isValidTypeDescriptor(descriptor5),
-    'type property may be a string'
-  );
+  t.ok(isValidTypeDescriptor(descriptor5), 'type property may be a string');
 
   var descriptor6 = {
     type: Symbol()
   };
-  t.ok(
-    isValidTypeDescriptor(descriptor6),
-    'type property may be a symbol'
-  );
+  t.ok(isValidTypeDescriptor(descriptor6), 'type property may be a symbol');
 
   t.end();
 });
 
-test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
+test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
   const action1 = '';
   t.ok(
     validateRSAA(action1).length === 1 &&
-    validateRSAA(action1).includes('RSAAs must be plain JavaScript objects with a [CALL_API] property'),
+      validateRSAA(action1).includes(
+        'RSAAs must be plain JavaScript objects with a [CALL_API] property'
+      ),
     'RSAAs must be plain JavaScript objects with a [CALL_API] property (validateRSAA)'
   );
   t.notOk(
@@ -110,7 +107,9 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     [CALL_API]: ''
   };
   t.ok(
-    validateRSAA(action3).includes('[CALL_API] property must be a plain JavaScript object'),
+    validateRSAA(action3).includes(
+      '[CALL_API] property must be a plain JavaScript object'
+    ),
     '[CALL_API] property must be a plain JavaScript object (validateRSAA)'
   );
   t.notOk(
@@ -154,7 +153,9 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action6).includes('[CALL_API].endpoint property must be a string or a function'),
+    validateRSAA(action6).includes(
+      '[CALL_API].endpoint property must be a string or a function'
+    ),
     '[CALL_API].endpoint must be a string or a function (validateRSAA)'
   );
   t.notOk(
@@ -170,7 +171,9 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action7).includes('[CALL_API].method property must be a string'),
+    validateRSAA(action7).includes(
+      '[CALL_API].method property must be a string'
+    ),
     '[CALL_API].method property must be a string (validateRSAA)'
   );
   t.notOk(
@@ -187,11 +190,11 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   };
   t.ok(
     validateRSAA(action8).includes('Invalid [CALL_API].method: INVALIDMETHOD'),
-    '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\', or \'OPTIONS\' (validateRSAA)'
+    "[CALL_API].method must be one of the strings 'GET', 'HEAD', 'POST', 'PUT', 'PATCH' 'DELETE', or 'OPTIONS' (validateRSAA)"
   );
   t.notOk(
     isValidRSAA(action8),
-    '[CALL_API].method must be one of the strings \'GET\', \'HEAD\', \'POST\', \'PUT\', \'PATCH\' \'DELETE\', or \'OPTIONS\' (isValidRSAA)'
+    "[CALL_API].method must be one of the strings 'GET', 'HEAD', 'POST', 'PUT', 'PATCH' 'DELETE', or 'OPTIONS' (isValidRSAA)"
   );
 
   const action9 = {
@@ -203,7 +206,9 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action9).includes('[CALL_API].headers property must be undefined, a plain JavaScript object, or a function'),
+    validateRSAA(action9).includes(
+      '[CALL_API].headers property must be undefined, a plain JavaScript object, or a function'
+    ),
     '[CALL_API].headers property must be undefined, a plain JavaScript object, or a function (validateRSAA)'
   );
   t.notOk(
@@ -220,7 +225,9 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action10).includes('[CALL_API].credentials property must be undefined, or a string'),
+    validateRSAA(action10).includes(
+      '[CALL_API].credentials property must be undefined, or a string'
+    ),
     '[CALL_API].credentials property must be undefined or a string (validateRSAA)'
   );
   t.notOk(
@@ -237,12 +244,14 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action11).includes('Invalid [CALL_API].credentials: InvalidCredentials'),
-    '[CALL_API].credentials property must be one of the string \'omit\', \'same-origin\', or \'include\' (validateRSAA)'
+    validateRSAA(action11).includes(
+      'Invalid [CALL_API].credentials: InvalidCredentials'
+    ),
+    "[CALL_API].credentials property must be one of the string 'omit', 'same-origin', or 'include' (validateRSAA)"
   );
   t.notOk(
     isValidRSAA(action11),
-    '[CALL_API].credentials property must be one of the string \'omit\', \'same-origin\', or \'include\' (isValidRSAA)'
+    "[CALL_API].credentials property must be one of the string 'omit', 'same-origin', or 'include' (isValidRSAA)"
   );
 
   const action12 = {
@@ -254,7 +263,9 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action12).includes('[CALL_API].bailout property must be undefined, a boolean, or a function'),
+    validateRSAA(action12).includes(
+      '[CALL_API].bailout property must be undefined, a boolean, or a function'
+    ),
     '[CALL_API].bailout must be undefined, a boolean, or a function (validateRSAA)'
   );
   t.notOk(
@@ -270,13 +281,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action13).includes('[CALL_API].types property must be an array of length 3'),
+    validateRSAA(action13).includes(
+      '[CALL_API].types property must be an array of length 3'
+    ),
     '[CALL_API].types property must be an array (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action13),
     '[CALL_API].types property must be an array (isRSAA)'
-  )
+  );
 
   const action14 = {
     [CALL_API]: {
@@ -286,13 +299,15 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     }
   };
   t.ok(
-    validateRSAA(action14).includes('[CALL_API].types property must be an array of length 3'),
+    validateRSAA(action14).includes(
+      '[CALL_API].types property must be an array of length 3'
+    ),
     '[CALL_API].types property must have length 3 (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action14),
     '[CALL_API].types property must have length 3 (isRSAA)'
-  )
+  );
 
   const action15 = {
     [CALL_API]: {
@@ -312,7 +327,7 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.notOk(
     isValidRSAA(action15),
     'Each element in [CALL_API].types property must be a string, a symbol, or a type descriptor (isRSAA)'
-  )
+  );
 
   const action16 = {
     [CALL_API]: {
@@ -329,7 +344,7 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.ok(
     isValidRSAA(action16),
     '[CALL_API].endpoint may be a string (isValidRSAA)'
-  )
+  );
 
   const action17 = {
     [CALL_API]: {
@@ -379,10 +394,7 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     0,
     '[CALL_API].headers may be a function (validateRSAA)'
   );
-  t.ok(
-    isValidRSAA(action19),
-    '[CALL_API].headers may be a function (isRSAA)'
-  );
+  t.ok(isValidRSAA(action19), '[CALL_API].headers may be a function (isRSAA)');
 
   const action20 = {
     [CALL_API]: {
@@ -397,10 +409,7 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     0,
     '[CALL_API].bailout may be a boolean (validateRSAA)'
   );
-  t.ok(
-    isValidRSAA(action20),
-    '[CALL_API].bailout may be a boolean (isRSAA)'
-  );
+  t.ok(isValidRSAA(action20), '[CALL_API].bailout may be a boolean (isRSAA)');
 
   const action21 = {
     [CALL_API]: {
@@ -415,10 +424,7 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
     0,
     '[CALL_API].bailout may be a function (validateRSAA)'
   );
-  t.ok(
-    isValidRSAA(action21),
-    '[CALL_API].bailout may be a function (isRSAA)'
-  );
+  t.ok(isValidRSAA(action21), '[CALL_API].bailout may be a function (isRSAA)');
 
   const action22 = {
     [CALL_API]: {
@@ -473,24 +479,13 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', (t) => {
   t.end();
 });
 
-test('InvalidRSAA', (t) => {
+test('InvalidRSAA', t => {
   const validationErrors = ['validation error 1', 'validation error 2'];
   const error = new InvalidRSAA(validationErrors);
 
-  t.ok(
-    error instanceof Error,
-    'is an error object'
-  );
-  t.equal(
-    error.name,
-    'InvalidRSAA',
-    'has correct name property'
-  );
-  t.equal(
-    error.message,
-    'Invalid RSAA',
-    'has correct message'
-  );
+  t.ok(error instanceof Error, 'is an error object');
+  t.equal(error.name, 'InvalidRSAA', 'has correct name property');
+  t.equal(error.message, 'Invalid RSAA', 'has correct message');
   t.deepEqual(
     error.validationErrors,
     validationErrors,
@@ -500,18 +495,11 @@ test('InvalidRSAA', (t) => {
   t.end();
 });
 
-test('InternalError', (t) => {
+test('InternalError', t => {
   const error = new InternalError('error thrown in payload function');
 
-  t.ok(
-    error instanceof Error,
-    'is an error object'
-  );
-  t.equal(
-    error.name,
-    'InternalError',
-    'has correct name property'
-  );
+  t.ok(error instanceof Error, 'is an error object');
+  t.equal(error.name, 'InternalError', 'has correct name property');
   t.equal(
     error.message,
     'error thrown in payload function',
@@ -521,65 +509,31 @@ test('InternalError', (t) => {
   t.end();
 });
 
-test('RequestError', (t) => {
+test('RequestError', t => {
   const error = new RequestError('Network request failed');
 
-  t.ok(
-    error instanceof Error,
-    'is an error object'
-  );
-  t.equal(
-    error.name,
-    'RequestError',
-    'has correct name property'
-  );
-  t.equal(
-    error.message,
-    'Network request failed',
-    'has correct message'
-  );
+  t.ok(error instanceof Error, 'is an error object');
+  t.equal(error.name, 'RequestError', 'has correct name property');
+  t.equal(error.message, 'Network request failed', 'has correct message');
 
   t.end();
 });
 
-test('ApiError', (t) => {
+test('ApiError', t => {
   const json = { error: 'Resource not found' };
   const error = new ApiError(404, 'Not Found', json);
 
-  t.ok(
-    error instanceof Error,
-    'is an error object'
-  );
-  t.equal(
-    error.name,
-    'ApiError',
-    'has correct name property'
-  );
-  t.equal(
-    error.message,
-    '404 - Not Found',
-    'has correct message'
-  );
-  t.equal(
-    error.status,
-    404,
-    'has correct status property'
-  );
-  t.equal(
-    error.statusText,
-    'Not Found',
-    'has correct statusText property'
-  );
-  t.equal(
-    error.response,
-    json,
-    'has correct response property'
-  );
+  t.ok(error instanceof Error, 'is an error object');
+  t.equal(error.name, 'ApiError', 'has correct name property');
+  t.equal(error.message, '404 - Not Found', 'has correct message');
+  t.equal(error.status, 404, 'has correct status property');
+  t.equal(error.statusText, 'Not Found', 'has correct statusText property');
+  t.equal(error.response, json, 'has correct response property');
 
   t.end();
 });
 
-test('getJSON', async (t) => {
+test('getJSON', async t => {
   const res1 = {
     headers: {
       get(name) {
@@ -594,7 +548,7 @@ test('getJSON', async (t) => {
   t.deepEqual(
     result1,
     { message: 'ok' },
-    'returns the JSON body of a response with a JSONy \'Content-Type\' header'
+    "returns the JSON body of a response with a JSONy 'Content-Type' header"
   );
 
   const res2 = {
@@ -607,13 +561,15 @@ test('getJSON', async (t) => {
   try {
     const result2 = await getJSON(res2);
   } catch (e) {
-    t.pass('returns a rejected promise for a response with a not-JSONy \'Content-Type\' header');
+    t.pass(
+      "returns a rejected promise for a response with a not-JSONy 'Content-Type' header"
+    );
   }
 
   t.end();
 });
 
-test('normalizeTypeDescriptors', (t) => {
+test('normalizeTypeDescriptors', t => {
   const types1 = ['REQUEST', 'SUCCESS', 'FAILURE'];
   const descriptors1 = normalizeTypeDescriptors(types1);
   t.ok(
@@ -711,7 +667,7 @@ test('normalizeTypeDescriptors', (t) => {
   t.end();
 });
 
-test('actionWith', async (t) => {
+test('actionWith', async t => {
   const descriptor1 = {
     type: 'REQUEST',
     payload: 'somePayload',
@@ -752,11 +708,7 @@ test('actionWith', async (t) => {
     },
     meta: (...args) => {
       t.pass('must call a meta function');
-      t.deepEqual(
-        args,
-        passedArgs,
-        'meta function must receive its arguments'
-      );
+      t.deepEqual(args, passedArgs, 'meta function must receive its arguments');
     }
   };
   const fsa2 = await actionWith(descriptor2, passedArgs);
@@ -798,17 +750,13 @@ test('actionWith', async (t) => {
   t.end();
 });
 
-test('apiMiddleware must be a Redux middleware', (t) => {
+test('apiMiddleware must be a Redux middleware', t => {
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
   const doNext = () => {};
   const actionHandler = nextHandler(doNext);
 
-  t.equal(
-    apiMiddleware.length,
-    1,
-    'apiMiddleware must take one argument'
-  );
+  t.equal(apiMiddleware.length, 1, 'apiMiddleware must take one argument');
 
   t.equal(
     typeof nextHandler,
@@ -816,11 +764,7 @@ test('apiMiddleware must be a Redux middleware', (t) => {
     'apiMiddleware must return a function to handle next'
   );
 
-  t.equal(
-    nextHandler.length,
-    1,
-    'next handler must take one argument'
-  );
+  t.equal(nextHandler.length, 1, 'next handler must take one argument');
 
   t.equal(
     typeof actionHandler,
@@ -828,26 +772,18 @@ test('apiMiddleware must be a Redux middleware', (t) => {
     'next handler must return a function to handle action'
   );
 
-  t.equal(
-    actionHandler.length,
-    1,
-    'action handler must take one argument'
-  );
+  t.equal(actionHandler.length, 1, 'action handler must take one argument');
 
   t.end();
 });
 
-test('apiMiddleware must pass actions without a [CALL_API] property to the next handler', (t) => {
+test('apiMiddleware must pass actions without a [CALL_API] property to the next handler', t => {
   const anAction = {};
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.pass('next handler called');
-    t.equal(
-      anAction,
-      action,
-      'original action passed to the next handler'
-    );
+    t.equal(anAction, action, 'original action passed to the next handler');
   };
   const actionHandler = nextHandler(doNext);
 
@@ -855,7 +791,7 @@ test('apiMiddleware must pass actions without a [CALL_API] property to the next 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a string request type', (t) => {
+test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a string request type', t => {
   const anAction = {
     [CALL_API]: {
       types: ['REQUEST']
@@ -863,27 +799,16 @@ test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.pass('next handler called');
-    t.equal(
-      action.type,
-      'REQUEST',
-      'dispatched FSA has correct type property'
-    );
+    t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
     t.equal(
       action.payload.name,
       'InvalidRSAA',
       'dispatched FSA has correct payload property'
     );
-    t.equal(
-      action.meta,
-      undefined,
-      'dispatched FSA has no meta property'
-    );
-    t.ok(
-      action.error,
-      'dispatched FSA has correct error property'
-    );
+    t.equal(action.meta, undefined, 'dispatched FSA has no meta property');
+    t.ok(action.error, 'dispatched FSA has correct error property');
   };
   const actionHandler = nextHandler(doNext);
 
@@ -891,7 +816,7 @@ test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a descriptor request type', (t) => {
+test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a descriptor request type', t => {
   const anAction = {
     [CALL_API]: {
       types: [
@@ -903,27 +828,16 @@ test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.pass('next handler called');
-    t.equal(
-      action.type,
-      'REQUEST',
-      'dispatched FSA has correct type property'
-    );
+    t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
     t.equal(
       action.payload.name,
       'InvalidRSAA',
       'dispatched FSA has correct payload property'
     );
-    t.equal(
-      action.meta,
-      undefined,
-      'dispatched FSA has no meta property'
-    );
-    t.ok(
-      action.error,
-      'dispatched FSA has correct error property'
-    );
+    t.equal(action.meta, undefined, 'dispatched FSA has no meta property');
+    t.ok(action.error, 'dispatched FSA has correct error property');
   };
   const actionHandler = nextHandler(doNext);
 
@@ -931,13 +845,13 @@ test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must do nothing for an invalid RSAA without a request type', (t) => {
+test('apiMiddleware must do nothing for an invalid RSAA without a request type', t => {
   const anAction = {
     [CALL_API]: {}
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.fail('next handler called');
   };
   const actionHandler = nextHandler(doNext);
@@ -949,12 +863,14 @@ test('apiMiddleware must do nothing for an invalid RSAA without a request type',
   }, 200);
 });
 
-test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout fails', (t) => {
+test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout fails', t => {
   const anAction = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
-      bailout: () => { throw new Error(); },
+      bailout: () => {
+        throw new Error();
+      },
       types: [
         {
           type: 'REQUEST',
@@ -968,13 +884,9 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout f
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.pass('next handler called');
-    t.equal(
-      action.type,
-      'REQUEST',
-      'dispatched FSA has correct type property'
-    );
+    t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
     t.equal(
       action.payload.message,
       '[CALL_API].bailout function failed',
@@ -985,10 +897,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout f
       'someMeta',
       'dispatched FSA has correct meta property'
     );
-    t.ok(
-      action.error,
-      'dispatched FSA has correct error property'
-    );
+    t.ok(action.error, 'dispatched FSA has correct error property');
   };
   const actionHandler = nextHandler(doNext);
 
@@ -996,10 +905,12 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].bailout f
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint fails', (t) => {
+test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint fails', t => {
   const anAction = {
     [CALL_API]: {
-      endpoint: () => { throw new Error(); },
+      endpoint: () => {
+        throw new Error();
+      },
       method: 'GET',
       types: [
         {
@@ -1014,13 +925,9 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.pass('next handler called');
-    t.equal(
-      action.type,
-      'REQUEST',
-      'dispatched FSA has correct type property'
-    );
+    t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
     t.equal(
       action.payload.message,
       '[CALL_API].endpoint function failed',
@@ -1031,10 +938,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint 
       'someMeta',
       'dispatched FSA has correct meta property'
     );
-    t.ok(
-      action.error,
-      'dispatched FSA has correct error property'
-    );
+    t.ok(action.error, 'dispatched FSA has correct error property');
   };
   const actionHandler = nextHandler(doNext);
 
@@ -1042,12 +946,14 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers fails', (t) => {
+test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers fails', t => {
   const anAction = {
     [CALL_API]: {
       endpoint: '',
       method: 'GET',
-      headers: () => { throw new Error(); },
+      headers: () => {
+        throw new Error();
+      },
       types: [
         {
           type: 'REQUEST',
@@ -1061,13 +967,9 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers f
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.pass('next handler called');
-    t.equal(
-      action.type,
-      'REQUEST',
-      'dispatched FSA has correct type property'
-    );
+    t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
     t.equal(
       action.payload.message,
       '[CALL_API].headers function failed',
@@ -1078,10 +980,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers f
       'someMeta',
       'dispatched FSA has correct meta property'
     );
-    t.ok(
-      action.error,
-      'dispatched FSA has correct error property'
-    );
+    t.ok(action.error, 'dispatched FSA has correct error property');
   };
   const actionHandler = nextHandler(doNext);
 
@@ -1089,7 +988,7 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers f
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA on a request error', (t) => {
+test('apiMiddleware must dispatch an error request FSA on a request error', t => {
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1', // We haven't mocked this
@@ -1107,53 +1006,50 @@ test('apiMiddleware must dispatch an error request FSA on a request error', (t) 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     switch (action.type) {
-    case 'REQUEST':
-      if (!action.error) {
-        t.pass('next handler called');
-        t.equal(
-          action.type,
-          'REQUEST',
-          'dispatched non-error FSA has correct type property'
-        );
-        t.equal(
-          action.payload,
-          'ignoredPayload',
-          'dispatched non-error FSA has correct payload property'
-        );
-        t.equal(
-          action.meta,
-          'someMeta',
-          'dispatched non-error FSA has correct meta property'
-        );
-        t.notOk(
-          action.error,
-          'dispatched non-error FSA has correct error property'
-        );
-        break;
-      } else {
-        t.pass('next handler called');
-        t.equal(
-          action.type,
-          'REQUEST',
-          'dispatched error FSA has correct type property'
-        );
-        t.equal(
-          action.payload.name,
-          'RequestError',
-          'dispatched error FSA has correct payload property'
-        );
-        t.equal(
-          action.meta,
-          'someMeta',
-          'dispatched error FSA has correct meta property'
-        );
-        t.ok(
-          action.error,
-          'dispatched error FSA has correct error property'
-        );
-      }
+      case 'REQUEST':
+        if (!action.error) {
+          t.pass('next handler called');
+          t.equal(
+            action.type,
+            'REQUEST',
+            'dispatched non-error FSA has correct type property'
+          );
+          t.equal(
+            action.payload,
+            'ignoredPayload',
+            'dispatched non-error FSA has correct payload property'
+          );
+          t.equal(
+            action.meta,
+            'someMeta',
+            'dispatched non-error FSA has correct meta property'
+          );
+          t.notOk(
+            action.error,
+            'dispatched non-error FSA has correct error property'
+          );
+          break;
+        } else {
+          t.pass('next handler called');
+          t.equal(
+            action.type,
+            'REQUEST',
+            'dispatched error FSA has correct type property'
+          );
+          t.equal(
+            action.payload.name,
+            'RequestError',
+            'dispatched error FSA has correct payload property'
+          );
+          t.equal(
+            action.meta,
+            'someMeta',
+            'dispatched error FSA has correct meta property'
+          );
+          t.ok(action.error, 'dispatched error FSA has correct error property');
+        }
     }
   };
   const actionHandler = nextHandler(doNext);
@@ -1162,7 +1058,7 @@ test('apiMiddleware must dispatch an error request FSA on a request error', (t) 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must use a [CALL_API].bailout boolean when present', (t) => {
+test('apiMiddleware must use a [CALL_API].bailout boolean when present', t => {
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1173,7 +1069,7 @@ test('apiMiddleware must use a [CALL_API].bailout boolean when present', (t) => 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.fail('next handler called');
   };
   const actionHandler = nextHandler(doNext);
@@ -1185,7 +1081,7 @@ test('apiMiddleware must use a [CALL_API].bailout boolean when present', (t) => 
   }, 200);
 });
 
-test('apiMiddleware must use a [CALL_API].bailout function when present', (t) => {
+test('apiMiddleware must use a [CALL_API].bailout function when present', t => {
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1199,7 +1095,7 @@ test('apiMiddleware must use a [CALL_API].bailout function when present', (t) =>
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     t.fail('next handler called');
   };
   const actionHandler = nextHandler(doNext);
@@ -1208,10 +1104,8 @@ test('apiMiddleware must use a [CALL_API].bailout function when present', (t) =>
   actionHandler(anAction);
 });
 
-test('apiMiddleware must use an [CALL_API].endpoint function when present', (t) => {
-  const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(200);
+test('apiMiddleware must use an [CALL_API].endpoint function when present', t => {
+  const api = nock('http://127.0.0.1').get('/api/users/1').reply(200);
   const anAction = {
     [CALL_API]: {
       endpoint: () => {
@@ -1224,40 +1118,38 @@ test('apiMiddleware must use an [CALL_API].endpoint function when present', (t) 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {};
+  const doNext = action => {};
   const actionHandler = nextHandler(doNext);
 
   t.plan(1);
   actionHandler(anAction);
 });
 
-test('apiMiddleware must use an [CALL_API].headers function when present', (t) => {
-  const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(200);
+test('apiMiddleware must use an [CALL_API].headers function when present', t => {
+  const api = nock('http://127.0.0.1').get('/api/users/1').reply(200);
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       headers: () => {
-        t.pass('[CALL_API].headers function called')
+        t.pass('[CALL_API].headers function called');
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {};
+  const doNext = action => {};
   const actionHandler = nextHandler(doNext);
 
   t.plan(1);
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response', (t) => {
+test('apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response', t => {
   const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
+    .get('/api/users/1')
+    .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1278,42 +1170,36 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     switch (action.type) {
-    case 'REQUEST':
-      t.pass('request FSA passed to the next handler');
-      t.equal(
-        action.payload,
-        'requestPayload',
-        'request FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'requestMeta',
-        'request FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'request FSA has correct error property'
-      );
-      break;
-    case 'SUCCESS':
-      t.pass('success FSA passed to the next handler');
-      t.deepEqual(
-        action.payload,
-        { username: 'Alice' },
-        'success FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'successMeta',
-        'success FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'success FSA has correct error property'
-      );
-      break;
+      case 'REQUEST':
+        t.pass('request FSA passed to the next handler');
+        t.equal(
+          action.payload,
+          'requestPayload',
+          'request FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'requestMeta',
+          'request FSA has correct meta property'
+        );
+        t.notOk(action.error, 'request FSA has correct error property');
+        break;
+      case 'SUCCESS':
+        t.pass('success FSA passed to the next handler');
+        t.deepEqual(
+          action.payload,
+          { username: 'Alice' },
+          'success FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'successMeta',
+          'success FSA has correct meta property'
+        );
+        t.notOk(action.error, 'success FSA has correct error property');
+        break;
     }
   };
   const actionHandler = nextHandler(doNext);
@@ -1322,10 +1208,10 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch a success FSA on a successful API call with an empty JSON response', (t) => {
+test('apiMiddleware must dispatch a success FSA on a successful API call with an empty JSON response', t => {
   const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(200, {}, { 'Content-Type': 'application/json' });
+    .get('/api/users/1')
+    .reply(200, {}, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1346,42 +1232,36 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with an
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     switch (action.type) {
-    case 'REQUEST':
-      t.pass('request FSA passed to the next handler');
-      t.equal(
-        action.payload,
-        'requestPayload',
-        'request FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'requestMeta',
-        'request FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'request FSA has correct error property'
-      );
-      break;
-    case 'SUCCESS':
-      t.pass('success FSA passed to the next handler');
-      t.deepEqual(
-        action.payload,
-        {},
-        'success FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'successMeta',
-        'success FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'success FSA has correct error property'
-      );
-      break;
+      case 'REQUEST':
+        t.pass('request FSA passed to the next handler');
+        t.equal(
+          action.payload,
+          'requestPayload',
+          'request FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'requestMeta',
+          'request FSA has correct meta property'
+        );
+        t.notOk(action.error, 'request FSA has correct error property');
+        break;
+      case 'SUCCESS':
+        t.pass('success FSA passed to the next handler');
+        t.deepEqual(
+          action.payload,
+          {},
+          'success FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'successMeta',
+          'success FSA has correct meta property'
+        );
+        t.notOk(action.error, 'success FSA has correct error property');
+        break;
     }
   };
   const actionHandler = nextHandler(doNext);
@@ -1390,10 +1270,8 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with an
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response', (t) => {
-  const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(200);
+test('apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response', t => {
+  const api = nock('http://127.0.0.1').get('/api/users/1').reply(200);
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1414,42 +1292,36 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     switch (action.type) {
-    case 'REQUEST':
-      t.pass('request FSA passed to the next handler');
-      t.equal(
-        action.payload,
-        'requestPayload',
-        'request FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'requestMeta',
-        'request FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'request FSA has correct error property'
-      );
-      break;
-    case 'SUCCESS':
-      t.pass('success FSA passed to the next handler');
-      t.deepEqual(
-        typeof action.payload,
-        'undefined',
-        'success FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'successMeta',
-        'success FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'success FSA has correct error property'
-      );
-      break;
+      case 'REQUEST':
+        t.pass('request FSA passed to the next handler');
+        t.equal(
+          action.payload,
+          'requestPayload',
+          'request FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'requestMeta',
+          'request FSA has correct meta property'
+        );
+        t.notOk(action.error, 'request FSA has correct error property');
+        break;
+      case 'SUCCESS':
+        t.pass('success FSA passed to the next handler');
+        t.deepEqual(
+          typeof action.payload,
+          'undefined',
+          'success FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'successMeta',
+          'success FSA has correct meta property'
+        );
+        t.notOk(action.error, 'success FSA has correct error property');
+        break;
     }
   };
   const actionHandler = nextHandler(doNext);
@@ -1458,11 +1330,14 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
   actionHandler(anAction);
 });
 
-
-test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-empty JSON response', (t) => {
+test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-empty JSON response', t => {
   const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(404, { error: 'Resource not found' }, { 'Content-Type': 'application/json' });
+    .get('/api/users/1')
+    .reply(
+      404,
+      { error: 'Resource not found' },
+      { 'Content-Type': 'application/json' }
+    );
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1477,48 +1352,42 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
         {
           type: 'FAILURE',
           meta: 'failureMeta'
-        },
+        }
       ]
     }
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     switch (action.type) {
-    case 'REQUEST':
-      t.pass('request FSA passed to the next handler');
-      t.equal(
-        action.payload,
-        'requestPayload',
-        'request FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'requestMeta',
-        'request FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'request FSA has correct error property'
-      );
-      break;
-    case 'FAILURE':
-      t.pass('failure FSA passed to the next handler');
-      t.deepEqual(
-        action.payload.response,
-        { error: 'Resource not found' },
-        'failure FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'failureMeta',
-        'failure FSA has correct meta property'
-      );
-      t.ok(
-        action.error,
-        'failure FSA has correct error property'
-      );
-      break;
+      case 'REQUEST':
+        t.pass('request FSA passed to the next handler');
+        t.equal(
+          action.payload,
+          'requestPayload',
+          'request FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'requestMeta',
+          'request FSA has correct meta property'
+        );
+        t.notOk(action.error, 'request FSA has correct error property');
+        break;
+      case 'FAILURE':
+        t.pass('failure FSA passed to the next handler');
+        t.deepEqual(
+          action.payload.response,
+          { error: 'Resource not found' },
+          'failure FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'failureMeta',
+          'failure FSA has correct meta property'
+        );
+        t.ok(action.error, 'failure FSA has correct error property');
+        break;
     }
   };
   const actionHandler = nextHandler(doNext);
@@ -1527,10 +1396,10 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with an empty JSON response', (t) => {
+test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with an empty JSON response', t => {
   const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(404, {}, { 'Content-Type': 'application/json' });
+    .get('/api/users/1')
+    .reply(404, {}, { 'Content-Type': 'application/json' });
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1545,48 +1414,42 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
         {
           type: 'FAILURE',
           meta: 'failureMeta'
-        },
+        }
       ]
     }
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     switch (action.type) {
-    case 'REQUEST':
-      t.pass('request FSA passed to the next handler');
-      t.equal(
-        action.payload,
-        'requestPayload',
-        'request FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'requestMeta',
-        'request FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'request FSA has correct error property'
-      );
-      break;
-    case 'FAILURE':
-      t.pass('failure FSA passed to the next handler');
-      t.deepEqual(
-        action.payload.response,
-        {},
-        'failure FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'failureMeta',
-        'failure FSA has correct meta property'
-      );
-      t.ok(
-        action.error,
-        'failure FSA has correct error property'
-      );
-      break;
+      case 'REQUEST':
+        t.pass('request FSA passed to the next handler');
+        t.equal(
+          action.payload,
+          'requestPayload',
+          'request FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'requestMeta',
+          'request FSA has correct meta property'
+        );
+        t.notOk(action.error, 'request FSA has correct error property');
+        break;
+      case 'FAILURE':
+        t.pass('failure FSA passed to the next handler');
+        t.deepEqual(
+          action.payload.response,
+          {},
+          'failure FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'failureMeta',
+          'failure FSA has correct meta property'
+        );
+        t.ok(action.error, 'failure FSA has correct error property');
+        break;
     }
   };
   const actionHandler = nextHandler(doNext);
@@ -1595,10 +1458,8 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-JSON response', (t) => {
-  const api = nock('http://127.0.0.1')
-                .get('/api/users/1')
-                .reply(404);
+test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-JSON response', t => {
+  const api = nock('http://127.0.0.1').get('/api/users/1').reply(404);
   const anAction = {
     [CALL_API]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1613,48 +1474,42 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
         {
           type: 'FAILURE',
           meta: 'failureMeta'
-        },
+        }
       ]
     }
   };
   const doGetState = () => {};
   const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = (action) => {
+  const doNext = action => {
     switch (action.type) {
-    case 'REQUEST':
-      t.pass('request FSA passed to the next handler');
-      t.equal(
-        action.payload,
-        'requestPayload',
-        'request FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'requestMeta',
-        'request FSA has correct meta property'
-      );
-      t.notOk(
-        action.error,
-        'request FSA has correct error property'
-      );
-      break;
-    case 'FAILURE':
-      t.pass('failure FSA passed to the next handler');
-      t.deepEqual(
-        typeof action.payload.response,
-        'undefined',
-        'failure FSA has correct payload property'
-      );
-      t.equal(
-        action.meta,
-        'failureMeta',
-        'failure FSA has correct meta property'
-      );
-      t.ok(
-        action.error,
-        'failure FSA has correct error property'
-      );
-      break;
+      case 'REQUEST':
+        t.pass('request FSA passed to the next handler');
+        t.equal(
+          action.payload,
+          'requestPayload',
+          'request FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'requestMeta',
+          'request FSA has correct meta property'
+        );
+        t.notOk(action.error, 'request FSA has correct error property');
+        break;
+      case 'FAILURE':
+        t.pass('failure FSA passed to the next handler');
+        t.deepEqual(
+          typeof action.payload.response,
+          'undefined',
+          'failure FSA has correct payload property'
+        );
+        t.equal(
+          action.meta,
+          'failureMeta',
+          'failure FSA has correct meta property'
+        );
+        t.ok(action.error, 'failure FSA has correct error property');
+        break;
     }
   };
   const actionHandler = nextHandler(doNext);
