@@ -40,7 +40,6 @@ export {
   // Alias RSAA to CALL_API to smooth v1 - v2 migration
   // TODO: Deprecate in v3
   RSAA as CALL_API,
-
   RSAA,
   isRSAA,
   validateRSAA,
