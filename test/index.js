@@ -992,81 +992,75 @@ test('apiMiddleware must dispatch an error request FSA when [RSAA].headers fails
   actionHandler(anAction);
 });
 
-test.skip(
-  'apiMiddleware must dispatch an error request FSA on a request error',
-  t => {
-    const anAction = {
-      [RSAA]: {
-        endpoint: 'http://127.0.0.1/api/users/1', // We haven't mocked this
-        method: 'GET',
-        types: [
-          {
-            type: 'REQUEST',
-            payload: 'ignoredPayload',
-            meta: 'someMeta'
-          },
-          'SUCCESS',
-          'FAILURE'
-        ]
-      }
-    };
-    const doGetState = () => {};
-    const nextHandler = apiMiddleware({ getState: doGetState });
-    const doNext = action => {
-      switch (action.type) {
-        case 'REQUEST':
-          if (!action.error) {
-            t.pass('next handler called');
-            t.equal(
-              action.type,
-              'REQUEST',
-              'dispatched non-error FSA has correct type property'
-            );
-            t.equal(
-              action.payload,
-              'ignoredPayload',
-              'dispatched non-error FSA has correct payload property'
-            );
-            t.equal(
-              action.meta,
-              'someMeta',
-              'dispatched non-error FSA has correct meta property'
-            );
-            t.notOk(
-              action.error,
-              'dispatched non-error FSA has correct error property'
-            );
-            break;
-          } else {
-            t.pass('next handler called');
-            t.equal(
-              action.type,
-              'REQUEST',
-              'dispatched error FSA has correct type property'
-            );
-            t.equal(
-              action.payload.name,
-              'RequestError',
-              'dispatched error FSA has correct payload property'
-            );
-            t.equal(
-              action.meta,
-              'someMeta',
-              'dispatched error FSA has correct meta property'
-            );
-            t.ok(
-              action.error,
-              'dispatched error FSA has correct error property'
-            );
-          }
-      }
-    };
-    const actionHandler = nextHandler(doNext);
+test('apiMiddleware must dispatch an error request FSA on a request error', t => {
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1', // We haven't mocked this
+      method: 'GET',
+      types: [
+        {
+          type: 'REQUEST',
+          payload: 'ignoredPayload',
+          meta: 'someMeta'
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    switch (action.type) {
+      case 'REQUEST':
+        if (!action.error) {
+          t.pass('next handler called');
+          t.equal(
+            action.type,
+            'REQUEST',
+            'dispatched non-error FSA has correct type property'
+          );
+          t.equal(
+            action.payload,
+            'ignoredPayload',
+            'dispatched non-error FSA has correct payload property'
+          );
+          t.equal(
+            action.meta,
+            'someMeta',
+            'dispatched non-error FSA has correct meta property'
+          );
+          t.notOk(
+            action.error,
+            'dispatched non-error FSA has correct error property'
+          );
+          break;
+        } else {
+          t.pass('next handler called');
+          t.equal(
+            action.type,
+            'REQUEST',
+            'dispatched error FSA has correct type property'
+          );
+          t.equal(
+            action.payload.name,
+            'RequestError',
+            'dispatched error FSA has correct payload property'
+          );
+          t.equal(
+            action.meta,
+            'someMeta',
+            'dispatched error FSA has correct meta property'
+          );
+          t.ok(action.error, 'dispatched error FSA has correct error property');
+        }
+    }
+  };
+  const actionHandler = nextHandler(doNext);
 
-    t.plan(10);
-    actionHandler(anAction);
-  }
-);
+  t.plan(10);
+  actionHandler(anAction);
+});
 
 test('apiMiddleware must use an [RSAA].bailout boolean when present', t => {
   const anAction = {
