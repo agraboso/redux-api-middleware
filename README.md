@@ -166,7 +166,7 @@ It may also be a function taking the state of your Redux store as its argument, 
 
 #### `[RSAA].options`
 
-The fetch options for the API call. See [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) for more information.
+The fetch options for the API call. What options are available depends on what fetch implementation is in use. See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options) for more information.
 
 It is usually an object with the options keys/values. For example, you can specify a network timeout for node.js code
 in the following way.
@@ -586,7 +586,8 @@ The optional `[RSAA].headers` property MUST be a plain JavaScript object or a fu
 #### `[RSAA].options`
 
 The optional `[RSAA].options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
-The options object can contain any options supported by the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+The options object can contain any options supported by the effective fetch implementation.
+See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options).
 
 #### `[RSAA].credentials`
 
