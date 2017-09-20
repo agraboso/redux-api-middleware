@@ -104,14 +104,16 @@ function apiMiddleware({ getState }) {
       try {
         options = options(getState());
       } catch (e) {
-        return next(await actionWith(
-          {
-            ...requestType,
-            payload: new RequestError('[RSAA].options function failed'),
-            error: true
-          },
-          [action, getState()]
-        ));
+        return next(
+          await actionWith(
+            {
+              ...requestType,
+              payload: new RequestError('[RSAA].options function failed'),
+              error: true
+            },
+            [action, getState()]
+          )
+        );
       }
     }
 
@@ -120,8 +122,14 @@ function apiMiddleware({ getState }) {
 
     try {
       // Make the API call
-      var res = await fetch(endpoint, {...options, method, body, credentials, headers: headers || {} });
-    } catch(e) {
+      var res = await fetch(endpoint, {
+        ...options,
+        method,
+        body,
+        credentials,
+        headers: headers || {}
+      });
+    } catch (e) {
       // The request was malformed, or there was a network error
       return next(
         await actionWith(

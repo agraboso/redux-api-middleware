@@ -96,7 +96,15 @@ function validateRSAA(action) {
     }
   }
 
-  const { endpoint, method, headers, options, credentials, types, bailout } = callAPI;
+  const {
+    endpoint,
+    method,
+    headers,
+    options,
+    credentials,
+    types,
+    bailout
+  } = callAPI;
   if (typeof endpoint === 'undefined') {
     validationErrors.push('[RSAA] must have an endpoint property');
   } else if (typeof endpoint !== 'string' && typeof endpoint !== 'function') {
@@ -121,8 +129,14 @@ function validateRSAA(action) {
       '[RSAA].headers property must be undefined, a plain JavaScript object, or a function'
     );
   }
-  if (typeof options !== 'undefined' && !isPlainObject(options) && typeof options !== 'function') {
-    validationErrors.push('[RSAA].options property must be undefined, a plain JavaScript object, or a function');
+  if (
+    typeof options !== 'undefined' &&
+    !isPlainObject(options) &&
+    typeof options !== 'function'
+  ) {
+    validationErrors.push(
+      '[RSAA].options property must be undefined, a plain JavaScript object, or a function'
+    );
   }
   if (typeof credentials !== 'undefined') {
     if (typeof credentials !== 'string') {
