@@ -1,7 +1,6 @@
 /**
  * Redux middleware for calling an API
  * @module redux-api-middleware
- * @requires isomorphic-fetch
  * @requires lodash.isplainobject
  * @exports {string} RSAA
  * @exports {string} CALL_API - alias of RSAA, to be deprecated in v3

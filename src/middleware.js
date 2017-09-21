@@ -1,9 +1,7 @@
-import isPlainObject from 'lodash.isplainobject';
-
 import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
-import { InvalidRSAA, RequestError, ApiError } from './errors';
-import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
+import { InvalidRSAA, RequestError } from './errors';
+import { normalizeTypeDescriptors, actionWith } from './util';
 
 /**
  * A Redux middleware that processes RSAA actions.
@@ -38,7 +36,7 @@ function apiMiddleware({ getState }) {
 
     // Parse the validated RSAA action
     const callAPI = action[RSAA];
-    var { endpoint, headers } = callAPI;
+    var { endpoint, headers, options = {} } = callAPI;
     const { method, body, credentials, bailout, types } = callAPI;
     const [requestType, successType, failureType] = normalizeTypeDescriptors(
       types
@@ -101,12 +99,31 @@ function apiMiddleware({ getState }) {
       }
     }
 
+    // Process [RSAA].options function
+    if (typeof options === 'function') {
+      try {
+        options = options(getState());
+      } catch (e) {
+        return next(
+          await actionWith(
+            {
+              ...requestType,
+              payload: new RequestError('[RSAA].options function failed'),
+              error: true
+            },
+            [action, getState()]
+          )
+        );
+      }
+    }
+
     // We can now dispatch the request FSA
     next(await actionWith(requestType, [action, getState()]));
 
     try {
       // Make the API call
       var res = await fetch(endpoint, {
+        ...options,
         method,
         body,
         credentials,

@@ -144,7 +144,7 @@ It must be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or
 
 The body of the API call.
 
-`redux-api-middleware` uses the [`Fetch API`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to make the API call. `[RSAA].body` should hence be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
+`redux-api-middleware` uses the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to make the API call. `[RSAA].body` should hence be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
 
 #### `[RSAA].headers`
 
@@ -163,6 +163,25 @@ It is usually an object, with the keys specifying the header names and the value
 ```
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of headers as above.
+
+#### `[RSAA].options`
+
+The fetch options for the API call. What options are available depends on what fetch implementation is in use. See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options) for more information.
+
+It is usually an object with the options keys/values. For example, you can specify a network timeout for node.js code
+in the following way.
+
+```js
+{
+  [RSAA]: {
+    ...
+    options: { timeout: 3000 }
+    ...
+  }
+}
+```
+
+It may also be a function taking the state of your Redux store as its argument, and returning an object of options as above.
 
 #### `[RSAA].credentials`
 
@@ -540,12 +559,13 @@ The `[RSAA]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
+- have an `options` property,
 - have a `credentials` property,
 - have a `bailout` property.
 
 The `[RSAA]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `credentials`, and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, and `bailout`.
 
 #### `[RSAA].endpoint`
 
@@ -557,11 +577,17 @@ The `[RSAA].method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `
 
 #### `[RSAA].body`
 
-The optional `[RSAA].body` property SHOULD be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org).
+The optional `[RSAA].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org).
 
 #### `[RSAA].headers`
 
 The optional `[RSAA].headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+
+#### `[RSAA].options`
+
+The optional `[RSAA].options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The options object can contain any options supported by the effective fetch implementation.
+See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options).
 
 #### `[RSAA].credentials`
 

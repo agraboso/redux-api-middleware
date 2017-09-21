@@ -1,6 +1,5 @@
 import test from 'tape';
-import fetch from 'isomorphic-fetch';
-import { Schema, normalize, arrayOf } from 'normalizr';
+import 'isomorphic-fetch';
 import nock from 'nock';
 
 // Public package exports
@@ -131,11 +130,11 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
   };
   t.ok(
     validateRSAA(action4).includes('Invalid [RSAA] key: invalidKey'),
-    '[RSAA] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (validateRSAA)'
+    '[RSAA] must not have properties other than endpoint, method, types, body, headers, credentials, options and bailout (validateRSAA)'
   );
   t.notOk(
     isValidRSAA(action4),
-    '[RSAA] must not have properties other than endpoint, method, types, body, headers, credentials, and bailout (isValidRSAA)'
+    '[RSAA] must not have properties other than endpoint, method, types, body, headers, credentials, options and bailout (isValidRSAA)'
   );
 
   const action5 = {
@@ -479,6 +478,58 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
     isValidRSAA(action23),
     'Each element in [RSAA].types may be a type descriptor (isRSAA)'
   );
+
+  const action24 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      options: ''
+    }
+  };
+  t.ok(
+    validateRSAA(action24).includes(
+      '[RSAA].options property must be undefined, a plain JavaScript object, or a function'
+    ),
+    '[RSAA].options property must be undefined, a plain JavaScript object, or a function (validateRSAA)'
+  );
+  t.notOk(
+    isValidRSAA(action24),
+    '[RSAA].options property must be undefined, a plain JavaScript object, or a function (isValidRSAA)'
+  );
+
+  const action25 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      options: {}
+    }
+  };
+  t.equal(
+    validateRSAA(action25).length,
+    0,
+    '[RSAA].options may be a plain JavaScript object (validateRSAA)'
+  );
+  t.ok(
+    isValidRSAA(action25),
+    '[RSAA].options may be a plain JavaScript object (isRSAA)'
+  );
+
+  const action26 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      options: () => {}
+    }
+  };
+  t.equal(
+    validateRSAA(action26).length,
+    0,
+    '[RSAA].options may be a function (validateRSAA)'
+  );
+  t.ok(isValidRSAA(action26), '[RSAA].options may be a function (isRSAA)');
 
   t.end();
 });
@@ -992,6 +1043,48 @@ test('apiMiddleware must dispatch an error request FSA when [RSAA].headers fails
   actionHandler(anAction);
 });
 
+test('apiMiddleware must dispatch an error request FSA when [RSAA].options fails', t => {
+  const anAction = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      options: () => {
+        throw new Error();
+      },
+      types: [
+        {
+          type: 'REQUEST',
+          payload: 'ignoredPayload',
+          meta: 'someMeta'
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    t.pass('next handler called');
+    t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
+    t.equal(
+      action.payload.message,
+      '[RSAA].options function failed',
+      'dispatched FSA has correct payload property'
+    );
+    t.equal(
+      action.meta,
+      'someMeta',
+      'dispatched FSA has correct meta property'
+    );
+    t.ok(action.error, 'dispatched FSA has correct error property');
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(5);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must dispatch an error request FSA on a request error', t => {
   const anAction = {
     [RSAA]: {
@@ -1109,7 +1202,9 @@ test('apiMiddleware must use an [RSAA].bailout function when present', t => {
 });
 
 test('apiMiddleware must use an [RSAA].endpoint function when present', t => {
-  const api = nock('http://127.0.0.1').get('/api/users/1').reply(200);
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
   const anAction = {
     [RSAA]: {
       endpoint: () => {
@@ -1130,13 +1225,38 @@ test('apiMiddleware must use an [RSAA].endpoint function when present', t => {
 });
 
 test('apiMiddleware must use an [RSAA].headers function when present', t => {
-  const api = nock('http://127.0.0.1').get('/api/users/1').reply(200);
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       headers: () => {
         t.pass('[RSAA].headers function called');
+      },
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {};
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use an [RSAA].options function when present', t => {
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      options: () => {
+        t.pass('[RSAA].options function called');
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
@@ -1343,7 +1463,9 @@ test('apiMiddleware must dispatch a success FSA with an error state on a success
 });
 
 test('apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response', t => {
-  const api = nock('http://127.0.0.1').get('/api/users/1').reply(200);
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1531,7 +1653,9 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
 });
 
 test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-JSON response', t => {
-  const api = nock('http://127.0.0.1').get('/api/users/1').reply(404);
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(404);
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
