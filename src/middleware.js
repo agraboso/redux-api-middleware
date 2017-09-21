@@ -2,7 +2,7 @@ import isPlainObject from 'lodash.isplainobject';
 
 import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
-import { InvalidRSAA, RequestError, ApiError } from './errors' ;
+import { InvalidRSAA, RequestError, ApiError } from './errors';
 import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
 
 /**
@@ -12,7 +12,7 @@ import { getJSON, normalizeTypeDescriptors, actionWith } from './util';
  * @access public
  */
 function apiMiddleware({ getState }) {
-  return (next) => async (action) => {
+  return next => async action => {
     // Do not process actions without an [RSAA] property
     if (!isRSAA(action)) {
       return next(action);
@@ -40,23 +40,29 @@ function apiMiddleware({ getState }) {
     const callAPI = action[RSAA];
     var { endpoint, headers, options = {} } = callAPI;
     const { method, body, credentials, bailout, types } = callAPI;
-    const [requestType, successType, failureType] = normalizeTypeDescriptors(types);
+    const [requestType, successType, failureType] = normalizeTypeDescriptors(
+      types
+    );
 
     // Should we bail out?
     try {
-      if ((typeof bailout === 'boolean' && bailout) ||
-          (typeof bailout === 'function' && bailout(getState()))) {
+      if (
+        (typeof bailout === 'boolean' && bailout) ||
+        (typeof bailout === 'function' && bailout(getState()))
+      ) {
         return;
       }
     } catch (e) {
-      return next(await actionWith(
-        {
-          ...requestType,
-          payload: new RequestError('[RSAA].bailout function failed'),
-          error: true
-        },
-        [action, getState()]
-      ));
+      return next(
+        await actionWith(
+          {
+            ...requestType,
+            payload: new RequestError('[RSAA].bailout function failed'),
+            error: true
+          },
+          [action, getState()]
+        )
+      );
     }
 
     // Process [RSAA].endpoint function
@@ -64,14 +70,16 @@ function apiMiddleware({ getState }) {
       try {
         endpoint = endpoint(getState());
       } catch (e) {
-        return next(await actionWith(
-          {
-            ...requestType,
-            payload: new RequestError('[RSAA].endpoint function failed'),
-            error: true
-          },
-          [action, getState()]
-        ));
+        return next(
+          await actionWith(
+            {
+              ...requestType,
+              payload: new RequestError('[RSAA].endpoint function failed'),
+              error: true
+            },
+            [action, getState()]
+          )
+        );
       }
     }
 
@@ -80,14 +88,16 @@ function apiMiddleware({ getState }) {
       try {
         headers = headers(getState());
       } catch (e) {
-        return next(await actionWith(
-          {
-            ...requestType,
-            payload: new RequestError('[RSAA].headers function failed'),
-            error: true
-          },
-          [action, getState()]
-        ));
+        return next(
+          await actionWith(
+            {
+              ...requestType,
+              payload: new RequestError('[RSAA].headers function failed'),
+              error: true
+            },
+            [action, getState()]
+          )
+        );
       }
     }
 
@@ -108,45 +118,40 @@ function apiMiddleware({ getState }) {
     }
 
     // We can now dispatch the request FSA
-    next(await actionWith(
-      requestType,
-      [action, getState()]
-    ));
+    next(await actionWith(requestType, [action, getState()]));
 
     try {
       // Make the API call
-      var res = await fetch(endpoint, {
-        ...options,
-        method, body, credentials, headers
-      });
+      var res = await fetch(endpoint, {...options, method, body, credentials, headers: headers || {} });
     } catch(e) {
       // The request was malformed, or there was a network error
-      return next(await actionWith(
-        {
-          ...requestType,
-          payload: new RequestError(e.message),
-          error: true
-        },
-        [action, getState()]
-      ));
+      return next(
+        await actionWith(
+          {
+            ...requestType,
+            payload: new RequestError(e.message),
+            error: true
+          },
+          [action, getState()]
+        )
+      );
     }
 
     // Process the server response
     if (res.ok) {
-      return next(await actionWith(
-        successType,
-        [action, getState(), res]
-      ));
+      return next(await actionWith(successType, [action, getState(), res]));
     } else {
-      return next(await actionWith(
-        {
-          ...failureType,
-          error: true
-        },
-        [action, getState(), res]
-      ));
+      return next(
+        await actionWith(
+          {
+            ...failureType,
+            error: true
+          },
+          [action, getState(), res]
+        )
+      );
     }
-  }
+  };
 }
 
 export { apiMiddleware };
