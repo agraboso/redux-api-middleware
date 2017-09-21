@@ -1043,6 +1043,48 @@ test('apiMiddleware must dispatch an error request FSA when [RSAA].headers fails
   actionHandler(anAction);
 });
 
+test('apiMiddleware must dispatch an error request FSA when [RSAA].options fails', t => {
+    const anAction = {
+        [RSAA]: {
+            endpoint: '',
+            method: 'GET',
+            options: () => {
+                throw new Error();
+            },
+            types: [
+                {
+                    type: 'REQUEST',
+                    payload: 'ignoredPayload',
+                    meta: 'someMeta'
+                },
+                'SUCCESS',
+                'FAILURE'
+            ]
+        }
+    };
+    const doGetState = () => {};
+    const nextHandler = apiMiddleware({ getState: doGetState });
+    const doNext = action => {
+        t.pass('next handler called');
+        t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
+        t.equal(
+            action.payload.message,
+            '[RSAA].options function failed',
+            'dispatched FSA has correct payload property'
+        );
+        t.equal(
+            action.meta,
+            'someMeta',
+            'dispatched FSA has correct meta property'
+        );
+        t.ok(action.error, 'dispatched FSA has correct error property');
+    };
+    const actionHandler = nextHandler(doNext);
+
+    t.plan(5);
+    actionHandler(anAction);
+});
+
 test('apiMiddleware must dispatch an error request FSA on a request error', t => {
   const anAction = {
     [RSAA]: {
