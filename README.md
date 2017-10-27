@@ -368,7 +368,7 @@ For example, if you want the status code and status message of a unsuccessful AP
         meta: (action, state, res) => {
           if (res) {
             return {
-              status: res.status
+              status: res.status,
               statusText: res.statusText
             };
           } else {
