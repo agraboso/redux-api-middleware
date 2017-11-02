@@ -1,7 +1,7 @@
 /**
  * Redux middleware for calling an API
  * @module redux-api-middleware
- * @requires isomorphic-fetch
+ * @requires cross-fetch
  * @requires lodash.isplainobject
  * @exports {symbol} CALL_API
  * @exports {function} isRSAA
