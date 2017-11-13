@@ -3,7 +3,7 @@ redux-api-middleware
 
 [![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=master)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=master&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=master)
 
-[Redux middleware](http://rackt.github.io/redux/docs/advanced/Middleware.html) for calling an API.
+[Redux middleware](https://redux.js.org/docs/advanced/Middleware.html) for calling an API.
 
 ## Table of contents
 
