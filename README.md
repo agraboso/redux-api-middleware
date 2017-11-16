@@ -7,22 +7,22 @@ See [Upgrading from v1.0.x](#upgrading-from-v1.0.x) for details on upgrading, an
 
 [![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=next)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=next&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=next)
 
-[Redux middleware](http://rackt.github.io/redux/docs/advanced/Middleware.html) for calling an API.
+[Redux middleware](https://redux.js.org/docs/advanced/Middleware.html) for calling an API.
 
 ## Table of contents
 
 1. [Introduction](#introduction)
-  - [A simple example](#a-simple-example)
+    - [A simple example](#a-simple-example)
 2. [Installation](#installation)
 3. [Usage](#usage)
-  - [Defining the API call](#defining-the-api-call)
-  - [Bailing out](#bailing-out)
-  - [Lifecycle](#lifecycle)
-  - [Customizing the dispatched FSAs](#customizing-the-dispatched-fsas)
+    - [Defining the API call](#defining-the-api-call)
+    - [Bailing out](#bailing-out)
+    - [Lifecycle](#lifecycle)
+    - [Customizing the dispatched FSAs](#customizing-the-dispatched-fsas)
 4. [Reference](#reference)
-  - [Exports](#exports)
-  - [Flux Standard Actions](#flux-standard-actions)
-  - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
+    - [Exports](#exports)
+    - [Flux Standard Actions](#flux-standard-actions)
+    - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
 5. [History](#history)
 6. [Tests](#tests)
 7. [Upgrading from v1.0.x](#upgrading-from-v1.0.x)
@@ -195,7 +195,7 @@ It must be one of the following strings:
 
 ### Bailing out
 
-In some cases, the data you would like to fetch from the server may already be cached in you Redux store. Or you may decide that the current user does not have the necessary permissions to make some request.
+In some cases, the data you would like to fetch from the server may already be cached in your Redux store. Or you may decide that the current user does not have the necessary permissions to make some request.
 
 You can tell `redux-api-middleware` to not make the API call through `[RSAA].bailout`. If the value is `true`, the RSAA will die here, and no FSA will be passed on to the next middleware.
 
