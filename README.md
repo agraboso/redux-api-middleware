@@ -1,7 +1,11 @@
 redux-api-middleware
 ====================
 
-[![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=master)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=master&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=master)
+## This `next` branch is 2.0.0-beta in development!
+
+See [Upgrading from v1.0.x](#upgrading-from-v1.0.x) for details on upgrading, and issues for the [2.0 milestone here](https://github.com/agraboso/redux-api-middleware/issues?utf8=%E2%9C%93&q=milestone%3A2.0.0%20)
+
+[![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=next)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=next&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=next)
 
 [Redux middleware](https://redux.js.org/docs/advanced/Middleware.html) for calling an API.
 
@@ -21,24 +25,25 @@ redux-api-middleware
     - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
 5. [History](#history)
 6. [Tests](#tests)
-7. [License](License)
-8. [Acknowledgements](#acknowledgements)
+7. [Upgrading from v1.0.x](#upgrading-from-v1.0.x)
+8. [License](License)
+9. [Acknowledgements](#acknowledgements)
 
 ## Introduction
 
 This middleware receives [*Redux Standard API-calling Actions*](#redux-standard-api-calling-actions) (RSAAs) and dispatches [*Flux Standard Actions*](#flux-standard-actions) (FSAs) to the next middleware.
 
-RSAAs are identified by the presence of a `[CALL_API]` property, where [`CALL_API`](#call_api) is a `Symbol` defined in, and exported by `redux-api-middleware`. They contain information describing an API call and three different types of FSAs, known as the *request*, *success* and *failure* FSAs.
+RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rsaa) is a `String` constant defined in, and exported by `redux-api-middleware`. They contain information describing an API call and three different types of FSAs, known as the *request*, *success* and *failure* FSAs.
 
 ### A simple example
 
 The following is a minimal RSAA action:
 
 ```js
-import { CALL_API } from `redux-api-middleware`;
+import { RSAA } from `redux-api-middleware`; // RSAA = '@@redux-api-middleware/RSAA'
 
 {
-  [CALL_API]: {
+  [RSAA]: {
     endpoint: 'http://www.example.com/api/users',
     method: 'GET',
     types: ['REQUEST', 'SUCCESS', 'FAILURE']
@@ -94,6 +99,8 @@ $ npm install redux-api-middleware --save
 
 To use it, wrap the standard Redux store with it. Here is an example setup. For more information (for example, on how to add several middlewares), consult the [Redux documentation](http://redux.js.org).
 
+Note: `redux-api-middleware` depends on a [global Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) being available, and may require a polyfill for your runtime environment(s).
+
 #### configureStore.js
 
 ```js
@@ -119,27 +126,27 @@ const store = configureStore(initialState);
 
 ### Defining the API call
 
-The parameters of the API call are specified by root properties of the `[CALL_API]` property of an RSAA.
+The parameters of the API call are specified by root properties of the `[RSAA]` property of an RSAA.
 
-#### `[CALL_API].endpoint`
+#### `[RSAA].endpoint`
 
 The URL endpoint for the API call.
 
 It is usually a string, be it a plain old one or an ES2015 template string. It may also be a function taking the state of your Redux store as its argument, and returning such a string.
 
-####  `[CALL_API].method`
+####  `[RSAA].method`
 
 The HTTP method for the API call.
 
 It must be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or `OPTIONS`, in any mixture of lowercase and uppercase letters.
 
-#### `[CALL_API].body`
+#### `[RSAA].body`
 
 The body of the API call.
 
-`redux-api-middleware` uses [`isomorphic-fetch`](https://github.com/matthew-andrews/isomorphic-fetch) to make the API call. `[CALL_API].body` should hence be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
+`redux-api-middleware` uses the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to make the API call. `[RSAA].body` should hence be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
 
-#### `[CALL_API].headers`
+#### `[RSAA].headers`
 
 The HTTP headers for the API call.
 
@@ -147,7 +154,7 @@ It is usually an object, with the keys specifying the header names and the value
 
 ```js
 {
-  [CALL_API]: {
+  [RSAA]: {
     ...
     headers: { 'Content-Type': 'application/json' }
     ...
@@ -157,7 +164,26 @@ It is usually an object, with the keys specifying the header names and the value
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of headers as above.
 
-#### `[CALL_API].credentials`
+#### `[RSAA].options`
+
+The fetch options for the API call. What options are available depends on what fetch implementation is in use. See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options) for more information.
+
+It is usually an object with the options keys/values. For example, you can specify a network timeout for node.js code
+in the following way.
+
+```js
+{
+  [RSAA]: {
+    ...
+    options: { timeout: 3000 }
+    ...
+  }
+}
+```
+
+It may also be a function taking the state of your Redux store as its argument, and returning an object of options as above.
+
+#### `[RSAA].credentials`
 
 Whether or not to send cookies with the API call.
 
@@ -171,48 +197,48 @@ It must be one of the following strings:
 
 In some cases, the data you would like to fetch from the server may already be cached in your Redux store. Or you may decide that the current user does not have the necessary permissions to make some request.
 
-You can tell `redux-api-middleware` to not make the API call through `[CALL_API].bailout`. If the value is `true`, the RSAA will die here, and no FSA will be passed on to the next middleware.
+You can tell `redux-api-middleware` to not make the API call through `[RSAA].bailout`. If the value is `true`, the RSAA will die here, and no FSA will be passed on to the next middleware.
 
-A more useful possibility is to give `[CALL_API].bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, if the return value of the function is `true`, the API call will not be made.
+A more useful possibility is to give `[RSAA].bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, if the return value of the function is `true`, the API call will not be made.
 
 ### Lifecycle
 
-The `[CALL_API].types` property controls the output of `redux-api-middleware`. The simplest form it can take is an array of length 3 consisting of string constants (or symbols), as in our [example](#a-simple-example) above. This results in the default behavior we now describe.
+The `[RSAA].types` property controls the output of `redux-api-middleware`. The simplest form it can take is an array of length 3 consisting of string constants (or symbols), as in our [example](#a-simple-example) above. This results in the default behavior we now describe.
 
-1. When `redux-api-middleware` receives an action, it first checks whether it has a `[CALL_API]` property. If it does not, it was clearly not intended for processing with `redux-api-middleware`, and so it is unceremoniously passed on to the next middleware.
+1. When `redux-api-middleware` receives an action, it first checks whether it has an `[RSAA]` property. If it does not, it was clearly not intended for processing with `redux-api-middleware`, and so it is unceremoniously passed on to the next middleware.
 
 2. It is now time to validate the action against the [RSAA definition](#redux-standard-api-calling-actions). If there are any validation errors, a *request* FSA will be dispatched (if at all possible) with the following properties:
-    - `type`: the string constant in the first position of the `[CALL_API].types` array;
+    - `type`: the string constant in the first position of the `[RSAA].types` array;
     - `payload`: an [`InvalidRSAA`](#invalidrsaa) object containing a list of said validation errors;
     - `error: true`.
 
   `redux-api-middleware` will perform no further operations. In particular, no API call will be made, and the incoming RSAA will die here.
 
 3. Now that `redux-api-middleware` is sure it has received a valid RSAA, it will try making the API call. If everything is alright, a *request* FSA will be dispatched with the following property:
-  - `type`: the string constant in the first position of the `[CALL_API].types` array.
+  - `type`: the string constant in the first position of the `[RSAA].types` array.
 
   But errors may pop up at this stage, for several reasons:
-  - `redux-api-middleware` has to call those of `[CALL_API].bailout`, `[CALL_API].endpoint` and `[CALL_API].headers` that happen to be a function, which may throw an error;
-  - `isomorphic-fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[CALL_API].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
+  - `redux-api-middleware` has to call those of `[RSAA].bailout`, `[RSAA].endpoint` and `[RSAA].headers` that happen to be a function, which may throw an error;
+  - `fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[RSAA].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
   If such an error occurs, a different *request* FSA will be dispatched (*instead* of the one described above). It will contain the following properties:
-  - `type`: the string constant in the first position of the `[CALL_API].types` array;
+  - `type`: the string constant in the first position of the `[RSAA].types` array;
   - `payload`: a [`RequestError`](#requesterror) object containing an error message;
   - `error: true`.
 
 4. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
-  - `type`: the string constant in the second position of the `[CALL_API].types` array;
+  - `type`: the string constant in the second position of the `[RSAA].types` array;
   - `payload`: if the `Content-Type` header of the response is set to something JSONy (see [*Success* type descriptors](#success-type-descriptors) below), the parsed JSON response of the server, or undefined otherwise.
 
   If the status code of the response falls outside that 200 range, a *failure* FSA will dispatched instead, with the following properties:
-  - `type`: the string constant in the third position of the `[CALL_API].types` array;
+  - `type`: the string constant in the third position of the `[RSAA].types` array;
   - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
   - `error: true`.
 
 ### Customizing the dispatched FSAs
 
-It is possible to customize the output of `redux-api-middleware` by replacing one or more of the string constants (or symbols) in `[CALL_API].types` by a type descriptor.
+It is possible to customize the output of `redux-api-middleware` by replacing one or more of the string constants (or symbols) in `[RSAA].types` by a type descriptor.
 
 A *type descriptor* is a plain JavaScript object that will be used as a blueprint for the dispatched FSAs. As such, type descriptors must have a `type` property, intended to house the string constant or symbol specifying the `type` of the resulting FSAs.
 
@@ -231,7 +257,7 @@ For example, if you want your *request* FSA to have the URL endpoint of the API 
 ```js
 // Input RSAA
 {
-  [CALL_API]: {
+  [RSAA]: {
     endpoint: 'http://www.example.com/api/users',
     method: 'GET',
     types: [
@@ -257,7 +283,7 @@ If you do not need access to the action itself or the state of your Redux store,
 ```js
 // Input RSAA
 {
-  [CALL_API]: {
+  [RSAA]: {
     endpoint: 'http://www.example.com/api/users',
     method: 'GET',
     types: [
@@ -296,7 +322,7 @@ const userSchema = new Schema('users');
 
 // Input RSAA
 {
-  [CALL_API]: {
+  [RSAA]: {
     endpoint: 'http://www.example.com/api/users',
     method: 'GET',
     types: [
@@ -357,7 +383,7 @@ For example, if you want the status code and status message of a unsuccessful AP
 
 ```js
 {
-  [CALL_API]: {
+  [RSAA]: {
     endpoint: 'http://www.example.com/api/users/1',
     method: 'GET',
     types: [
@@ -396,9 +422,9 @@ By default, *failure* FSAs will not contain a `meta` property, while their `payl
 
 The following objects are exported by `redux-api-middleware`.
 
-#### `CALL_API`
+#### `RSAA`
 
-A JavaScript `Symbol` whose presence as a key in an action signals that `redux-api-middleware` should process said action.
+A JavaScript `String` whose presence as a key in an action signals that `redux-api-middleware` should process said action.
 
 #### `apiMiddleware`
 
@@ -406,7 +432,7 @@ The Redux middleware itself.
 
 #### `isRSAA(action)`
 
-A function that returns `true` if `action` has a `[CALL_API]` property, and `false` otherwise.
+A function that returns `true` if `action` has an `[RSAA]` property, and `false` otherwise.
 
 #### `validateRSAA(action)`
 
@@ -508,65 +534,72 @@ The optional `meta` property MAY be any type of value. It is intended for any ex
 ### Redux Standard API-calling Actions
 
 The definition of a *Redux Standard API-calling Action* below is the one used to validate RSAA actions. As explained in [Lifecycle](#lifecycle),
-  - actions without a `[CALL_API]` will be passed to the next middleware without any modifications;
-  - actions with a `[CALL_API]` property that fail validation will result in an error *request* FSA.
+  - actions without an `[RSAA]` property will be passed to the next middleware without any modifications;
+  - actions with an `[RSAA]` property that fail validation will result in an error *request* FSA.
 
 A *Redux Standard API-calling Action* MUST
 
 - be a plain JavaScript object,
-- have a `[CALL_API]` property.
+- have an `[RSAA]` property.
 
 A *Redux Standard API-calling Action* MUST NOT
 
-- include properties other than `[CALL_API]`.
+- include properties other than `[RSAA]`.
 
-#### `[CALL_API]`
+#### `[RSAA]`
 
-The `[CALL_API]` property MUST
+The `[RSAA]` property MUST
 
 - be a plain JavaScript Object,
 - have an `endpoint` property,
 - have a `method` property,
 - have a `types` property.
 
-The `[CALL_API]` property MAY
+The `[RSAA]` property MAY
 
 - have a `body` property,
 - have a `headers` property,
+- have an `options` property,
 - have a `credentials` property,
 - have a `bailout` property.
 
-The `[CALL_API]` property MUST NOT
+The `[RSAA]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `credentials`, and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, and `bailout`.
 
-#### `[CALL_API].endpoint`
+#### `[RSAA].endpoint`
 
-The `[CALL_API].endpoint` property MUST be a string or a function. In the second case, the function SHOULD return a string.
+The `[RSAA].endpoint` property MUST be a string or a function. In the second case, the function SHOULD return a string.
 
-#### `[CALL_API].method`
+#### `[RSAA].method`
 
-The `[CALL_API].method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or `OPTIONS`, in any mixture of lowercase and uppercase letters.
+The `[RSAA].method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or `OPTIONS`, in any mixture of lowercase and uppercase letters.
 
-#### `[CALL_API].body`
+#### `[RSAA].body`
 
-The optional `[CALL_API].body` property SHOULD be a valid body according to the the [fetch specification](https://fetch.spec.whatwg.org).
+The optional `[RSAA].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org).
 
-#### `[CALL_API].headers`
+#### `[RSAA].headers`
 
-The optional `[CALL_API].headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The optional `[RSAA].headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
 
-#### `[CALL_API].credentials`
+#### `[RSAA].options`
 
-The optional `[CALL_API].credentials` property MUST be one of the strings `omit`, `same-origin` or `include`.
+The optional `[RSAA].options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The options object can contain any options supported by the effective fetch implementation.
+See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options).
 
-#### `[CALL_API].bailout`
+#### `[RSAA].credentials`
 
-The optional `[CALL_API].bailout` property MUST be a boolean or a function.
+The optional `[RSAA].credentials` property MUST be one of the strings `omit`, `same-origin` or `include`.
 
-#### `[CALL_API].types`
+#### `[RSAA].bailout`
 
-The `[CALL_API].types` property MUST be an array of length 3. Each element of the array MUST be a string, a `Symbol`, or a type descriptor.
+The optional `[RSAA].bailout` property MUST be a boolean or a function.
+
+#### `[RSAA].types`
+
+The `[RSAA].types` property MUST be an array of length 3. Each element of the array MUST be a string, a `Symbol`, or a type descriptor.
 
 #### Type descriptors
 
@@ -593,6 +626,12 @@ TODO
 ```
 $ npm install && npm test
 ```
+
+## Upgrading from v1.0.x
+
+- The `CALL_API` symbol is replaced with the `RSAA` string as the top-level RSAA action key. `CALL_API` is aliased to the new value as of 2.0, but this will ultimately be deprecated.
+- `redux-api-middleware` no longer brings its own `fetch` implementation and depends on a global `fetch` to be provided in the runtime
+- A new `options` config is added to pass your `fetch` implementation extra options other than `method`, `headers`, `body` and `credentials`
 
 ## License
 
