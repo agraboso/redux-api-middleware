@@ -1042,6 +1042,55 @@ test('apiMiddleware must dispatch an error request FSA when [CALL_API].endpoint 
   actionHandler(anAction);
 });
 
+test('apiMiddleware must dispatch an error request FSA when [CALL_API].body fails', (t) => {
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      body: () => {
+        throw new Error
+      },
+      method: 'GET',
+      types: [
+        {
+          type: 'REQUEST',
+          payload: 'ignoredPayload',
+          meta: 'someMeta'
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {
+    t.pass('next handler called');
+    t.equal(
+      action.type,
+      'REQUEST',
+      'dispatched FSA has correct type property'
+    );
+    t.equal(
+      action.payload.message,
+      '[CALL_API].body function failed',
+      'dispatched FSA has correct payload property'
+    );
+    t.equal(
+      action.meta,
+      'someMeta',
+      'dispatched FSA has correct meta property'
+    );
+    t.ok(
+      action.error,
+      'dispatched FSA has correct error property'
+    );
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(5);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must dispatch an error request FSA when [CALL_API].headers fails', (t) => {
   const anAction = {
     [CALL_API]: {
@@ -1217,6 +1266,30 @@ test('apiMiddleware must use an [CALL_API].endpoint function when present', (t) 
       endpoint: () => {
         t.pass('[CALL_API].endpoint function called');
         return 'http://127.0.0.1/api/users/1';
+      },
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = (action) => {};
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use an [CALL_API].body function when present', (t) => {
+  const api = nock('http://127.0.0.1')
+                .get('/api/users/1')
+                .reply(200);
+  const anAction = {
+    [CALL_API]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      body: () => {
+        t.pass('[CALL_API].body function called');
+        return 'body';
       },
       method: 'GET',
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
