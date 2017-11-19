@@ -11,7 +11,7 @@ import { normalizeTypeDescriptors, actionWith } from './util';
  * @type {ReduxMiddleware}
  * @access public
  */
-function apiMiddleware({ getState }) {
+function apiMiddleware({ getState, dispatch }) {
   return (next) => async (action) => {
     // Do not process actions without a [CALL_API] property
     if (!isRSAA(action)) {
@@ -45,7 +45,7 @@ function apiMiddleware({ getState }) {
     // Should we bail out?
     try {
       if ((typeof bailout === 'boolean' && bailout) ||
-          (typeof bailout === 'function' && bailout(getState()))) {
+          (typeof bailout === 'function' && bailout(getState(), dispatch))) {
         return;
       }
     } catch (e) {
@@ -55,7 +55,7 @@ function apiMiddleware({ getState }) {
           payload: new RequestError('[CALL_API].bailout function failed'),
           error: true
         },
-        [action, getState()]
+        [action, getState(), dispatch]
       ));
     }
 
@@ -70,7 +70,7 @@ function apiMiddleware({ getState }) {
             payload: new RequestError('[CALL_API].endpoint function failed'),
             error: true
           },
-          [action, getState()]
+          [action, getState(), dispatch]
         ));
       }
     }
@@ -86,7 +86,7 @@ function apiMiddleware({ getState }) {
             payload: new RequestError('[CALL_API].headers function failed'),
             error: true
           },
-          [action, getState()]
+          [action, getState(), dispatch]
         ));
       }
     }
@@ -94,7 +94,7 @@ function apiMiddleware({ getState }) {
     // We can now dispatch the request FSA
     next(await actionWith(
       requestType,
-      [action, getState()]
+      [action, getState(), dispatch]
     ));
 
     try {
@@ -108,7 +108,7 @@ function apiMiddleware({ getState }) {
           payload: new RequestError(e.message),
           error: true
         },
-        [action, getState()]
+        [action, getState(), dispatch]
       ));
     }
 
@@ -116,7 +116,7 @@ function apiMiddleware({ getState }) {
     if (res.ok) {
       return next(await actionWith(
         successType,
-        [action, getState(), res]
+        [action, getState(), res, dispatch]
       ));
     } else {
       return next(await actionWith(
@@ -124,7 +124,7 @@ function apiMiddleware({ getState }) {
           ...failureType,
           error: true
         },
-        [action, getState(), res]
+        [action, getState(), res, dispatch]
       ));
     }
   }
