@@ -1,5 +1,6 @@
 redux-api-middleware
 ====================
+[![npm version](https://badge.fury.io/js/redux-api-middleware.svg)](https://badge.fury.io/js/redux-api-middleware)
 [![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=next)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=next&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=next)
 
 [Redux middleware](https://redux.js.org/docs/advanced/Middleware.html) for calling an API.
