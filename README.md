@@ -1,10 +1,5 @@
 redux-api-middleware
 ====================
-
-## This `next` branch is 2.0.0-beta in development!
-
-See [Upgrading from v1.0.x](#upgrading-from-v1.0.x) for details on upgrading, and issues for the [2.0 milestone here](https://github.com/agraboso/redux-api-middleware/issues?utf8=%E2%9C%93&q=milestone%3A2.0.0%20)
-
 [![Build Status](https://travis-ci.org/agraboso/redux-api-middleware.svg?branch=next)](https://travis-ci.org/agraboso/redux-api-middleware) [![Coverage Status](https://coveralls.io/repos/agraboso/redux-api-middleware/badge.svg?branch=next&service=github)](https://coveralls.io/github/agraboso/redux-api-middleware?branch=next)
 
 [Redux middleware](https://redux.js.org/docs/advanced/Middleware.html) for calling an API.
@@ -88,6 +83,10 @@ Upon receiving this action, `redux-api-middleware` will
     ```
 
 We have tiptoed around error-handling issues here. For a thorough walkthrough of the `redux-api-middleware` lifecycle, see [Lifecycle](#lifecycle) below.
+
+### Breaking Changes in 2.0 Release
+
+See the 2.0 Release Notes, and [Upgrading from v1.0.x](#upgrading-from-v1.0.x) for details on upgrading.
 
 ## Installation
 
