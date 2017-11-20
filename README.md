@@ -8,6 +8,7 @@ redux-api-middleware
 
 1. [Introduction](#introduction)
     - [A simple example](#a-simple-example)
+    - [Breaking Changes in 2.0 Release](#breaking-changes-in-20-release)
 2. [Installation](#installation)
 3. [Usage](#usage)
     - [Defining the API call](#defining-the-api-call)
