@@ -88,7 +88,7 @@ We have tiptoed around error-handling issues here. For a thorough walkthrough of
 
 ### Breaking Changes in 2.0 Release
 
-See the 2.0 Release Notes, and [Upgrading from v1.0.x](#upgrading-from-v10x) for details on upgrading.
+See the [2.0 Release Notes](https://github.com/agraboso/redux-api-middleware/releases/tag/v2.0.0), and [Upgrading from v1.0.x](#upgrading-from-v10x) for details on upgrading.
 
 ## Installation
 
