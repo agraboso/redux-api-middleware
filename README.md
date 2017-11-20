@@ -22,7 +22,7 @@ redux-api-middleware
     - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
 5. [History](#history)
 6. [Tests](#tests)
-7. [Upgrading from v1.0.x](#upgrading-from-v1.0.x)
+7. [Upgrading from v1.0.x](#upgrading-from-v10x)
 8. [License](License)
 9. [Acknowledgements](#acknowledgements)
 
@@ -88,7 +88,7 @@ We have tiptoed around error-handling issues here. For a thorough walkthrough of
 
 ### Breaking Changes in 2.0 Release
 
-See the 2.0 Release Notes, and [Upgrading from v1.0.x](#upgrading-from-v1.0.x) for details on upgrading.
+See the 2.0 Release Notes, and [Upgrading from v1.0.x](#upgrading-from-v10x) for details on upgrading.
 
 ## Installation
 
