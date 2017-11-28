@@ -1,7 +1,5 @@
 {
-  "parser": "babel-eslint",
   "plugins": [
-    "babel",
     "prettier"
   ],
   "env": {
@@ -9,9 +7,10 @@
     "es6": true
   },
   "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
     "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
-      "modules": true
+      "experimentalObjectRestSpread": true
     }
   },
   "root": true,

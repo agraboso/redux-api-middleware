@@ -1,0 +1,24 @@
+[
+  {
+    "name": "lib/index.js (min)",
+    "path": "lib/index.js",
+    "limit": "10 KB",
+    "gzip": false
+  },
+  {
+    "name": "lib/index.js (min + gzip)",
+    "path": "lib/index.js",
+    "limit": "4 KB"
+  },
+  {
+    "name": "lib/index.umd.js (min)",
+    "path": "lib/index.umd.js",
+    "limit": "10 KB",
+    "gzip": false
+  },
+  {
+    "name": "lib/index.umd.js (min + gzip)",
+    "path": "lib/index.umd.js",
+    "limit": "4 KB"
+  }
+]
