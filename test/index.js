@@ -1,6 +1,11 @@
 import test from 'tape';
+
 import 'isomorphic-fetch';
-import nock from 'nock';
+import fetchMock from 'fetch-mock';
+
+function mockOneFetch({ url, response }) {
+  return fetchMock.once(url, response);
+}
 
 // Public package exports
 import {
@@ -1292,9 +1297,11 @@ test('apiMiddleware must use an [RSAA].body function when present', t => {
 });
 
 test('apiMiddleware must use an [RSAA].endpoint function when present', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 200
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: () => {
@@ -1315,9 +1322,11 @@ test('apiMiddleware must use an [RSAA].endpoint function when present', t => {
 });
 
 test('apiMiddleware must use an [RSAA].headers function when present', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 200
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1338,9 +1347,11 @@ test('apiMiddleware must use an [RSAA].headers function when present', t => {
 });
 
 test('apiMiddleware must use an [RSAA].options function when present', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 200
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1479,9 +1490,17 @@ test('apiMiddleware must use meta property of request type descriptor when it is
 });
 
 test('apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200, { username: 'Alice' }, { 'Content-Type': 'application/json' });
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: {
+      status: 200,
+      body: { username: 'Alice' },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1541,9 +1560,17 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
 });
 
 test('apiMiddleware must dispatch a success FSA on a successful API call with an empty JSON response', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200, {}, { 'Content-Type': 'application/json' });
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: {
+      status: 200,
+      body: {},
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1603,11 +1630,21 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with an
 });
 
 test('apiMiddleware must dispatch a success FSA with an error state on a successful API call with an invalid JSON response', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200, '', { 'Content-Type': 'application/json' });
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: {
+      // By default fetch-mock stringifies the 'body' value here,
+      // a behavior we need to bypass for this test
+      sendAsJson: false,
+      status: 200,
+      body: '',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  });
 
-  const error = new InternalError('Expected error - simulating invalid JSON');
+  const error = new Error('Expected error - simulating invalid JSON');
 
   const anAction = {
     [RSAA]: {
@@ -1650,11 +1687,22 @@ test('apiMiddleware must dispatch a success FSA with an error state on a success
         break;
       case 'SUCCESS':
         t.pass('success FSA passed to the next handler');
-        t.deepEqual(
-          action.payload,
-          error,
-          'success FSA has correct payload property'
+
+        t.ok(
+          action.payload instanceof Error,
+          'success FSA has an error payload'
         );
+        t.equal(
+          action.payload.name,
+          'InternalError',
+          'success FSA is an InternalError'
+        );
+        t.equal(
+          action.payload.message,
+          error.message,
+          'success FSA error payload has the correct message'
+        );
+
         t.equal(
           action.meta,
           'successMeta',
@@ -1666,14 +1714,16 @@ test('apiMiddleware must dispatch a success FSA with an error state on a success
   };
   const actionHandler = nextHandler(doNext);
 
-  t.plan(8);
+  t.plan(10);
   actionHandler(anAction);
 });
 
 test('apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 200
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1733,13 +1783,17 @@ test('apiMiddleware must dispatch a success FSA on a successful API call with a 
 });
 
 test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-empty JSON response', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(
-      404,
-      { error: 'Resource not found' },
-      { 'Content-Type': 'application/json' }
-    );
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: {
+      status: 404,
+      body: { error: 'Resource not found' },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1799,9 +1853,17 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
 });
 
 test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with an empty JSON response', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(404, {}, { 'Content-Type': 'application/json' });
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: {
+      status: 404,
+      body: {},
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1861,9 +1923,11 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
 });
 
 test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-JSON response', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(404);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 404
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',

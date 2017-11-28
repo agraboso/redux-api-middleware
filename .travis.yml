@@ -1,12 +1,10 @@
 language: node_js
 node_js:
-  - "node"
   - "lts/*"
-  - "6"
 cache:
   directories:
     - "node_modules"
 script:
-  - npm run cover
+  - npm run test:cover
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
