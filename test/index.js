@@ -1270,6 +1270,124 @@ test('apiMiddleware must use an [RSAA].options function when present', t => {
   actionHandler(anAction);
 });
 
+test('apiMiddleware must use payload property of request type descriptor when it is a function', t => {
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
+  const expectedState = { foo: 'bar' };
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: [
+        {
+          type: 'REQUEST',
+          meta: 'requestMeta',
+          payload: (action, state) => {
+            t.pass('request type descriptor payload function has been called');
+            t.equal(
+              action,
+              anAction,
+              'request type descriptor payload function has been called with correct action parameter'
+            );
+            t.equal(
+              state,
+              expectedState,
+              'request type descriptor payload function has been called with correct state parameter'
+            );
+            return 'requestPayload';
+          }
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {
+    return expectedState;
+  };
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    if (action.type === 'REQUEST') {
+      t.pass('request FSA passed to the next handler');
+      t.equal(
+        action.meta,
+        'requestMeta',
+        'request FSA has correct meta property'
+      );
+      t.equal(
+        action.payload,
+        'requestPayload',
+        'request FSA has correct payload property'
+      );
+      t.notOk(action.error, 'request FSA has correct error property');
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(7);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use meta property of request type descriptor when it is a function', t => {
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
+  const expectedState = { foo: 'bar' };
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      types: [
+        {
+          type: 'REQUEST',
+          meta: (action, state) => {
+            t.pass('request type descriptor meta function has been called');
+            t.equal(
+              action,
+              anAction,
+              'request type descriptor meta function has been called with correct action parameter'
+            );
+            t.equal(
+              state,
+              expectedState,
+              'request type descriptor meta function has been called with correct state parameter'
+            );
+            return 'requestMeta';
+          },
+          payload: 'requestPayload'
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {
+    return expectedState;
+  };
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    if (action.type === 'REQUEST') {
+      t.pass('request FSA passed to the next handler');
+      t.equal(
+        action.meta,
+        'requestMeta',
+        'request FSA has correct meta property'
+      );
+      t.equal(
+        action.payload,
+        'requestPayload',
+        'request FSA has correct payload property'
+      );
+      t.notOk(action.error, 'request FSA has correct error property');
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(7);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response', t => {
   const api = nock('http://127.0.0.1')
     .get('/api/users/1')
