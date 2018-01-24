@@ -133,7 +133,7 @@ function apiMiddleware({ getState }) {
         var res = await fetch(endpoint, {
           ...options,
           method,
-          body,
+          body: body || undefined,
           credentials,
           headers: headers || {}
         });
