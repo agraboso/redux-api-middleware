@@ -984,6 +984,48 @@ test('apiMiddleware must dispatch an error request FSA when [RSAA].bailout fails
   actionHandler(anAction);
 });
 
+test('apiMiddleware must dispatch an error request FSA when [RSAA].body fails', t => {
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      body: () => {
+        throw new Error();
+      },
+      method: 'GET',
+      types: [
+        {
+          type: 'REQUEST',
+          payload: 'ignoredPayload',
+          meta: 'someMeta'
+        },
+        'SUCCESS',
+        'FAILURE'
+      ]
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    t.pass('next handler called');
+    t.equal(action.type, 'REQUEST', 'dispatched FSA has correct type property');
+    t.equal(
+      action.payload.message,
+      '[RSAA].body function failed',
+      'dispatched FSA has correct payload property'
+    );
+    t.equal(
+      action.meta,
+      'someMeta',
+      'dispatched FSA has correct meta property'
+    );
+    t.ok(action.error, 'dispatched FSA has correct error property');
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(5);
+  actionHandler(anAction);
+});
+
 test('apiMiddleware must dispatch an error request FSA when [RSAA].endpoint fails', t => {
   const anAction = {
     [RSAA]: {
@@ -1219,6 +1261,30 @@ test('apiMiddleware must use an [RSAA].bailout function when present', t => {
   const doNext = action => {
     t.fail('next handler called');
   };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use an [RSAA].body function when present', t => {
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      body: () => {
+        t.pass('[RSAA].body function called');
+        return 'body';
+      },
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {};
   const actionHandler = nextHandler(doNext);
 
   t.plan(1);
