@@ -10,160 +10,162 @@ import { normalizeTypeDescriptors, actionWith } from './util';
  * @access public
  */
 function apiMiddleware({ getState }) {
-  return next => async action => {
+  return next => action => {
     // Do not process actions without an [RSAA] property
     if (!isRSAA(action)) {
       return next(action);
     }
 
-    // Try to dispatch an error request FSA for invalid RSAAs
-    const validationErrors = validateRSAA(action);
-    if (validationErrors.length) {
-      const callAPI = action[RSAA];
-      if (callAPI.types && Array.isArray(callAPI.types)) {
-        let requestType = callAPI.types[0];
-        if (requestType && requestType.type) {
-          requestType = requestType.type;
+    return (async () => {
+      // Try to dispatch an error request FSA for invalid RSAAs
+      const validationErrors = validateRSAA(action);
+      if (validationErrors.length) {
+        const callAPI = action[RSAA];
+        if (callAPI.types && Array.isArray(callAPI.types)) {
+          let requestType = callAPI.types[0];
+          if (requestType && requestType.type) {
+            requestType = requestType.type;
+          }
+          next({
+            type: requestType,
+            payload: new InvalidRSAA(validationErrors),
+            error: true
+          });
         }
-        next({
-          type: requestType,
-          payload: new InvalidRSAA(validationErrors),
-          error: true
-        });
-      }
-      return;
-    }
-
-    // Parse the validated RSAA action
-    const callAPI = action[RSAA];
-    var { endpoint, headers, options = {} } = callAPI;
-    const { method, body, credentials, bailout, types } = callAPI;
-    const [requestType, successType, failureType] = normalizeTypeDescriptors(
-      types
-    );
-
-    // Should we bail out?
-    try {
-      if (
-        (typeof bailout === 'boolean' && bailout) ||
-        (typeof bailout === 'function' && bailout(getState()))
-      ) {
         return;
       }
-    } catch (e) {
-      return next(
-        await actionWith(
-          {
-            ...requestType,
-            payload: new RequestError('[RSAA].bailout function failed'),
-            error: true
-          },
-          [action, getState()]
-        )
-      );
-    }
 
-    // Process [RSAA].endpoint function
-    if (typeof endpoint === 'function') {
+      // Parse the validated RSAA action
+      const callAPI = action[RSAA];
+      var { endpoint, headers, options = {} } = callAPI;
+      const { method, body, credentials, bailout, types } = callAPI;
+      const [requestType, successType, failureType] = normalizeTypeDescriptors(
+        types
+      );
+
+      // Should we bail out?
       try {
-        endpoint = endpoint(getState());
+        if (
+          (typeof bailout === 'boolean' && bailout) ||
+          (typeof bailout === 'function' && bailout(getState()))
+        ) {
+          return;
+        }
       } catch (e) {
         return next(
           await actionWith(
             {
               ...requestType,
-              payload: new RequestError('[RSAA].endpoint function failed'),
+              payload: new RequestError('[RSAA].bailout function failed'),
               error: true
             },
             [action, getState()]
           )
         );
       }
-    }
 
-    // Process [RSAA].headers function
-    if (typeof headers === 'function') {
+      // Process [RSAA].endpoint function
+      if (typeof endpoint === 'function') {
+        try {
+          endpoint = endpoint(getState());
+        } catch (e) {
+          return next(
+            await actionWith(
+              {
+                ...requestType,
+                payload: new RequestError('[RSAA].endpoint function failed'),
+                error: true
+              },
+              [action, getState()]
+            )
+          );
+        }
+      }
+
+      // Process [RSAA].headers function
+      if (typeof headers === 'function') {
+        try {
+          headers = headers(getState());
+        } catch (e) {
+          return next(
+            await actionWith(
+              {
+                ...requestType,
+                payload: new RequestError('[RSAA].headers function failed'),
+                error: true
+              },
+              [action, getState()]
+            )
+          );
+        }
+      }
+
+      // Process [RSAA].options function
+      if (typeof options === 'function') {
+        try {
+          options = options(getState());
+        } catch (e) {
+          return next(
+            await actionWith(
+              {
+                ...requestType,
+                payload: new RequestError('[RSAA].options function failed'),
+                error: true
+              },
+              [action, getState()]
+            )
+          );
+        }
+      }
+
+      // We can now dispatch the request FSA
+      if (
+        typeof requestType.payload === 'function' ||
+        typeof requestType.meta === 'function'
+      ) {
+        next(await actionWith(requestType, [action, getState()]));
+      } else {
+        next(requestType);
+      }
+
       try {
-        headers = headers(getState());
+        // Make the API call
+        var res = await fetch(endpoint, {
+          ...options,
+          method,
+          body,
+          credentials,
+          headers: headers || {}
+        });
       } catch (e) {
+        // The request was malformed, or there was a network error
         return next(
           await actionWith(
             {
               ...requestType,
-              payload: new RequestError('[RSAA].headers function failed'),
+              payload: new RequestError(e.message),
               error: true
             },
             [action, getState()]
           )
         );
       }
-    }
 
-    // Process [RSAA].options function
-    if (typeof options === 'function') {
-      try {
-        options = options(getState());
-      } catch (e) {
+      // Process the server response
+      if (res.ok) {
+        return next(await actionWith(successType, [action, getState(), res]));
+      } else {
         return next(
           await actionWith(
             {
-              ...requestType,
-              payload: new RequestError('[RSAA].options function failed'),
+              ...failureType,
               error: true
             },
-            [action, getState()]
+            [action, getState(), res]
           )
         );
       }
-    }
-
-    // We can now dispatch the request FSA
-    if (
-      typeof requestType.payload === 'function' ||
-      typeof requestType.meta === 'function'
-    ) {
-      next(await actionWith(requestType, [action, getState()]));
-    } else {
-      next(requestType);
-    }
-
-    try {
-      // Make the API call
-      var res = await fetch(endpoint, {
-        ...options,
-        method,
-        body,
-        credentials,
-        headers: headers || {}
-      });
-    } catch (e) {
-      // The request was malformed, or there was a network error
-      return next(
-        await actionWith(
-          {
-            ...requestType,
-            payload: new RequestError(e.message),
-            error: true
-          },
-          [action, getState()]
-        )
-      );
-    }
-
-    // Process the server response
-    if (res.ok) {
-      return next(await actionWith(successType, [action, getState(), res]));
-    } else {
-      return next(
-        await actionWith(
-          {
-            ...failureType,
-            error: true
-          },
-          [action, getState(), res]
-        )
-      );
-    }
+    })();
   };
 }
 
