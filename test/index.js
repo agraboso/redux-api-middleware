@@ -846,6 +846,30 @@ test('apiMiddleware must pass actions without an [RSAA] property to the next han
   actionHandler(anAction);
 });
 
+test("apiMiddleware mustn't return a promise on actions without a [RSAA] property", t => {
+  const anAction = {};
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => action;
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  const noProm = actionHandler(anAction);
+  t.notEqual(typeof noProm.then, 'function', 'no promise returned');
+});
+
+test('apiMiddleware must return a promise on actions with a [RSAA] property', t => {
+  const anAction = { [RSAA]: {} };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => action;
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  const yesProm = actionHandler(anAction);
+  t.equal(typeof yesProm.then, 'function', 'promise returned');
+});
+
 test('apiMiddleware must dispatch an error request FSA for an invalid RSAA with a string request type', t => {
   const anAction = {
     [RSAA]: {
