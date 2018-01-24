@@ -118,7 +118,14 @@ function apiMiddleware({ getState }) {
     }
 
     // We can now dispatch the request FSA
-    next(await actionWith(requestType, [action, getState()]));
+    if (
+      typeof requestType.payload === 'function' ||
+      typeof requestType.meta === 'function'
+    ) {
+      next(await actionWith(requestType, [action, getState()]));
+    } else {
+      next(requestType);
+    }
 
     try {
       // Make the API call
