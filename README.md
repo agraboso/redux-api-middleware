@@ -146,6 +146,8 @@ The body of the API call.
 
 `redux-api-middleware` uses the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to make the API call. `[RSAA].body` should hence be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
 
+It may also be a function taking the state of your Redux store as its argument, and returning a body as described above.
+
 #### `[RSAA].headers`
 
 The HTTP headers for the API call.
@@ -218,7 +220,7 @@ The `[RSAA].types` property controls the output of `redux-api-middleware`. The s
   - `type`: the string constant in the first position of the `[RSAA].types` array.
 
   But errors may pop up at this stage, for several reasons:
-  - `redux-api-middleware` has to call those of `[RSAA].bailout`, `[RSAA].endpoint` and `[RSAA].headers` that happen to be a function, which may throw an error;
+  - `redux-api-middleware` has to call those of `[RSAA].bailout`, `[RSAA].endpoint`, `[RSAA].body`, `[RSAA].options` and `[RSAA].headers` that happen to be a function, which may throw an error;
   - `fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[RSAA].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
@@ -577,7 +579,7 @@ The `[RSAA].method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `
 
 #### `[RSAA].body`
 
-The optional `[RSAA].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org).
+The optional `[RSAA].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org), or a function. In the second case, the function SHOULD return a valid body.
 
 #### `[RSAA].headers`
 
