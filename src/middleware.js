@@ -200,7 +200,7 @@ export function createMiddleware(options = {}) {
  * @access public
  */
 function apiMiddleware({ getState }) {
-  return createMiddleware()(...arguments);
+  return createMiddleware()({ getState });
 }
 
 export { apiMiddleware };
