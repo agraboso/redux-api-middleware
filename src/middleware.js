@@ -3,14 +3,14 @@ import { isRSAA, validateRSAA } from './validation';
 import { InvalidRSAA, RequestError } from './errors';
 import { normalizeTypeDescriptors, actionWith } from './util';
 
-/**
- * A Redux middleware that processes RSAA actions.
- *
- * @type {ReduxMiddleware}
- * @access public
- */
-function apiMiddleware({ getState }) {
-  return next => action => {
+const defaults = {
+  responseOk: res => res.ok
+};
+
+export function createMiddleware(options = {}) {
+  const middlewareOptions = Object.assign({}, defaults, options);
+
+  return ({ getState }) => next => action => {
     // Do not process actions without an [RSAA] property
     if (!isRSAA(action)) {
       return next(action);
@@ -176,7 +176,7 @@ function apiMiddleware({ getState }) {
       }
 
       // Process the server response
-      if (res.ok) {
+      if (middlewareOptions.responseOk(res)) {
         return next(await actionWith(successType, [action, getState(), res]));
       } else {
         return next(
@@ -191,6 +191,16 @@ function apiMiddleware({ getState }) {
       }
     })();
   };
+}
+
+/**
+ * A Redux middleware that processes RSAA actions.
+ *
+ * @type {ReduxMiddleware}
+ * @access public
+ */
+function apiMiddleware({ getState }) {
+  return createMiddleware()(...arguments);
 }
 
 export { apiMiddleware };
