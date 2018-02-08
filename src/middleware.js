@@ -2,10 +2,7 @@ import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
 import { InvalidRSAA, RequestError } from './errors';
 import { normalizeTypeDescriptors, actionWith } from './util';
-
-const defaults = {
-  responseOk: res => res.ok
-};
+import defaults from './defaults';
 
 export function createMiddleware(options = {}) {
   const middlewareOptions = Object.assign({}, defaults, options);
