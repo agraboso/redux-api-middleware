@@ -4,7 +4,7 @@ import { InvalidRSAA, RequestError } from './errors';
 import { normalizeTypeDescriptors, actionWith } from './util';
 import defaults from './defaults';
 
-export function createMiddleware(options = {}) {
+function createMiddleware(options = {}) {
   const middlewareOptions = Object.assign({}, defaults, options);
 
   return ({ getState }) => next => action => {
@@ -200,4 +200,4 @@ function apiMiddleware({ getState }) {
   return createMiddleware()({ getState });
 }
 
-export { apiMiddleware };
+export { createMiddleware, apiMiddleware };

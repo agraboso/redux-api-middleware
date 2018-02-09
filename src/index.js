@@ -48,6 +48,6 @@ export {
   RequestError,
   ApiError,
   getJSON,
-  apiMiddleware,
-  createMiddleware
+  createMiddleware,
+  apiMiddleware
 };
