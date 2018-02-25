@@ -1273,9 +1273,11 @@ test('apiMiddleware must use an [RSAA].bailout function when present', t => {
 });
 
 test('apiMiddleware must use an [RSAA].body function when present', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 200
+  });
+
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
@@ -1372,9 +1374,10 @@ test('apiMiddleware must use an [RSAA].options function when present', t => {
 });
 
 test('apiMiddleware must use payload property of request type descriptor when it is a function', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 200
+  });
   const expectedState = { foo: 'bar' };
   const anAction = {
     [RSAA]: {
@@ -1431,9 +1434,10 @@ test('apiMiddleware must use payload property of request type descriptor when it
 });
 
 test('apiMiddleware must use meta property of request type descriptor when it is a function', t => {
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200);
+  const mock = mockOneFetch({
+    url: 'http://127.0.0.1/api/users/1',
+    response: 200
+  });
   const expectedState = { foo: 'bar' };
   const anAction = {
     [RSAA]: {
