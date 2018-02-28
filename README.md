@@ -634,6 +634,7 @@ $ npm install && npm test
 - The `CALL_API` symbol is replaced with the `RSAA` string as the top-level RSAA action key. `CALL_API` is aliased to the new value as of 2.0, but this will ultimately be deprecated.
 - `redux-api-middleware` no longer brings its own `fetch` implementation and depends on a global `fetch` to be provided in the runtime
 - A new `options` config is added to pass your `fetch` implementation extra options other than `method`, `headers`, `body` and `credentials`
+- `apiMiddleware` no longer returns a promise on actions without [RSAA] 
 
 ## License
 
