@@ -1944,16 +1944,17 @@ test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', 
 
         const res = await fetch(endpoint, opts);
 
-        return {
-          ...res,
-          // Custom `ok` check
-          ok: !responseBody.error,
-          json: async () => ({
-            ...responseBody,
-            // Custom `json` response
-            foo: 'bar'
-          })
+        const customJson = {
+          ...(await res.json()),
+          foo: 'bar'
         };
+
+        return new Response(JSON.stringify(customJson), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
