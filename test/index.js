@@ -1927,8 +1927,8 @@ test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', 
   const responseBody = {
     id: 1,
     name: 'Alan',
-    error: false,
-  }
+    error: false
+  };
   const api = nock('http://127.0.0.1')
     .get('/api/users/1')
     .reply(200, responseBody);
@@ -1938,7 +1938,7 @@ test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', 
       method: 'GET',
       fetch: async (endpoint, opts) => {
         t.pass('custom fetch handler called');
-        
+
         // Simulate some async process like retrieving cache
         await asyncWorker();
 
@@ -1951,9 +1951,9 @@ test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', 
           json: async () => ({
             ...responseBody,
             // Custom `json` response
-            foo: 'bar',
-          }),
-        }
+            foo: 'bar'
+          })
+        };
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
@@ -1967,13 +1967,13 @@ test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', 
           action.payload,
           {
             ...responseBody,
-            foo: 'bar',
+            foo: 'bar'
           },
           'custom response passed to the next handler'
         );
         break;
     }
-  }
+  };
 
   const actionHandler = nextHandler(doNext);
 
