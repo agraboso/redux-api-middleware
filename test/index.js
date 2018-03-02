@@ -531,6 +531,32 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
   );
   t.ok(isValidRSAA(action26), '[RSAA].options may be a function (isRSAA)');
 
+  const action27 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      fetch: () => {}
+    }
+  };
+  t.ok(
+    isValidRSAA(action27),
+    '[RSAA].fetch property must be a function (isRSAA)'
+  );
+
+  const action28 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      fetch: {}
+    }
+  };
+  t.notOk(
+    isValidRSAA(action28),
+    '[RSAA].fetch property must be a function (isRSAA)'
+  );
+
   t.end();
 });
 
