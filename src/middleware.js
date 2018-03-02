@@ -42,7 +42,7 @@ function apiMiddleware({ getState }) {
       const [requestType, successType, failureType] = normalizeTypeDescriptors(
         types
       );
-      let doFetch = customFetch || fetch;
+      const doFetch = customFetch || fetch;
 
       // Should we bail out?
       try {
