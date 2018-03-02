@@ -60,7 +60,8 @@ function validateRSAA(action) {
     'headers',
     'credentials',
     'bailout',
-    'types'
+    'types',
+    'fetch',
   ];
   const validMethods = [
     'GET',
@@ -103,7 +104,8 @@ function validateRSAA(action) {
     options,
     credentials,
     types,
-    bailout
+    bailout,
+    fetch
   } = callAPI;
   if (typeof endpoint === 'undefined') {
     validationErrors.push('[RSAA] must have an endpoint property');
@@ -183,6 +185,12 @@ function validateRSAA(action) {
       !isValidTypeDescriptor(failureType)
     ) {
       validationErrors.push('Invalid failure type');
+    }
+  }
+
+  if (typeof fetch !== 'undefined') {
+    if (typeof fetch !== 'function') {
+      validationErrors.push('[RSAA].fetch property must be a function');
     }
   }
 
