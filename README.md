@@ -199,7 +199,7 @@ It must be one of the following strings:
 
 A custom [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) implementation, useful for intercepting the fetch request to customize the response status, modify the response payload or skip the request altogether and provide a cached response instead.
 
-`fetch` must be a function that returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) which resolves with an instance of [Request](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+If provided, the fetch option must be a function that conforms to the Fetch API. Otherwise, the global fetch will be used.
 
 Example of modifying a request payload and status:
 
