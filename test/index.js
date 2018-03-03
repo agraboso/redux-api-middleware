@@ -2011,7 +2011,7 @@ test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', 
   actionHandler(anAction);
 });
 
-test.only('apiMiddleware must dispatch correct error payload when custom fetch wrapper returns an error response', t => {
+test('apiMiddleware must dispatch correct error payload when custom fetch wrapper returns an error response', t => {
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1',
