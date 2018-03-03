@@ -42,13 +42,12 @@ function apiMiddleware({ getState }) {
         body,
         headers,
         options = {},
-        fetch: customFetch
+        fetch: doFetch = fetch
       } = callAPI;
       const { method, credentials, bailout, types } = callAPI;
       const [requestType, successType, failureType] = normalizeTypeDescriptors(
         types
       );
-      const doFetch = customFetch || fetch;
 
       // Should we bail out?
       try {
