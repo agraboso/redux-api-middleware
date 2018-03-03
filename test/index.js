@@ -1171,7 +1171,7 @@ test('apiMiddleware must dispatch an error request FSA when [RSAA].options fails
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an error request FSA on a request error', t => {
+test('apiMiddleware must dispatch an failure FSA with an error on a request error', t => {
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1', // We haven't mocked this
@@ -1192,7 +1192,9 @@ test('apiMiddleware must dispatch an error request FSA on a request error', t =>
   const doNext = action => {
     switch (action.type) {
       case 'REQUEST':
-        if (!action.error) {
+        if (action.error) {
+          t.fail('Request FSA should not have an error');
+        } else {
           t.pass('next handler called');
           t.equal(
             action.type,
@@ -1213,31 +1215,26 @@ test('apiMiddleware must dispatch an error request FSA on a request error', t =>
             action.error,
             'dispatched non-error FSA has correct error property'
           );
-          break;
-        } else {
-          t.pass('next handler called');
-          t.equal(
-            action.type,
-            'REQUEST',
-            'dispatched error FSA has correct type property'
-          );
-          t.equal(
-            action.payload.name,
-            'RequestError',
-            'dispatched error FSA has correct payload property'
-          );
-          t.equal(
-            action.meta,
-            'someMeta',
-            'dispatched error FSA has correct meta property'
-          );
-          t.ok(action.error, 'dispatched error FSA has correct error property');
         }
+        break;
+      case 'FAILURE':
+        t.equal(
+          action.type,
+          'FAILURE',
+          'dispatched error FSA has correct type property'
+        );
+        t.equal(
+          action.payload.name,
+          'RequestError',
+          'dispatched error FSA has correct payload property'
+        );
+        t.ok(action.error, 'dispatched error FSA has correct error property');
+        break;
     }
   };
   const actionHandler = nextHandler(doNext);
 
-  t.plan(10);
+  t.plan(8);
   actionHandler(anAction);
 });
 
