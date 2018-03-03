@@ -37,7 +37,13 @@ function apiMiddleware({ getState }) {
 
       // Parse the validated RSAA action
       const callAPI = action[RSAA];
-      var { endpoint, body, headers, options = {} } = callAPI;
+      var {
+        endpoint,
+        body,
+        headers,
+        options = {},
+        fetch: doFetch = fetch
+      } = callAPI;
       const { method, credentials, bailout, types } = callAPI;
       const [requestType, successType, failureType] = normalizeTypeDescriptors(
         types
@@ -148,7 +154,7 @@ function apiMiddleware({ getState }) {
 
       try {
         // Make the API call
-        var res = await fetch(endpoint, {
+        var res = await doFetch(endpoint, {
           ...options,
           method,
           body: body || undefined,
