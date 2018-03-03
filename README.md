@@ -195,6 +195,72 @@ It must be one of the following strings:
 - `same-origin` only sends cookies for the current domain;
 - `include` always send cookies, even for cross-origin calls.
 
+#### `[RSAA].fetch`
+
+A custom [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) implementation, useful for intercepting the fetch request to customize the response status, modify the response payload or skip the request altogether and provide a cached response instead.
+
+`fetch` must be a function that returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) which resolves with an instance of [Request](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+
+Example of modifying a request payload and status:
+
+```js
+{
+  [RSAA]: {
+    ...
+    fetch: async (...args) => {
+      // `fetch` args may be just a Request instance or [URI, options] (see Fetch API docs above)
+      const res = await fetch(...args);
+      const json = await res.json();
+
+      return new Response(
+        JSON.stringify({
+          ...json,
+          // Adding to the JSON response
+          foo: 'bar'
+        }),
+        {
+          // Custom success/error status based on an `error` key in the API response
+          status: json.error ? 500 : 200,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+    }
+    ...
+  }
+}
+```
+
+Example of skipping the request in favor of a cached response:
+
+```js
+{
+  [RSAA]: {
+    ...
+    fetch: async (...args) => {
+      const cached = await getCache('someKey');
+
+      if (cached) {
+        // where `cached` is a JSON string: '{"foo": "bar"}'
+        return new Response(cached,
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      }
+
+      // Fetch as usual if not cached
+      return fetch(...args);
+    }
+    ...
+  }
+}
+```
+
 ### Bailing out
 
 In some cases, the data you would like to fetch from the server may already be cached in your Redux store. Or you may decide that the current user does not have the necessary permissions to make some request.
@@ -563,11 +629,12 @@ The `[RSAA]` property MAY
 - have a `headers` property,
 - have an `options` property,
 - have a `credentials` property,
-- have a `bailout` property.
+- have a `bailout` property,
+- have a `fetch` property.
 
 The `[RSAA]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, and `bailout`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, `bailout` and `fetch`.
 
 #### `[RSAA].endpoint`
 
@@ -598,6 +665,10 @@ The optional `[RSAA].credentials` property MUST be one of the strings `omit`, `s
 #### `[RSAA].bailout`
 
 The optional `[RSAA].bailout` property MUST be a boolean or a function.
+
+#### `[RSAA].fetch`
+
+The optional `[RSAA].fetch` property MUST be a function.
 
 #### `[RSAA].types`
 
