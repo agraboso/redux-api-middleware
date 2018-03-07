@@ -1,5 +1,6 @@
 const defaults = {
-  responseOk: res => res.ok
+  ok: res => res.ok,
+  fetch
 };
 
 export default defaults;

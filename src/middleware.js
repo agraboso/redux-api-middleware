@@ -39,7 +39,8 @@ function createMiddleware(options = {}) {
         body,
         headers,
         options = {},
-        fetch: doFetch = fetch
+        fetch: doFetch = middlewareOptions.fetch,
+        ok = middlewareOptions.ok
       } = callAPI;
       const { method, credentials, bailout, types } = callAPI;
       const [requestType, successType, failureType] = normalizeTypeDescriptors(
@@ -173,7 +174,7 @@ function createMiddleware(options = {}) {
       }
 
       // Process the server response
-      if (middlewareOptions.responseOk(res)) {
+      if (ok(res)) {
         return next(await actionWith(successType, [action, getState(), res]));
       } else {
         return next(
