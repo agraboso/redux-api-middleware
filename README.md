@@ -201,7 +201,10 @@ A custom [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorker
 
 If provided, the fetch option must be a function that conforms to the Fetch API. Otherwise, the global fetch will be used.
 
-Example of modifying a request payload and status:
+Examples:
+
+<details>
+<summary>Modify a response payload and status</summary>
 
 ```js
 {
@@ -231,8 +234,31 @@ Example of modifying a request payload and status:
   }
 }
 ```
+</details>
 
-Example of skipping the request in favor of a cached response:
+<details>
+<summary>Modify a response status based on response json</summary>
+
+```js
+{
+  [RSAA]: {
+    ...
+    fetch: async (...args) => {
+      const res = await fetch(...args);
+      const returnRes = res.clone(); // faster then above example with JSON.stringify
+      const json = await res.json(); // we need json just to check status
+
+      returnRes.status = json.error ? 500 : 200,
+      return returnRes;
+    }
+    ...
+  }
+}
+```
+</details>
+
+<details>
+<summary>Skip the request in favor of a cached response</summary>
 
 ```js
 {
@@ -260,6 +286,7 @@ Example of skipping the request in favor of a cached response:
   }
 }
 ```
+</details>
 
 ### Bailing out
 
