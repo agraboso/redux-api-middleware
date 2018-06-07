@@ -15,6 +15,7 @@ redux-api-middleware
     - [Bailing out](#bailing-out)
     - [Lifecycle](#lifecycle)
     - [Customizing the dispatched FSAs](#customizing-the-dispatched-fsas)
+    - [Testing](#testing)
 4. [Reference](#reference)
     - [Exports](#exports)
     - [Flux Standard Actions](#flux-standard-actions)
@@ -342,6 +343,76 @@ They may also have `payload` and `meta` properties, which may be of any type. Fu
 If a custom `payload` and `meta` function throws an error, `redux-api-middleware` will dispatch an FSA with its `error` property set to `true`, and an `InternalError` object as its `payload`.
 
 A noteworthy feature of `redux-api-middleware` is that it accepts Promises (or function that return them) in `payload` and `meta` properties of type descriptors, and it will wait for them to resolve before dispatching the FSA &mdash; so no need to use anything like `redux-promise`.
+
+#### Testing
+
+To test `redux-api-middleware` calls inside our application, we need to create a fetch mock in order to simulate the response of the call. `fetch-mock` package can be used for that purpose along with `redux-mock-store` as showed in the following example:
+
+##### actions/user.js
+
+```javascript
+export const USER_REQUEST = '@@user/USER_REQUEST'
+export const USER_SUCCESS = '@@user/USER_SUCCESS'
+export const USER_FAILURE = '@@user/USER_FAILURE'
+
+export const getUser = () => ({
+  [RSAA]: {
+    endpoint: 'https://hostname/api/users/',
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    types: [
+      USER_REQUEST,
+      USER_SUCCESS,
+      USER_FAILURE
+    ]
+  }
+})
+```
+
+##### actions/user.test.js
+
+```javascript
+import configureMockStore from 'redux-mock-store'
+import { apiMiddleware } from 'redux-api-middleware'
+import thunk from 'redux-thunk'
+import fetchMock from 'fetch-mock'
+
+import {getUser} from './user'
+
+const middlewares = [ thunk, apiMiddleware ]
+const mockStore = configureMockStore(middlewares)
+
+describe('async user actions', () => {
+  // If we have several tests in our test suit, we might want to
+  // reset and restor the mocks after each test to avoid unexpected behaviours
+  afterEach(() => {
+    fetchMock.reset()
+    fetchMock.restore()
+  })
+
+  it('should dispatch USER_SUCCESS when getUser is called', () => {
+    // We create a mock store for our test data.
+    const store = mockStore({})
+
+    const body = {
+      email: 'EMAIL',
+      username: 'USERNAME'
+    }
+    // We build the mock for the fetch request.
+    // beware that the url must match the action endpoint.
+    fetchMock.getOnce(`https://hostname/api/users/`, {body: body, headers: {'content-type': 'application/json'}})
+    // We are going to verify the response with the following actions
+    const expectedActions = [
+      {type: actions.USER_REQUEST},
+      {type: actions.USER_SUCCESS, payload: body}
+    ]
+    return store.dispatch(actions.getUser()).then(() => {
+      // Verify that all the actions in the store are the expected ones
+      expect(store.getActions()).toEqual(expectedActions)
+    })
+  })
+})
+```
 
 #### *Request* type descriptors
 
@@ -732,7 +803,7 @@ $ npm install && npm test
 - The `CALL_API` symbol is replaced with the `RSAA` string as the top-level RSAA action key. `CALL_API` is aliased to the new value as of 2.0, but this will ultimately be deprecated.
 - `redux-api-middleware` no longer brings its own `fetch` implementation and depends on a global `fetch` to be provided in the runtime
 - A new `options` config is added to pass your `fetch` implementation extra options other than `method`, `headers`, `body` and `credentials`
-- `apiMiddleware` no longer returns a promise on actions without [RSAA] 
+- `apiMiddleware` no longer returns a promise on actions without [RSAA]
 
 ## License
 
