@@ -346,7 +346,7 @@ A noteworthy feature of `redux-api-middleware` is that it accepts Promises (or f
 
 #### Testing
 
-To test `redux-api-middleware` calls inside our application, we need to create a fetch mock in order to simulate the response of the call. `fetch-mock` package can be used for that purpose along with `redux-mock-store` as showed in the following example:
+To test `redux-api-middleware` calls inside our application, we can create a fetch mock in order to simulate the response of the call. The `fetch-mock` and `redux-mock-store`packages can be used for this purpose as shown in the following example:
 
 ##### actions/user.js
 
@@ -372,6 +372,8 @@ export const getUser = () => ({
 ##### actions/user.test.js
 
 ```javascript
+// This is a Jest test, fyi
+
 import configureMockStore from 'redux-mock-store'
 import { apiMiddleware } from 'redux-api-middleware'
 import thunk from 'redux-thunk'
@@ -384,7 +386,7 @@ const mockStore = configureMockStore(middlewares)
 
 describe('async user actions', () => {
   // If we have several tests in our test suit, we might want to
-  // reset and restor the mocks after each test to avoid unexpected behaviours
+  // reset and restore the mocks after each test to avoid unexpected behaviors
   afterEach(() => {
     fetchMock.reset()
     fetchMock.restore()
