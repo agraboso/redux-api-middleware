@@ -4,6 +4,10 @@ redux-api-middleware
 
 [Redux middleware](https://redux.js.org/docs/advanced/Middleware.html) for calling an API.
 
+This middleware receives [*Redux Standard API-calling Actions*](#redux-standard-api-calling-actions) (RSAAs) and dispatches [*Flux Standard Actions*](#flux-standard-actions) (FSAs) to the next middleware.
+
+RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rsaa) is a `String` constant defined in, and exported by `redux-api-middleware`. They contain information describing an API call and three different types of FSAs, known as the *request*, *success* and *failure* FSAs.
+
 ## Table of contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -11,7 +15,6 @@ redux-api-middleware
 
 
 - [Introduction](#introduction)
-  - [A simple example](#a-simple-example)
   - [Breaking Changes in 2.0 Release](#breaking-changes-in-20-release)
 - [Installation](#installation)
     - [configureStore.js](#configurestorejs)
@@ -73,12 +76,6 @@ redux-api-middleware
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
-
-This middleware receives [*Redux Standard API-calling Actions*](#redux-standard-api-calling-actions) (RSAAs) and dispatches [*Flux Standard Actions*](#flux-standard-actions) (FSAs) to the next middleware.
-
-RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rsaa) is a `String` constant defined in, and exported by `redux-api-middleware`. They contain information describing an API call and three different types of FSAs, known as the *request*, *success* and *failure* FSAs.
-
-### A simple example
 
 The following is a minimal RSAA action:
 
@@ -248,7 +245,7 @@ A custom [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorker
 
 If provided, the fetch option must be a function that conforms to the Fetch API. Otherwise, the global fetch will be used.
 
-Examples:
+**Examples:**
 
 <details>
 <summary>Modify a response payload and status</summary>
