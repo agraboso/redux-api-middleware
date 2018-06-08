@@ -94,16 +94,17 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
   );
 
   const action2 = {
-    [RSAA]: {},
-    invalidKey: ''
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    },
+    anotherKey: 'foo'
   };
-  t.ok(
-    validateRSAA(action2).includes('Invalid root key: invalidKey'),
-    'RSAAs must not have properties other than [RSAA] (validateRSAA)'
-  );
-  t.notOk(
-    isValidRSAA(action2),
-    'RSAAs must not have properties other than [RSAA] (isValidRSAA)'
+  t.equal(
+    validateRSAA(action2).length,
+    0,
+    'RSAAs may have properties other than [RSAA] (validateRSAA)'
   );
 
   const action3 = {
@@ -563,6 +564,20 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
   t.notOk(
     isValidRSAA(action29),
     '[RSAA].ok property must be a function (isRSAA)'
+  );
+
+  const action30 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    },
+    [Symbol('action30 Symbol')]: 'foo'
+  };
+  t.equal(
+    validateRSAA(action30).length,
+    0,
+    'RSAAs may have Symbol properties other than [RSAA] (validateRSAA)'
   );
 
   t.end();
