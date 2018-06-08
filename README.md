@@ -31,9 +31,8 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
   - [Bailing out](#bailing-out)
   - [Lifecycle](#lifecycle)
   - [Customizing the dispatched FSAs](#customizing-the-dispatched-fsas)
+  - [Dispatching Thunks](#dispatching-thunks)
   - [Testing](#testing)
-      - [actions/user.js](#actionsuserjs)
-      - [actions/user.test.js](#actionsusertestjs)
 - [Reference](#reference)
   - [*Request* type descriptors](#request-type-descriptors)
   - [*Success* type descriptors](#success-type-descriptors)
@@ -387,11 +386,51 @@ If a custom `payload` and `meta` function throws an error, `redux-api-middleware
 
 A noteworthy feature of `redux-api-middleware` is that it accepts Promises (or function that return them) in `payload` and `meta` properties of type descriptors, and it will wait for them to resolve before dispatching the FSA &mdash; so no need to use anything like `redux-promise`.
 
+### Dispatching Thunks
+
+You can use `redux-thunk` to compose effects, dispatch custom actions on success/error, and implement other types of complex behavior.
+
+See [the Redux docs on composition](https://github.com/reduxjs/redux-thunk#composition) for more in-depth information, or expand the example below.
+
+<details>
+<summary>Example</summary>
+
+```js
+export function patchAsyncExampleThunkChainedActionCreator(values) {
+  return async(dispatch, getState) => {
+    const actionResponse = await dispatch({
+      [CALL_API]: {
+        endpoint: "...",
+        method: "PATCH",
+        body: JSON.stringify(values),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        types: [PATCH, PATCH_SUCCESS, PATCH_FAILED]
+      }
+    });
+
+    if (actionResponse.error) {
+      // the last dispatched action has errored, break out of the promise chain.
+      throw new Error("Promise flow received action error", actionResponse);
+    }
+
+    // you can EITHER return the above resolved promise (actionResponse) here...
+    return actionResponse;
+
+    // OR resolve another asyncAction here directly and pass the previous received payload value as argument...
+    return await yourOtherAsyncAction(actionResponse.payload.foo);
+  };
+}
+```
+</details>
+
 ### Testing
 
 To test `redux-api-middleware` calls inside our application, we can create a fetch mock in order to simulate the response of the call. The `fetch-mock` and `redux-mock-store`packages can be used for this purpose as shown in the following example:
 
-##### actions/user.js
+**actions/user.js**
 
 ```javascript
 export const USER_REQUEST = '@@user/USER_REQUEST'
@@ -412,7 +451,7 @@ export const getUser = () => ({
 })
 ```
 
-##### actions/user.test.js
+**actions/user.test.js**
 
 ```javascript
 // This is a Jest test, fyi
