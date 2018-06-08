@@ -33,7 +33,7 @@ import RSAA from './RSAA';
 import { isRSAA, validateRSAA, isValidRSAA } from './validation';
 import { InvalidRSAA, InternalError, RequestError, ApiError } from './errors';
 import { getJSON } from './util';
-import { apiMiddleware } from './middleware';
+import { apiMiddleware, createMiddleware } from './middleware';
 
 export {
   // Alias RSAA to CALL_API to smooth v1 - v2 migration
@@ -48,5 +48,6 @@ export {
   RequestError,
   ApiError,
   getJSON,
+  createMiddleware,
   apiMiddleware
 };

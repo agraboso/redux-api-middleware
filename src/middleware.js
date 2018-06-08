@@ -2,15 +2,12 @@ import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
 import { InvalidRSAA, RequestError } from './errors';
 import { normalizeTypeDescriptors, actionWith } from './util';
+import defaults from './defaults';
 
-/**
- * A Redux middleware that processes RSAA actions.
- *
- * @type {ReduxMiddleware}
- * @access public
- */
-function apiMiddleware({ getState }) {
-  return next => action => {
+function createMiddleware(options = {}) {
+  const middlewareOptions = Object.assign({}, defaults, options);
+
+  return ({ getState }) => next => action => {
     // Do not process actions without an [RSAA] property
     if (!isRSAA(action)) {
       return next(action);
@@ -42,7 +39,8 @@ function apiMiddleware({ getState }) {
         body,
         headers,
         options = {},
-        fetch: doFetch = fetch
+        fetch: doFetch = middlewareOptions.fetch,
+        ok = middlewareOptions.ok
       } = callAPI;
       const { method, credentials, bailout, types } = callAPI;
       const [requestType, successType, failureType] = normalizeTypeDescriptors(
@@ -176,7 +174,7 @@ function apiMiddleware({ getState }) {
       }
 
       // Process the server response
-      if (res.ok) {
+      if (ok(res)) {
         return next(await actionWith(successType, [action, getState(), res]));
       } else {
         return next(
@@ -193,4 +191,14 @@ function apiMiddleware({ getState }) {
   };
 }
 
-export { apiMiddleware };
+/**
+ * A Redux middleware that processes RSAA actions.
+ *
+ * @type {ReduxMiddleware}
+ * @access public
+ */
+function apiMiddleware({ getState }) {
+  return createMiddleware()({ getState });
+}
+
+export { createMiddleware, apiMiddleware };
