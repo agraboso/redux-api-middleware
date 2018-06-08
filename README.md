@@ -6,25 +6,71 @@ redux-api-middleware
 
 ## Table of contents
 
-1. [Introduction](#introduction)
-    - [A simple example](#a-simple-example)
-    - [Breaking Changes in 2.0 Release](#breaking-changes-in-20-release)
-2. [Installation](#installation)
-3. [Usage](#usage)
-    - [Defining the API call](#defining-the-api-call)
-    - [Bailing out](#bailing-out)
-    - [Lifecycle](#lifecycle)
-    - [Customizing the dispatched FSAs](#customizing-the-dispatched-fsas)
-    - [Testing](#testing)
-4. [Reference](#reference)
-    - [Exports](#exports)
-    - [Flux Standard Actions](#flux-standard-actions)
-    - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
-5. [History](#history)
-6. [Tests](#tests)
-7. [Upgrading from v1.0.x](#upgrading-from-v10x)
-8. [License](License)
-9. [Acknowledgements](#acknowledgements)
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Introduction](#introduction)
+  - [A simple example](#a-simple-example)
+  - [Breaking Changes in 2.0 Release](#breaking-changes-in-20-release)
+- [Installation](#installation)
+    - [configureStore.js](#configurestorejs)
+    - [app.js](#appjs)
+- [Usage](#usage)
+  - [Defining the API call](#defining-the-api-call)
+    - [`[RSAA].endpoint`](#rsaaendpoint)
+    - [`[RSAA].method`](#rsaamethod)
+    - [`[RSAA].body`](#rsaabody)
+    - [`[RSAA].headers`](#rsaaheaders)
+    - [`[RSAA].options`](#rsaaoptions)
+    - [`[RSAA].credentials`](#rsaacredentials)
+    - [`[RSAA].fetch`](#rsaafetch)
+  - [Bailing out](#bailing-out)
+  - [Lifecycle](#lifecycle)
+  - [Customizing the dispatched FSAs](#customizing-the-dispatched-fsas)
+  - [Testing](#testing)
+      - [actions/user.js](#actionsuserjs)
+      - [actions/user.test.js](#actionsusertestjs)
+- [Reference](#reference)
+  - [*Request* type descriptors](#request-type-descriptors)
+  - [*Success* type descriptors](#success-type-descriptors)
+  - [*Failure* type descriptors](#failure-type-descriptors)
+  - [Exports](#exports)
+    - [`RSAA`](#rsaa)
+    - [`apiMiddleware`](#apimiddleware)
+    - [`isRSAA(action)`](#isrsaaaction)
+    - [`validateRSAA(action)`](#validatersaaaction)
+    - [`isValidRSAA(action)`](#isvalidrsaaaction)
+    - [`InvalidRSAA`](#invalidrsaa)
+    - [`InternalError`](#internalerror)
+    - [`RequestError`](#requesterror)
+    - [`ApiError`](#apierror)
+    - [`getJSON(res)`](#getjsonres)
+  - [Flux Standard Actions](#flux-standard-actions)
+    - [`type`](#type)
+    - [`payload`](#payload)
+    - [`error`](#error)
+    - [`meta`](#meta)
+  - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
+    - [`[RSAA]`](#rsaa)
+    - [`[RSAA].endpoint`](#rsaaendpoint-1)
+    - [`[RSAA].method`](#rsaamethod-1)
+    - [`[RSAA].body`](#rsaabody-1)
+    - [`[RSAA].headers`](#rsaaheaders-1)
+    - [`[RSAA].options`](#rsaaoptions-1)
+    - [`[RSAA].credentials`](#rsaacredentials-1)
+    - [`[RSAA].bailout`](#rsaabailout)
+    - [`[RSAA].fetch`](#rsaafetch-1)
+    - [`[RSAA].types`](#rsaatypes)
+    - [Type descriptors](#type-descriptors)
+- [History](#history)
+- [Tests](#tests)
+- [Upgrading from v1.0.x](#upgrading-from-v10x)
+- [License](#license)
+- [Projects using redux-api-middleware](#projects-using-redux-api-middleware)
+- [Acknowledgements](#acknowledgements)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
 
@@ -344,7 +390,7 @@ If a custom `payload` and `meta` function throws an error, `redux-api-middleware
 
 A noteworthy feature of `redux-api-middleware` is that it accepts Promises (or function that return them) in `payload` and `meta` properties of type descriptors, and it will wait for them to resolve before dispatching the FSA &mdash; so no need to use anything like `redux-promise`.
 
-#### Testing
+### Testing
 
 To test `redux-api-middleware` calls inside our application, we can create a fetch mock in order to simulate the response of the call. The `fetch-mock` and `redux-mock-store`packages can be used for this purpose as shown in the following example:
 
@@ -416,7 +462,9 @@ describe('async user actions', () => {
 })
 ```
 
-#### *Request* type descriptors
+## Reference
+
+### *Request* type descriptors
 
 `payload` and `meta` functions will be passed the RSAA action itself and the state of your Redux store.
 
@@ -478,7 +526,7 @@ Error *request* FSAs might need to obviate these custom settings though.
   - *Request* FSAs resulting from invalid RSAAs (step 2 in [Lifecycle](#lifecycle) above) cannot be customized. `redux-api-middleware` will try to dispatch an error *request* FSA, but it might not be able to (it may happen that the invalid RSAA does not contain a value that can be used as the *request* FSA `type` property, in which case `redux-api-middleware` will let the RSAA die silently).
   - *Request* FSAs resulting in request errors (step 3 in [Lifecycle](#lifecycle) above) will honor the user-provided `meta`, but will ignore the user-provided `payload`, which is reserved for the default error object.
 
-#### *Success* type descriptors
+### *Success* type descriptors
 
 `payload` and `meta` functions will be passed the RSAA action itself, the state of your Redux store, and the raw server response.
 
@@ -543,7 +591,7 @@ By default, *success* FSAs will not contain a `meta` property, while their `payl
 (action, state, res) => getJSON(res)
 ```
 
-#### *Failure* type descriptors
+### *Failure* type descriptors
 
 `payload` and `meta` functions will be passed the RSAA action itself, the state of your Redux store, and the raw server response &mdash; exactly as for *success* type descriptors. The `error` property of dispatched *failure* FSAs will always be set to `true`.
 
@@ -583,8 +631,6 @@ By default, *failure* FSAs will not contain a `meta` property, while their `payl
     (json) => new ApiError(res.status, res.statusText, json)
   )
 ```
-
-## Reference
 
 ### Exports
 
