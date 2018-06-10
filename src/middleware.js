@@ -2,8 +2,25 @@ import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
 import { InvalidRSAA, RequestError } from './errors';
 import { normalizeTypeDescriptors, actionWith } from './util';
-import defaults from './defaults';
 
+/**
+ * Default options for redux-api-middleware
+ * These can be customized by passing options into `createMiddleware`
+ * @type {Object}
+ */
+const defaults = {
+  ok: res => res.ok,
+  fetch
+};
+
+/**
+ * A middleware creator used to create a ReduxApiMiddleware
+ * with custom defaults
+ *
+ * @type {function}
+ * @returns {ReduxMiddleware}
+ * @access public
+ */
 function createMiddleware(options = {}) {
   const middlewareOptions = Object.assign({}, defaults, options);
 

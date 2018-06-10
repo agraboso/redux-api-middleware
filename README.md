@@ -41,6 +41,7 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
   - [Exports](#exports)
     - [`RSAA`](#rsaa)
     - [`apiMiddleware`](#apimiddleware)
+    - [`createMiddleware(options)`](#createmiddlewareoptions)
     - [`isRSAA(action)`](#isrsaaaction)
     - [`validateRSAA(action)`](#validatersaaaction)
     - [`isValidRSAA(action)`](#isvalidrsaaaction)
@@ -64,6 +65,7 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
     - [`[RSAA].credentials`](#rsaacredentials-1)
     - [`[RSAA].bailout`](#rsaabailout)
     - [`[RSAA].fetch`](#rsaafetch-1)
+    - [`[RSAA].ok`](#rsaaok)
     - [`[RSAA].types`](#rsaatypes)
     - [Type descriptors](#type-descriptors)
 - [History](#history)
@@ -690,6 +692,15 @@ A JavaScript `String` whose presence as a key in an action signals that `redux-a
 
 The Redux middleware itself.
 
+#### `createMiddleware(options)`
+
+A function that creates an `apiMiddleware` with custom options.
+
+The following `options` properties are used:
+
+- `fetch` - provide a `fetch` API compatible function here to use instead of the default `window.fetch`
+- `ok` - provide a function here to use as a status check in the RSAA flow instead of `(res) => res.ok`
+
 #### `isRSAA(action)`
 
 A function that returns `true` if `action` has an `[RSAA]` property, and `false` otherwise.
@@ -860,7 +871,11 @@ The optional `[RSAA].bailout` property MUST be a boolean or a function.
 
 #### `[RSAA].fetch`
 
-The optional `[RSAA].fetch` property MUST be a function.
+The optional `[RSAA].fetch` property MUST be a function that conforms to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+
+#### `[RSAA].ok`
+
+The optional `[RSAA].ok` property MUST be a function that accepts a response object and returns a boolean indicating if the request is a success or failure
 
 #### `[RSAA].types`
 
