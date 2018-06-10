@@ -1,6 +1,6 @@
 import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
-import { InvalidRSAA, RequestError } from './errors';
+import { InvalidRSAA, RequestError, InternalError } from './errors';
 import { normalizeTypeDescriptors, actionWith } from './util';
 
 /**
@@ -167,9 +167,10 @@ function createMiddleware(options = {}) {
         next(requestType);
       }
 
+      let res;
       try {
         // Make the API call
-        var res = await doFetch(endpoint, {
+        res = await doFetch(endpoint, {
           ...options,
           method,
           body: body || undefined,
@@ -190,8 +191,24 @@ function createMiddleware(options = {}) {
         );
       }
 
+      let isOk;
+      try {
+        isOk = ok(res)
+      } catch (e) {
+        return next(
+          await actionWith(
+            {
+              ...failureType,
+              payload: new InternalError('[RSAA].ok function failed'),
+              error: true
+            },
+            [action, getState(), res]
+          )
+        );
+      }
+
       // Process the server response
-      if (ok(res)) {
+      if (isOk) {
         return next(await actionWith(successType, [action, getState(), res]));
       } else {
         return next(
