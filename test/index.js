@@ -13,7 +13,8 @@ import {
   RequestError,
   ApiError,
   getJSON,
-  apiMiddleware
+  apiMiddleware,
+  createMiddleware
 } from '../src';
 
 // Private module exports
@@ -551,6 +552,19 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
     '[RSAA].fetch property must be a function (isRSAA)'
   );
 
+  const action29 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      ok: {}
+    }
+  };
+  t.notOk(
+    isValidRSAA(action29),
+    '[RSAA].ok property must be a function (isRSAA)'
+  );
+
   t.end();
 });
 
@@ -821,6 +835,34 @@ test('actionWith', async t => {
     fsa4.error,
     'must set FSA error property to true if a custom meta function throws'
   );
+
+  t.end();
+});
+
+test('createMiddleware must return a Redux middleware', t => {
+  const doGetState = () => {};
+  const middleware = createMiddleware();
+  const nextHandler = middleware({ getState: doGetState });
+  const doNext = () => {};
+  const actionHandler = nextHandler(doNext);
+
+  t.equal(middleware.length, 1, 'apiMiddleware must take one argument');
+
+  t.equal(
+    typeof nextHandler,
+    'function',
+    'apiMiddleware must return a function to handle next'
+  );
+
+  t.equal(nextHandler.length, 1, 'next handler must take one argument');
+
+  t.equal(
+    typeof actionHandler,
+    'function',
+    'next handler must return a function to handle action'
+  );
+
+  t.equal(actionHandler.length, 1, 'action handler must take one argument');
 
   t.end();
 });
