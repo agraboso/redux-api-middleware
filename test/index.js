@@ -5,7 +5,6 @@ import nock from 'nock';
 // Public package exports
 import {
   RSAA,
-  CALL_API,
   isRSAA,
   validateRSAA,
   isValidRSAA,
@@ -20,11 +19,6 @@ import {
 // Private module exports
 import { isValidTypeDescriptor } from '../src/validation';
 import { normalizeTypeDescriptors, actionWith } from '../src/util';
-
-test('CALL_API is aliased to RSAA', t => {
-  t.equal(RSAA, CALL_API);
-  t.end();
-});
 
 test('isRSAA must identify RSAAs', t => {
   const action1 = '';
