@@ -366,8 +366,8 @@ The `[RSAA].types` property controls the output of `redux-api-middleware`. The s
   - `fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[RSAA].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
-  If such an error occurs, a different *request* FSA will be dispatched (*instead* of the one described above). It will contain the following properties:
-  - `type`: the string constant in the first position of the `[RSAA].types` array;
+  If such an error occurs, a *failure* FSA will be dispatched containing the following properties:
+  - `type`: the string constant in the last position of the `[RSAA].types` array;
   - `payload`: a [`RequestError`](#requesterror) object containing an error message;
   - `error: true`.
 
@@ -666,6 +666,7 @@ For example, if you want the status code and status message of a unsuccessful AP
   }
 }
 ```
+
 By default, *failure* FSAs will not contain a `meta` property, while their `payload` property will be evaluated from
 ```js
 (action, state, res) =>
@@ -673,6 +674,9 @@ By default, *failure* FSAs will not contain a `meta` property, while their `payl
     (json) => new ApiError(res.status, res.statusText, json)
   )
 ```
+
+
+Note that *failure* FSAs dispatched due to fetch errors will not have a `res` argument into `meta` or `payload`. The `res` parameter will exist for completed requests that have resulted in errors, but not for failed requests.
 
 ### Exports
 
@@ -898,6 +902,9 @@ $ npm install && npm test
 ## Upgrading from v2.0.x
 
 - The `CALL_API` alias has been removed
+- Error handling around failed fetches has been updated (#175)
+  - Previously, a failed `fetch` would dispatch a `REQUEST` FSA followed by another `REQUEST` FSA with an error flag
+  - Now, a failed `fetch` will dispatch a `REQUEST` FSA followed by a `FAILURE` FSA
 
 ## License
 
