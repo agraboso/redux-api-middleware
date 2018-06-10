@@ -16,6 +16,7 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
 
 - [Introduction](#introduction)
   - [Breaking Changes in 2.0 Release](#breaking-changes-in-20-release)
+  - [Breaking Changes in 3.0 Release](#breaking-changes-in-30-release)
 - [Installation](#installation)
     - [configureStore.js](#configurestorejs)
     - [app.js](#appjs)
@@ -68,6 +69,7 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
 - [History](#history)
 - [Tests](#tests)
 - [Upgrading from v1.0.x](#upgrading-from-v10x)
+- [Upgrading from v2.0.x](#upgrading-from-v20x)
 - [License](#license)
 - [Projects using redux-api-middleware](#projects-using-redux-api-middleware)
 - [Acknowledgements](#acknowledgements)
