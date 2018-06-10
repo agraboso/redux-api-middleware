@@ -11,6 +11,7 @@
  * @exports {error} RequestError
  * @exports {error} ApiError
  * @exports {function} getJSON
+ * @exports {function} createMiddleware
  * @exports {ReduxMiddleWare} apiMiddleware
  */
 
