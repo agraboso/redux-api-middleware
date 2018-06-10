@@ -13,7 +13,8 @@ import {
   RequestError,
   ApiError,
   getJSON,
-  apiMiddleware
+  apiMiddleware,
+  createMiddleware
 } from '../src';
 
 // Private module exports
@@ -551,6 +552,19 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
     '[RSAA].fetch property must be a function (isRSAA)'
   );
 
+  const action29 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      ok: {}
+    }
+  };
+  t.notOk(
+    isValidRSAA(action29),
+    '[RSAA].ok property must be a function (isRSAA)'
+  );
+
   t.end();
 });
 
@@ -821,6 +835,34 @@ test('actionWith', async t => {
     fsa4.error,
     'must set FSA error property to true if a custom meta function throws'
   );
+
+  t.end();
+});
+
+test('createMiddleware must return a Redux middleware', t => {
+  const doGetState = () => {};
+  const middleware = createMiddleware();
+  const nextHandler = middleware({ getState: doGetState });
+  const doNext = () => {};
+  const actionHandler = nextHandler(doNext);
+
+  t.equal(middleware.length, 1, 'apiMiddleware must take one argument');
+
+  t.equal(
+    typeof nextHandler,
+    'function',
+    'apiMiddleware must return a function to handle next'
+  );
+
+  t.equal(nextHandler.length, 1, 'next handler must take one argument');
+
+  t.equal(
+    typeof actionHandler,
+    'function',
+    'next handler must return a function to handle action'
+  );
+
+  t.equal(actionHandler.length, 1, 'action handler must take one argument');
 
   t.end();
 });
@@ -1171,7 +1213,50 @@ test('apiMiddleware must dispatch an error request FSA when [RSAA].options fails
   actionHandler(anAction);
 });
 
-test('apiMiddleware must dispatch an failure FSA with an error on a request error', t => {
+test('apiMiddleware must dispatch a failure FSA when [RSAA].ok fails', t => {
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
+
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      ok: () => {
+        throw new Error();
+      },
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+
+  const doNext = action => {
+    switch (action.type) {
+      case 'REQUEST':
+        t.pass('next handler called');
+        break;
+      case 'SUCCESS':
+        t.fail('success action should not be dispatched');
+        break;
+      case 'FAILURE':
+        t.equal(
+          action.payload.message,
+          '[RSAA].ok function failed',
+          'dispatched FSA has correct payload property'
+        );
+        t.ok(action.error, 'dispatched FSA has correct error property');
+        break;
+    }
+  };
+
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(3);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must dispatch a failure FSA with an error on a request error', t => {
   const anAction = {
     [RSAA]: {
       endpoint: 'http://127.0.0.1/api/users/1', // We haven't mocked this
@@ -1374,6 +1459,173 @@ test('apiMiddleware must use an [RSAA].options function when present', t => {
   const actionHandler = nextHandler(doNext);
 
   t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use an [RSAA].ok function when present', t => {
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      ok: () => {
+        t.pass('[RSAA].ok function called');
+        return true;
+      },
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {};
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(1);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false on a successful request', t => {
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200);
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      ok: () => {
+        return false;
+      },
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    switch (action.type) {
+      case 'REQUEST':
+        t.pass('next handler called');
+        break;
+      case 'SUCCESS':
+        t.fail('success action should not be dispatched');
+        break;
+      case 'FAILURE':
+        t.ok(action.error, 'dispatched FSA has correct error property');
+        break;
+    }
+  };
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(2);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', t => {
+  const asyncWorker = async () => 'Done!';
+  const responseBody = {
+    id: 1,
+    name: 'Alan',
+    error: false
+  };
+  const api = nock('http://127.0.0.1')
+    .get('/api/users/1')
+    .reply(200, responseBody);
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      fetch: async (endpoint, opts) => {
+        t.pass('custom fetch handler called');
+
+        // Simulate some async process like retrieving cache
+        await asyncWorker();
+
+        const res = await fetch(endpoint, opts);
+        const json = await res.json();
+
+        return new Response(
+          JSON.stringify({
+            ...json,
+            foo: 'bar'
+          }),
+          {
+            // Example of custom `res.ok`
+            status: json.error ? 500 : 200,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      },
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    switch (action.type) {
+      case 'SUCCESS':
+        t.deepEqual(
+          action.payload,
+          {
+            ...responseBody,
+            foo: 'bar'
+          },
+          'custom response passed to the next handler'
+        );
+        break;
+    }
+  };
+
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(2);
+  actionHandler(anAction);
+});
+
+test('apiMiddleware must dispatch correct error payload when custom fetch wrapper returns an error response', t => {
+  const anAction = {
+    [RSAA]: {
+      endpoint: 'http://127.0.0.1/api/users/1',
+      method: 'GET',
+      fetch: async (endpoint, opts) => {
+        return new Response(
+          JSON.stringify({
+            foo: 'bar'
+          }),
+          {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      },
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
+    }
+  };
+  const doGetState = () => {};
+  const nextHandler = apiMiddleware({ getState: doGetState });
+  const doNext = action => {
+    switch (action.type) {
+      case 'FAILURE':
+        t.ok(action.payload instanceof Error);
+        t.pass('error action dispatched');
+        t.deepEqual(
+          action.payload.response,
+          {
+            foo: 'bar'
+          },
+          'custom response passed to the next handler'
+        );
+        break;
+    }
+  };
+
+  const actionHandler = nextHandler(doNext);
+
+  t.plan(3);
   actionHandler(anAction);
 });
 
@@ -1936,113 +2188,5 @@ test('apiMiddleware must dispatch a failure FSA on an unsuccessful API call with
   const actionHandler = nextHandler(doNext);
 
   t.plan(8);
-  actionHandler(anAction);
-});
-
-test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', t => {
-  const asyncWorker = async () => 'Done!';
-  const responseBody = {
-    id: 1,
-    name: 'Alan',
-    error: false
-  };
-  const api = nock('http://127.0.0.1')
-    .get('/api/users/1')
-    .reply(200, responseBody);
-  const anAction = {
-    [RSAA]: {
-      endpoint: 'http://127.0.0.1/api/users/1',
-      method: 'GET',
-      fetch: async (endpoint, opts) => {
-        t.pass('custom fetch handler called');
-
-        // Simulate some async process like retrieving cache
-        await asyncWorker();
-
-        const res = await fetch(endpoint, opts);
-        const json = await res.json();
-
-        return new Response(
-          JSON.stringify({
-            ...json,
-            foo: 'bar'
-          }),
-          {
-            // Example of custom `res.ok`
-            status: json.error ? 500 : 200,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-      },
-      types: ['REQUEST', 'SUCCESS', 'FAILURE']
-    }
-  };
-  const doGetState = () => {};
-  const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = action => {
-    switch (action.type) {
-      case 'SUCCESS':
-        t.deepEqual(
-          action.payload,
-          {
-            ...responseBody,
-            foo: 'bar'
-          },
-          'custom response passed to the next handler'
-        );
-        break;
-    }
-  };
-
-  const actionHandler = nextHandler(doNext);
-
-  t.plan(2);
-  actionHandler(anAction);
-});
-
-test('apiMiddleware must dispatch correct error payload when custom fetch wrapper returns an error response', t => {
-  const anAction = {
-    [RSAA]: {
-      endpoint: 'http://127.0.0.1/api/users/1',
-      method: 'GET',
-      fetch: async (endpoint, opts) => {
-        return new Response(
-          JSON.stringify({
-            foo: 'bar'
-          }),
-          {
-            status: 500,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-      },
-      types: ['REQUEST', 'SUCCESS', 'FAILURE']
-    }
-  };
-  const doGetState = () => {};
-  const nextHandler = apiMiddleware({ getState: doGetState });
-  const doNext = action => {
-    switch (action.type) {
-      case 'FAILURE':
-        t.ok(action.payload instanceof Error);
-        t.pass('error action dispatched');
-        t.deepEqual(
-          action.payload.response,
-          {
-            foo: 'bar'
-          },
-          'custom response passed to the next handler'
-        );
-        break;
-    }
-  };
-
-  const actionHandler = nextHandler(doNext);
-
-  t.plan(3);
   actionHandler(anAction);
 });
