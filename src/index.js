@@ -3,7 +3,6 @@
  * @module redux-api-middleware
  * @requires lodash.isplainobject
  * @exports {string} RSAA
- * @exports {string} CALL_API - alias of RSAA, to be deprecated in v3
  * @exports {function} isRSAA
  * @exports {function} validateRSAA
  * @exports {function} isValidRSAA
@@ -36,9 +35,6 @@ import { getJSON } from './util';
 import { apiMiddleware } from './middleware';
 
 export {
-  // Alias RSAA to CALL_API to smooth v1 - v2 migration
-  // TODO: Deprecate in v3
-  RSAA as CALL_API,
   RSAA,
   isRSAA,
   validateRSAA,

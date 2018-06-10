@@ -132,6 +132,10 @@ We have tiptoed around error-handling issues here. For a thorough walkthrough of
 
 See the [2.0 Release Notes](https://github.com/agraboso/redux-api-middleware/releases/tag/v2.0.0), and [Upgrading from v1.0.x](#upgrading-from-v10x) for details on upgrading.
 
+### Breaking Changes in 3.0 Release
+
+See the [3.0 Release Notes](https://github.com/agraboso/redux-api-middleware/releases/tag/v3.0.0), and [Upgrading from v2.0.x](#upgrading-from-v20x) for details on upgrading.
+
 ## Installation
 
 `redux-api-middleware` is available on [npm](https://www.npmjs.com/package/redux-api-middleware).
@@ -399,7 +403,7 @@ See [the Redux docs on composition](https://github.com/reduxjs/redux-thunk#compo
 export function patchAsyncExampleThunkChainedActionCreator(values) {
   return async(dispatch, getState) => {
     const actionResponse = await dispatch({
-      [CALL_API]: {
+      [RSAA]: {
         endpoint: "...",
         method: "PATCH",
         body: JSON.stringify(values),
@@ -888,6 +892,10 @@ $ npm install && npm test
 - `redux-api-middleware` no longer brings its own `fetch` implementation and depends on a global `fetch` to be provided in the runtime
 - A new `options` config is added to pass your `fetch` implementation extra options other than `method`, `headers`, `body` and `credentials`
 - `apiMiddleware` no longer returns a promise on actions without [RSAA]
+
+## Upgrading from v2.0.x
+
+- The `CALL_API` alias has been removed
 
 ## License
 
