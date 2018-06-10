@@ -193,7 +193,7 @@ function createMiddleware(options = {}) {
 
       let isOk;
       try {
-        isOk = ok(res)
+        isOk = ok(res);
       } catch (e) {
         return next(
           await actionWith(

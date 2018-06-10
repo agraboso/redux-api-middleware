@@ -1183,11 +1183,7 @@ test('apiMiddleware must dispatch a failure FSA when [RSAA].ok fails', t => {
       ok: () => {
         throw new Error();
       },
-      types: [
-        'REQUEST',
-        'SUCCESS',
-        'FAILURE'
-      ]
+      types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
   };
   const doGetState = () => {};
@@ -1434,7 +1430,7 @@ test('apiMiddleware must use an [RSAA].ok function when present', t => {
       method: 'GET',
       ok: () => {
         t.pass('[RSAA].ok function called');
-        return true
+        return true;
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
@@ -1457,7 +1453,7 @@ test('apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false on 
       endpoint: 'http://127.0.0.1/api/users/1',
       method: 'GET',
       ok: () => {
-        return false
+        return false;
       },
       types: ['REQUEST', 'SUCCESS', 'FAILURE']
     }
@@ -1481,7 +1477,7 @@ test('apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false on 
 
   t.plan(2);
   actionHandler(anAction);
-})
+});
 
 test('apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present', t => {
   const asyncWorker = async () => 'Done!';
