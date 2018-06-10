@@ -902,6 +902,9 @@ $ npm install && npm test
 ## Upgrading from v2.0.x
 
 - The `CALL_API` alias has been removed
+- Error handling around failed fetches has been updated (#175)
+  - Previously, a failed `fetch` would dispatch a `REQUEST` FSA followed by another `REQUEST` FSA with an error flag
+  - Now, a failed `fetch` will dispatch a `REQUEST` FSA followed by a `FAILURE` FSA
 
 ## License
 
