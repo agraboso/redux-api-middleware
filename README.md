@@ -833,11 +833,12 @@ The `[RSAA]` property MAY
 - have an `options` property,
 - have a `credentials` property,
 - have a `bailout` property,
-- have a `fetch` property.
+- have a `fetch` property,
+- have an `ok` property.
 
 The `[RSAA]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, `bailout` and `fetch`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, `bailout`, `fetch` and `ok`.
 
 #### `[RSAA].endpoint`
 
