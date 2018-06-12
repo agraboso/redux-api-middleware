@@ -82,12 +82,6 @@ function validateRSAA(action) {
     return validationErrors;
   }
 
-  for (let key in action) {
-    if (key !== RSAA) {
-      validationErrors.push(`Invalid root key: ${key}`);
-    }
-  }
-
   const callAPI = action[RSAA];
   if (!isPlainObject(callAPI)) {
     validationErrors.push('[RSAA] property must be a plain JavaScript object');

@@ -813,9 +813,9 @@ A *Redux Standard API-calling Action* MUST
 - be a plain JavaScript object,
 - have an `[RSAA]` property.
 
-A *Redux Standard API-calling Action* MUST NOT
+A *Redux Standard API-calling Action* MAY
 
-- include properties other than `[RSAA]`.
+- include properties other than `[RSAA]` (but will be ignored by redux-api-middleware).
 
 #### `[RSAA]`
 
