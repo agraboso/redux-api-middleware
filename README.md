@@ -8,6 +8,16 @@ This middleware receives [*Redux Standard API-calling Actions*](#redux-standard-
 
 RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rsaa) is a `String` constant defined in, and exported by `redux-api-middleware`. They contain information describing an API call and three different types of FSAs, known as the *request*, *success* and *failure* FSAs.
 
+-------------------
+### Breaking Change Notice
+3.0 is being prepared in the [`next` branch](https://github.com/agraboso/redux-api-middleware/tree/next), and can be installed via npm: `npm install redux-api-middleware@next`
+
+:rotating_light: There are a few breaking changes in 3.0, notably a change to the RSAA spec around error handling during the request phase :rotating_light:
+
+See the changes in the [beta's documentation](https://github.com/agraboso/redux-api-middleware/blob/next/README.md), or the [diff from the latest release](https://github.com/agraboso/redux-api-middleware/compare/next) to learn more.
+
+-------------------
+
 ## Table of contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
