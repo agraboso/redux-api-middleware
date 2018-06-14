@@ -1,5 +1,8 @@
 node_modules
 *.log
 lib
+umd
+es
 coverage
 .idea
+.DS_Store
