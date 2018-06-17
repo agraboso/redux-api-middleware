@@ -256,6 +256,23 @@ test('validateRSAA/isValidRSAA must identify conformant RSAAs', t => {
     "[RSAA].credentials property must be one of the string 'omit', 'same-origin', or 'include' (isValidRSAA)"
   );
 
+  const action111 = {
+    [RSAA]: {
+      endpoint: '',
+      method: 'GET',
+      types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+      credentials: 'same-origin'
+    }
+  };
+  t.ok(
+    validateRSAA(action111).length === 0,
+    "[RSAA].credentials property must be one of the string 'omit', 'same-origin', or 'include' (validateRSAA)"
+  );
+  t.ok(
+    isValidRSAA(action111),
+    "[RSAA].credentials property must be one of the string 'omit', 'same-origin', or 'include' (isValidRSAA)"
+  );
+
   const action12 = {
     [RSAA]: {
       endpoint: '',
