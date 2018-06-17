@@ -1,4 +1,35 @@
 {
-  "plugins": ["transform-runtime", "transform-object-rest-spread"],
-  "presets": ["env"]
+  "presets": [
+    [
+      "env", {
+        "modules": false,
+        "useBuiltIns": true,
+        "targets": {
+          "node": "8"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "transform-object-rest-spread"
+  ],
+
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "env", {
+            "modules": "commonjs",
+            "useBuiltIns": true,
+            "targets": {
+              "node": "current"
+            }
+          }
+        ]
+      ],
+      "plugins": [
+        "istanbul"
+      ]
+    }
+  }
 }

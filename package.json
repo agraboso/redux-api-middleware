@@ -2,14 +2,20 @@
   "name": "redux-api-middleware",
   "version": "3.0.0-beta.0",
   "description": "Redux middleware for calling an API.",
+  "source": "src/index.js",
   "main": "lib/index.js",
+  "browser": "lib/index.umd.js",
+  "module": "es/index.js",
+  "sideEffects": false,
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "clean": "rimraf lib coverage",
-    "cover": "babel-node ./node_modules/.bin/babel-istanbul cover test/index.js | tap-spec",
+    "build": "babel src --out-dir es && microbundle --entry src/index.js --compress false --strict --format cjs,umd",
+    "postbuild": "npm run size",
+    "clean": "rimraf es lib coverage .nyc_output",
+    "test": "cross-env BABEL_ENV=test babel-node test/index.js | tap-spec",
+    "cover": "nyc npm test",
     "lint": "eslint src test",
-    "prepublish": "npm run lint && npm test && npm run clean && npm run build",
-    "test": "babel-node test/index.js | tap-spec"
+    "prepublishOnly": "npm run lint && npm test && npm run clean && npm run build",
+    "size": "size-limit"
   },
   "repository": "agraboso/redux-api-middleware",
   "homepage": "https://github.com/agraboso/redux-api-middleware",
@@ -26,30 +32,31 @@
   },
   "license": "MIT",
   "dependencies": {
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-runtime": "^6.25.0",
     "lodash.isplainobject": "^4.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.2",
-    "babel-istanbul": "^0.12.2",
+    "babel-plugin-istanbul": "^4.1.6",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "coveralls": "^3.0.0",
-    "eslint": "^4.3.0",
-    "eslint-plugin-babel": "^4.1.2",
-    "eslint-plugin-prettier": "^2.1.2",
-    "isomorphic-fetch": "^2.1.1",
-    "nock": "^9.1.0",
-    "prettier": "^1.5.3",
+    "babel-preset-env": "^1.7.0",
+    "coveralls": "^3.0.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^4.19.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "isomorphic-fetch": "^2.2.1",
+    "microbundle": "^0.4.4",
+    "nock": "^9.3.3",
+    "nyc": "^12.0.2",
+    "prettier": "^1.13.5",
     "rimraf": "^2.6.2",
-    "tap-spec": "^4.1.1 ",
-    "tape": "^4.8.0"
+    "size-limit": "^0.18.2",
+    "tap-spec": "^5.0.0 ",
+    "tape": "^4.9.1"
   },
   "files": [
     "README.md",
     "LICENSE.md",
-    "lib/"
+    "es",
+    "lib"
   ]
 }
