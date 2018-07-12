@@ -70,18 +70,20 @@ function normalizeTypeDescriptors(types) {
  */
 async function actionWith(descriptor, args) {
   try {
-    descriptor.payload = await (typeof descriptor.payload === 'function'
-      ? descriptor.payload(...args)
-      : descriptor.payload);
+    descriptor.payload =
+      typeof descriptor.payload === 'function'
+        ? await descriptor.payload(...args)
+        : descriptor.payload;
   } catch (e) {
     descriptor.payload = new InternalError(e.message);
     descriptor.error = true;
   }
 
   try {
-    descriptor.meta = await (typeof descriptor.meta === 'function'
-      ? descriptor.meta(...args)
-      : descriptor.meta);
+    descriptor.meta =
+      typeof descriptor.meta === 'function'
+        ? await descriptor.meta(...args)
+        : descriptor.meta;
   } catch (e) {
     delete descriptor.meta;
     descriptor.payload = new InternalError(e.message);
