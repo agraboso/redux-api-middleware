@@ -1,5 +1,20 @@
 import RSAA from './RSAA';
-import isPlainObject from 'lodash.isplainobject';
+
+/**
+ * Is the argument a plain object?
+ * Inspired by lodash.isplainobject
+ *
+ * @function isPlainObject
+ * @param {object} obj - The object to check
+ * @returns {boolean}
+ */
+function isPlainObject(obj) {
+  return (
+    obj &&
+    typeof obj == 'object' &&
+    Object.getPrototypeOf(obj) === Object.prototype
+  );
+}
 
 /**
  * Is the given action a plain JavaScript object with an [RSAA] property?

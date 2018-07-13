@@ -31,9 +31,7 @@
     "email": "agraboso@gmail.com"
   },
   "license": "MIT",
-  "dependencies": {
-    "lodash.isplainobject": "^4.0.6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-istanbul": "^4.1.6",
