@@ -1,6 +1,6 @@
 {
   "name": "redux-api-middleware",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "Redux middleware for calling an API.",
   "source": "src/index.js",
   "main": "lib/index.js",
