@@ -68,7 +68,7 @@ function normalizeTypeDescriptors(types) {
  * @param {array} args - The array of arguments for `payload` and `meta` function properties
  * @returns {object}
  */
-async function actionWith(descriptor, args) {
+async function actionWith(descriptor, args = []) {
   try {
     descriptor.payload =
       typeof descriptor.payload === 'function'

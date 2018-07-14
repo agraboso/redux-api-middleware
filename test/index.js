@@ -868,6 +868,33 @@ test('actionWith', async t => {
     'must set FSA error property to true if a custom meta function throws'
   );
 
+  const descriptor5 = {
+    type: 'REQUEST',
+    payload: () => 'somePayload',
+    meta: () => new Promise(resolve => setTimeout(() => resolve('someMeta'), 250)),
+    error: true
+  };
+  const fsa5 = await actionWith(descriptor5);
+  t.equal(
+    fsa5.type,
+    'REQUEST',
+    'must set FSA type property to incoming descriptor type property'
+  );
+  t.equal(
+    fsa5.payload,
+    'somePayload',
+    'must set FSA payload property to incoming descriptor payload property'
+  );
+  t.equal(
+    fsa5.meta,
+    'someMeta',
+    'must set FSA meta property to incoming descriptor meta property'
+  );
+  t.ok(
+    fsa5.error,
+    'must set FSA error property to incoming descriptor error property'
+  );
+
   t.end();
 });
 
