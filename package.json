@@ -10,9 +10,9 @@
   "scripts": {
     "build": "babel src --out-dir es && microbundle --entry src/index.js --compress false --strict --format cjs,umd",
     "postbuild": "npm run size",
-    "clean": "rimraf es lib coverage .nyc_output",
-    "test": "cross-env BABEL_ENV=test babel-node test/index.js | tap-spec",
-    "cover": "nyc npm test",
+    "clean": "rimraf es lib coverage",
+    "test": "cross-env BABEL_ENV=test jest",
+    "cover": "npm test -- --verbose --coverage --collectCoverageFrom \"src/**/*.js\"",
     "lint": "eslint src test",
     "prepublishOnly": "npm run lint && npm test && npm run clean && npm run build",
     "size": "size-limit"
@@ -34,27 +34,32 @@
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-plugin-istanbul": "^4.1.6",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "coveralls": "^3.0.1",
     "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
     "eslint-plugin-prettier": "^2.6.0",
-    "isomorphic-fetch": "^2.2.1",
+    "jest": "^23.4.1",
+    "jest-fetch-mock": "^1.6.5",
     "microbundle": "^0.5.1",
-    "nock": "^9.3.3",
-    "nyc": "^12.0.2",
     "prettier": "^1.13.5",
     "rimraf": "^2.6.2",
-    "size-limit": "^0.18.2",
-    "tap-spec": "^5.0.0 ",
-    "tape": "^4.9.1"
+    "size-limit": "^0.18.2"
   },
   "files": [
     "README.md",
     "LICENSE.md",
     "es",
     "lib"
-  ]
+  ],
+  "jest": {
+    "automock": false,
+    "resetMocks": true,
+    "restoreMocks": true,
+    "resetModules": true,
+    "setupFiles": [
+      "./test/setupJest.js"
+    ]
+  }
 }
