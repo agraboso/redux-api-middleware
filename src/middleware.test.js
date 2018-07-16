@@ -13,11 +13,8 @@ const fetchMockSnapshotMatcher = {
 
 const doTestMiddleware = async ({ response, action }) => {
   if (response) {
-    const { body, ...mockConfig } = response
-    fetch.mockResponseOnce(
-      body,
-      mockConfig
-    )
+    const { body, ...mockConfig } = response;
+    fetch.mockResponseOnce(body, mockConfig);
   }
 
   const doGetState = jest.fn();
@@ -32,18 +29,21 @@ const doTestMiddleware = async ({ response, action }) => {
   if (result) {
     const final = await result;
     if (final) {
-      expect(final).toMatchSnapshot({}, 'final result')
+      expect(final).toMatchSnapshot({}, 'final result');
     }
   }
 
   if (doNext.mock.calls.length) {
-    expect(doNext).toMatchSnapshot({}, 'next mock')
+    expect(doNext).toMatchSnapshot({}, 'next mock');
   }
 
   if (fetch.mock.calls.length) {
-    expect(fetch.mock).toMatchSnapshot({
-      invocationCallOrder: expect.any(Object)
-    }, 'fetch mock');
+    expect(fetch.mock).toMatchSnapshot(
+      {
+        invocationCallOrder: expect.any(Object)
+      },
+      'fetch mock'
+    );
   }
 
   return {
@@ -52,8 +52,8 @@ const doTestMiddleware = async ({ response, action }) => {
     doNext,
     actionHandler,
     result
-  }
-}
+  };
+};
 
 describe('#createMiddleware', () => {
   it('returns a redux middleware', () => {
@@ -63,16 +63,16 @@ describe('#createMiddleware', () => {
     const doNext = () => {};
     const actionHandler = nextHandler(doNext);
 
-    expect(typeof middleware).toEqual('function')
-    expect(middleware.length).toEqual(1)
+    expect(typeof middleware).toEqual('function');
+    expect(middleware.length).toEqual(1);
 
-    expect(typeof nextHandler).toEqual('function')
-    expect(nextHandler.length).toEqual(1)
+    expect(typeof nextHandler).toEqual('function');
+    expect(nextHandler.length).toEqual(1);
 
-    expect(typeof actionHandler).toEqual('function')
-    expect(actionHandler.length).toEqual(1)
-  })
-})
+    expect(typeof actionHandler).toEqual('function');
+    expect(actionHandler.length).toEqual(1);
+  });
+});
 
 describe('#apiMiddleware', () => {
   it('is a redux middleware', () => {
@@ -81,44 +81,44 @@ describe('#apiMiddleware', () => {
     const doNext = () => {};
     const actionHandler = nextHandler(doNext);
 
-    expect(typeof apiMiddleware).toEqual('function')
-    expect(apiMiddleware.length).toEqual(1)
+    expect(typeof apiMiddleware).toEqual('function');
+    expect(apiMiddleware.length).toEqual(1);
 
-    expect(typeof nextHandler).toEqual('function')
-    expect(nextHandler.length).toEqual(1)
+    expect(typeof nextHandler).toEqual('function');
+    expect(nextHandler.length).toEqual(1);
 
-    expect(typeof actionHandler).toEqual('function')
-    expect(actionHandler.length).toEqual(1)
-  })
+    expect(typeof actionHandler).toEqual('function');
+    expect(actionHandler.length).toEqual(1);
+  });
 
   it('must pass actions without an [RSAA] property to the next handler', async () => {
     const action = {};
 
     const { doNext } = await doTestMiddleware({
       action
-    })
-    expect(doNext).toHaveBeenCalledWith(action)
-  })
+    });
+    expect(doNext).toHaveBeenCalledWith(action);
+  });
 
   it("mustn't return a promise on actions without a [RSAA] property", async () => {
     const action = {};
 
     const { result } = await doTestMiddleware({
       action
-    })
+    });
 
     expect(result.then).toBeUndefined();
-  })
+  });
 
-  it("must return a promise on actions without a [RSAA] property", async () => {
+  it('must return a promise on actions without a [RSAA] property', async () => {
     const action = { [RSAA]: {} };
 
     const { result } = await doTestMiddleware({
       action
-    })
+    });
 
     expect(typeof result.then).toEqual('function');
-  })
+  });
 
   it('must dispatch an error request FSA for an invalid RSAA with a string request type', async () => {
     const action = {
@@ -129,9 +129,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-
-  })
+    });
+  });
 
   it('must dispatch an error request FSA for an invalid RSAA with a descriptor request type', async () => {
     const action = {
@@ -146,9 +145,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-
-  })
+    });
+  });
 
   it('must do nothing for an invalid RSAA without a request type', async () => {
     const action = {
@@ -157,11 +155,10 @@ describe('#apiMiddleware', () => {
 
     const { doNext } = await doTestMiddleware({
       action
-    })
+    });
 
     expect(doNext).not.toHaveBeenCalled();
-  })
-
+  });
 
   it('must dispatch an error request FSA when [RSAA].bailout fails', async () => {
     const action = {
@@ -185,8 +182,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-  })
+    });
+  });
 
   // FIXME this doesnt seem like it needs async/await,
   // but actionHandler is returning a promise
@@ -212,8 +209,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-  })
+    });
+  });
 
   it('must dispatch an error request FSA when [RSAA].endpoint fails', async () => {
     const action = {
@@ -236,8 +233,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-  })
+    });
+  });
 
   it('must dispatch an error request FSA when [RSAA].headers fails', async () => {
     const action = {
@@ -261,8 +258,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-  })
+    });
+  });
 
   it('must dispatch an error request FSA when [RSAA].options fails', async () => {
     const action = {
@@ -286,8 +283,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-  })
+    });
+  });
 
   it('must dispatch an error request FSA when [RSAA].ok fails', async () => {
     const action = {
@@ -310,11 +307,11 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
-  })
+    });
+  });
 
   it('must dispatch a failure FSA with an error on a request error', async () => {
-    fetch.mockRejectOnce(new Error('Test request error'))
+    fetch.mockRejectOnce(new Error('Test request error'));
 
     const action = {
       [RSAA]: {
@@ -334,8 +331,8 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-  })
+    });
+  });
 
   it('must use an [RSAA].bailout boolean when present', async () => {
     const action = {
@@ -348,13 +345,13 @@ describe('#apiMiddleware', () => {
     };
 
     await doTestMiddleware({
-      action,
-    })
-  })
+      action
+    });
+  });
 
   it('must use an [RSAA].bailout function when present', async () => {
     const bailout = jest.fn();
-    bailout.mockReturnValue(true)
+    bailout.mockReturnValue(true);
 
     const action = {
       [RSAA]: {
@@ -374,15 +371,15 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(bailout).toMatchSnapshot({}, 'bailout()');
-    expect(doNext).not.toHaveBeenCalled()
-  })
+    expect(doNext).not.toHaveBeenCalled();
+  });
 
   it('must use an [RSAA].body function when present', async () => {
     const body = jest.fn();
-    body.mockReturnValue('mockBody')
+    body.mockReturnValue('mockBody');
 
     const action = {
       [RSAA]: {
@@ -402,20 +399,20 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(body).toMatchSnapshot({}, 'body()');
-  })
+  });
 
   it('must use an [RSAA].endpoint function when present', async () => {
     const endpoint = jest.fn();
-    endpoint.mockReturnValue('http://127.0.0.1/api/users/1')
+    endpoint.mockReturnValue('http://127.0.0.1/api/users/1');
 
     const action = {
       [RSAA]: {
         endpoint,
         method: 'GET',
-        types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+        types: ['REQUEST', 'SUCCESS', 'FAILURE']
       }
     };
 
@@ -428,14 +425,14 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(endpoint).toMatchSnapshot({}, 'endpoint()');
-  })
+  });
 
   it('must use an [RSAA].headers function when present', async () => {
     const headers = jest.fn();
-    headers.mockReturnValue({ 'Test-Header': 'test' })
+    headers.mockReturnValue({ 'Test-Header': 'test' });
 
     const action = {
       [RSAA]: {
@@ -455,14 +452,14 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(headers).toMatchSnapshot({}, 'headers()');
-  })
+  });
 
   it('must use an [RSAA].options function when present', async () => {
     const options = jest.fn();
-    options.mockReturnValue({})
+    options.mockReturnValue({});
 
     const action = {
       [RSAA]: {
@@ -482,14 +479,14 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(options).toMatchSnapshot({}, 'options()');
-  })
+  });
 
   it('must use an [RSAA].ok function when present', async () => {
     const ok = jest.fn();
-    ok.mockReturnValue(true)
+    ok.mockReturnValue(true);
 
     const action = {
       [RSAA]: {
@@ -509,14 +506,14 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(ok).toMatchSnapshot({}, 'ok()');
-  })
+  });
 
   it('must dispatch a failure FSA when [RSAA].ok returns false on a successful request', async () => {
     const ok = jest.fn();
-    ok.mockReturnValue(false)
+    ok.mockReturnValue(false);
 
     const action = {
       [RSAA]: {
@@ -536,10 +533,10 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(ok).toMatchSnapshot({}, 'ok()');
-  })
+  });
 
   it('must use a [RSAA].fetch custom fetch wrapper when present', async () => {
     const myFetch = async (endpoint, opts) => {
@@ -583,8 +580,8 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
-  })
+    });
+  });
 
   it('must dispatch correct error payload when [RSAA].fetch wrapper returns an error response', async () => {
     const myFetch = async (endpoint, opts) => {
@@ -612,12 +609,12 @@ describe('#apiMiddleware', () => {
 
     await doTestMiddleware({
       action
-    })
-  })
+    });
+  });
 
   it('must use payload property of request type descriptor when it is a function', async () => {
-    const payload = jest.fn()
-    payload.mockReturnValue('requestPayload')
+    const payload = jest.fn();
+    payload.mockReturnValue('requestPayload');
 
     const action = {
       [RSAA]: {
@@ -644,14 +641,14 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(payload).toMatchSnapshot({}, 'payload()');
-  })
+  });
 
   it('must use meta property of request type descriptor when it is a function', async () => {
-    const meta = jest.fn()
-    meta.mockReturnValue('requestMeta')
+    const meta = jest.fn();
+    meta.mockReturnValue('requestMeta');
 
     const action = {
       [RSAA]: {
@@ -678,10 +675,10 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
+    });
 
     expect(meta).toMatchSnapshot({}, 'meta()');
-  })
+  });
 
   it('must dispatch a success FSA on a successful API call with a non-empty JSON response', async () => {
     const action = {
@@ -712,8 +709,8 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
-  })
+    });
+  });
 
   it('must dispatch a success FSA on a successful API call with a non-empty JSON response', async () => {
     const action = {
@@ -744,9 +741,8 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
-
-  })
+    });
+  });
 
   it('must dispatch a success FSA on a successful API call with an empty JSON response', async () => {
     const action = {
@@ -777,9 +773,8 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
-
-  })
+    });
+  });
 
   it('must dispatch a success FSA with an error state on a successful API call with an invalid JSON response', async () => {
     const action = {
@@ -796,7 +791,9 @@ describe('#apiMiddleware', () => {
             type: 'SUCCESS',
             meta: 'successMeta',
             payload: () => {
-              throw new InternalError('Expected error - simulating invalid JSON');
+              throw new InternalError(
+                'Expected error - simulating invalid JSON'
+              );
             }
           },
           'FAILURE'
@@ -813,9 +810,8 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
-
-  })
+    });
+  });
 
   it('must dispatch a success FSA on a successful API call with a non-JSON response', async () => {
     const action = {
@@ -834,7 +830,6 @@ describe('#apiMiddleware', () => {
           },
           'FAILURE'
         ]
-
       }
     };
 
@@ -842,11 +837,10 @@ describe('#apiMiddleware', () => {
       action,
       response: {
         body: null,
-        status: 200,
+        status: 200
       }
-    })
-
-  })
+    });
+  });
 
   it('must dispatch a failure FSA on an unsuccessful API call with a non-empty JSON response', async () => {
     const action = {
@@ -877,9 +871,8 @@ describe('#apiMiddleware', () => {
           'Content-Type': 'application/json'
         }
       }
-    })
-
-  })
+    });
+  });
 
   it('must dispatch a failure FSA on an unsuccessful API call with an empty JSON response', async () => {
     const action = {
@@ -904,14 +897,14 @@ describe('#apiMiddleware', () => {
     await doTestMiddleware({
       action,
       response: {
-        body: JSON.stringify({ }),
+        body: JSON.stringify({}),
         status: 404,
         headers: {
           'Content-Type': 'application/json'
         }
       }
-    })
-  })
+    });
+  });
 
   it('must dispatch a failure FSA on an unsuccessful API call with a non-JSON response', async () => {
     const action = {
@@ -939,6 +932,6 @@ describe('#apiMiddleware', () => {
         body: '',
         status: 404
       }
-    })
-  })
-})
+    });
+  });
+});

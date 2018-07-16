@@ -1,8 +1,5 @@
 // Public package exports
-import {
-  RSAA,
-  getJSON
-} from './index.js';
+import { RSAA, getJSON } from './index.js';
 
 // Private package import
 import { normalizeTypeDescriptors, actionWith } from './util';
@@ -11,8 +8,8 @@ describe('#normalizeTypeDescriptors', () => {
   it('handles string types', () => {
     const types = ['REQUEST', 'SUCCESS', 'FAILURE'];
     const descriptors = normalizeTypeDescriptors(types);
-    expect(descriptors).toMatchSnapshot()
-  })
+    expect(descriptors).toMatchSnapshot();
+  });
 
   it('handles object types', () => {
     const types = [
@@ -33,9 +30,9 @@ describe('#normalizeTypeDescriptors', () => {
       }
     ];
     const descriptors = normalizeTypeDescriptors(types);
-    expect(descriptors).toMatchSnapshot()
-  })
-})
+    expect(descriptors).toMatchSnapshot();
+  });
+});
 
 describe('#actionWith', () => {
   it('handles string payload and meta descriptor properties', async () => {
@@ -44,36 +41,39 @@ describe('#actionWith', () => {
       payload: 'somePayload',
       meta: 'someMeta',
       error: true
-    })
+    });
 
-    expect(fsa).toMatchSnapshot()
-  })
+    expect(fsa).toMatchSnapshot();
+  });
 
   it('handles function payload and meta descriptor properties', async () => {
     const fsa = await actionWith({
       type: 'REQUEST',
       payload: () => 'somePayloadFromFn',
       meta: () => 'someMetaFromFn'
-    })
-    expect(fsa).toMatchSnapshot()
-  })
+    });
+    expect(fsa).toMatchSnapshot();
+  });
 
   it('passes function payload and meta descriptor properties arguments', async () => {
     const payload = jest.fn();
-    payload.mockReturnValue('somePayloadFromMock')
+    payload.mockReturnValue('somePayloadFromMock');
     const meta = jest.fn();
-    meta.mockReturnValue('someMetaFromMock')
+    meta.mockReturnValue('someMetaFromMock');
 
     const passedArgs = ['action', 'state', 'res'];
-    const fsa = await actionWith({
-      type: 'REQUEST',
-      payload,
-      meta
-    }, passedArgs)
+    const fsa = await actionWith(
+      {
+        type: 'REQUEST',
+        payload,
+        meta
+      },
+      passedArgs
+    );
 
-    expect(payload).toHaveBeenCalledWith(...passedArgs)
-    expect(meta).toHaveBeenCalledWith(...passedArgs)
-  })
+    expect(payload).toHaveBeenCalledWith(...passedArgs);
+    expect(meta).toHaveBeenCalledWith(...passedArgs);
+  });
 
   it('handles an error in the payload function', async () => {
     const fsa = await actionWith({
@@ -81,10 +81,10 @@ describe('#actionWith', () => {
       payload: () => {
         throw new Error('test error in payload function');
       }
-    })
+    });
 
-    expect(fsa).toMatchSnapshot()
-  })
+    expect(fsa).toMatchSnapshot();
+  });
 
   it('handles an error in the meta function', async () => {
     const fsa = await actionWith({
@@ -92,47 +92,51 @@ describe('#actionWith', () => {
       meta: () => {
         throw new Error('test error in meta function');
       }
-    })
+    });
 
-    expect(fsa).toMatchSnapshot()
-  })
+    expect(fsa).toMatchSnapshot();
+  });
 
   it('handles a synchronous payload function', async () => {
     const fsa = await actionWith({
       type: 'REQUEST',
-      payload: () => 'somePayload',
-    })
+      payload: () => 'somePayload'
+    });
 
-    expect(fsa).toMatchSnapshot()
-  })
+    expect(fsa).toMatchSnapshot();
+  });
 
   it('handles an asynchronous payload function', async () => {
     const fsa = await actionWith({
       type: 'REQUEST',
-      payload: new Promise(resolve => setTimeout(() => resolve('somePayloadAsync'), 250)),
-    })
+      payload: new Promise(resolve =>
+        setTimeout(() => resolve('somePayloadAsync'), 250)
+      )
+    });
 
-    expect(fsa).toMatchSnapshot()
-  })
+    expect(fsa).toMatchSnapshot();
+  });
 
   it('handles a synchronous meta function', async () => {
     const fsa = await actionWith({
       type: 'REQUEST',
-      meta: () => 'someMeta',
-    })
+      meta: () => 'someMeta'
+    });
 
-    expect(fsa).toMatchSnapshot()
-  })
+    expect(fsa).toMatchSnapshot();
+  });
 
   it('handles an asynchronous meta function', async () => {
     const fsa = await actionWith({
       type: 'REQUEST',
-      meta: new Promise(resolve => setTimeout(() => resolve('someMetaAsync'), 250)),
-    })
+      meta: new Promise(resolve =>
+        setTimeout(() => resolve('someMetaAsync'), 250)
+      )
+    });
 
-    expect(fsa).toMatchSnapshot()
-  })
-})
+    expect(fsa).toMatchSnapshot();
+  });
+});
 
 describe('#getJSON', () => {
   it("returns the JSON body of a response with a JSONy 'Content-Type' header", async () => {
@@ -149,7 +153,7 @@ describe('#getJSON', () => {
 
     const result = await getJSON(res);
     expect(result).toMatchSnapshot();
-  })
+  });
 
   it("returns a resolved promise for a response with a not-JSONy 'Content-Type' header", async () => {
     const res = {
@@ -160,6 +164,6 @@ describe('#getJSON', () => {
       }
     };
     const result = await getJSON(res);
-    expect(result).toBeUndefined()
-  })
-})
+    expect(result).toBeUndefined();
+  });
+});
