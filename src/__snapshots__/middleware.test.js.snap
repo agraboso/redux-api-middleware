@@ -864,9 +864,9 @@ exports[`#apiMiddleware must dispatch an error request FSA for an invalid RSAA w
 exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].bailout fails: final result 1`] = `
 Object {
   "error": true,
-  "meta": "someMeta",
+  "meta": undefined,
   "payload": [RequestError: [RSAA].bailout function failed],
-  "type": "REQUEST",
+  "type": "FAILURE",
 }
 `;
 
@@ -876,9 +876,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].bailout f
     Array [
       Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].bailout function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     ],
   ],
@@ -887,9 +887,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].bailout f
       "isThrow": false,
       "value": Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].bailout function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     },
   ],
@@ -899,9 +899,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].bailout f
 exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].body fails: final result 1`] = `
 Object {
   "error": true,
-  "meta": "someMeta",
+  "meta": undefined,
   "payload": [RequestError: [RSAA].body function failed],
-  "type": "REQUEST",
+  "type": "FAILURE",
 }
 `;
 
@@ -911,9 +911,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].body fail
     Array [
       Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].body function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     ],
   ],
@@ -922,9 +922,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].body fail
       "isThrow": false,
       "value": Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].body function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     },
   ],
@@ -934,9 +934,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].body fail
 exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].endpoint fails: final result 1`] = `
 Object {
   "error": true,
-  "meta": "someMeta",
+  "meta": undefined,
   "payload": [RequestError: [RSAA].endpoint function failed],
-  "type": "REQUEST",
+  "type": "FAILURE",
 }
 `;
 
@@ -946,9 +946,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].endpoint 
     Array [
       Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].endpoint function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     ],
   ],
@@ -957,9 +957,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].endpoint 
       "isThrow": false,
       "value": Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].endpoint function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     },
   ],
@@ -969,9 +969,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].endpoint 
 exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].headers fails: final result 1`] = `
 Object {
   "error": true,
-  "meta": "someMeta",
+  "meta": undefined,
   "payload": [RequestError: [RSAA].headers function failed],
-  "type": "REQUEST",
+  "type": "FAILURE",
 }
 `;
 
@@ -981,9 +981,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].headers f
     Array [
       Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].headers function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     ],
   ],
@@ -992,9 +992,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].headers f
       "isThrow": false,
       "value": Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].headers function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     },
   ],
@@ -1076,9 +1076,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].ok fails:
 exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].options fails: final result 1`] = `
 Object {
   "error": true,
-  "meta": "someMeta",
+  "meta": undefined,
   "payload": [RequestError: [RSAA].options function failed],
-  "type": "REQUEST",
+  "type": "FAILURE",
 }
 `;
 
@@ -1088,9 +1088,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].options f
     Array [
       Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].options function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     ],
   ],
@@ -1099,9 +1099,9 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].options f
       "isThrow": false,
       "value": Object {
         "error": true,
-        "meta": "someMeta",
+        "meta": undefined,
         "payload": [RequestError: [RSAA].options function failed],
-        "type": "REQUEST",
+        "type": "FAILURE",
       },
     },
   ],
