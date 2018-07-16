@@ -1,0 +1,2011 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-JSON response: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-JSON response: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "failureMeta",
+  "payload": [ApiError: 404 - Not Found],
+  "type": "FAILURE",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-JSON response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": "failureMeta",
+        "payload": [ApiError: 404 - Not Found],
+        "type": "FAILURE",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "failureMeta",
+        "payload": [ApiError: 404 - Not Found],
+        "type": "FAILURE",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-empty JSON response: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-empty JSON response: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "failureMeta",
+  "payload": [ApiError: 404 - Not Found],
+  "type": "FAILURE",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with a non-empty JSON response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": "failureMeta",
+        "payload": [ApiError: 404 - Not Found],
+        "type": "FAILURE",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "failureMeta",
+        "payload": [ApiError: 404 - Not Found],
+        "type": "FAILURE",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with an empty JSON response: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with an empty JSON response: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "failureMeta",
+  "payload": [ApiError: 404 - Not Found],
+  "type": "FAILURE",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call with an empty JSON response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": "failureMeta",
+        "payload": [ApiError: 404 - Not Found],
+        "type": "FAILURE",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "failureMeta",
+        "payload": [ApiError: 404 - Not Found],
+        "type": "FAILURE",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false on a successful request: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false on a successful request: final result 1`] = `
+Object {
+  "error": true,
+  "meta": undefined,
+  "payload": [ApiError: 200 - OK],
+  "type": "FAILURE",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false on a successful request: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [ApiError: 200 - OK],
+        "type": "FAILURE",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [ApiError: 200 - OK],
+        "type": "FAILURE",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false on a successful request: ok() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Body {
+        "_abort": false,
+        "_bytes": 16,
+        "_raw": Array [
+          Object {
+            "data": Array [
+              123,
+              34,
+              100,
+              97,
+              116,
+              97,
+              34,
+              58,
+              34,
+              49,
+              50,
+              51,
+              52,
+              53,
+              34,
+              125,
+            ],
+            "type": "Buffer",
+          },
+        ],
+        "body": "{\\"data\\":\\"12345\\"}",
+        "bodyUsed": true,
+        "headers": Headers {
+          "_headers": Object {
+            "content-type": Array [
+              "application/json",
+            ],
+          },
+        },
+        "ok": true,
+        "size": 0,
+        "status": 200,
+        "statusText": "OK",
+        "timeout": 0,
+        "url": undefined,
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": false,
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA with an error on a request error: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA with an error on a request error: final result 1`] = `
+Object {
+  "error": true,
+  "meta": undefined,
+  "payload": [RequestError: Test request error],
+  "type": "FAILURE",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a failure FSA with an error on a request error: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "someMeta",
+        "payload": "ignoredPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [RequestError: Test request error],
+        "type": "FAILURE",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "someMeta",
+        "payload": "ignoredPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [RequestError: Test request error],
+        "type": "FAILURE",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response: final result 1`] = `
+Object {
+  "meta": "successMeta",
+  "payload": undefined,
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-JSON response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": "successMeta",
+        "payload": undefined,
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "successMeta",
+        "payload": undefined,
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: fetch mock 2`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: final result 1`] = `
+Object {
+  "meta": "successMeta",
+  "payload": Object {
+    "username": "Alice",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: final result 2`] = `
+Object {
+  "meta": "successMeta",
+  "payload": Object {
+    "username": "Alice",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": "successMeta",
+        "payload": Object {
+          "username": "Alice",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "successMeta",
+        "payload": Object {
+          "username": "Alice",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: next mock 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": "successMeta",
+        "payload": Object {
+          "username": "Alice",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "successMeta",
+        "payload": Object {
+          "username": "Alice",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with an empty JSON response: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with an empty JSON response: final result 1`] = `
+Object {
+  "meta": "successMeta",
+  "payload": Object {},
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA on a successful API call with an empty JSON response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": "successMeta",
+        "payload": Object {},
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "successMeta",
+        "payload": Object {},
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA with an error state on a successful API call with an invalid JSON response: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA with an error state on a successful API call with an invalid JSON response: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "successMeta",
+  "payload": [InternalError: Expected error - simulating invalid JSON],
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must dispatch a success FSA with an error state on a successful API call with an invalid JSON response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": "successMeta",
+        "payload": [InternalError: Expected error - simulating invalid JSON],
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "successMeta",
+        "payload": [InternalError: Expected error - simulating invalid JSON],
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA for an invalid RSAA with a descriptor request type: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "error": true,
+        "payload": [InvalidRSAA: Invalid RSAA],
+        "type": "REQUEST",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "payload": [InvalidRSAA: Invalid RSAA],
+        "type": "REQUEST",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA for an invalid RSAA with a string request type: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "error": true,
+        "payload": [InvalidRSAA: Invalid RSAA],
+        "type": "REQUEST",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "payload": [InvalidRSAA: Invalid RSAA],
+        "type": "REQUEST",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].bailout fails: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "someMeta",
+  "payload": [RequestError: [RSAA].bailout function failed],
+  "type": "REQUEST",
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].bailout fails: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].bailout function failed],
+        "type": "REQUEST",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].bailout function failed],
+        "type": "REQUEST",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].body fails: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "someMeta",
+  "payload": [RequestError: [RSAA].body function failed],
+  "type": "REQUEST",
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].body fails: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].body function failed],
+        "type": "REQUEST",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].body function failed],
+        "type": "REQUEST",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].endpoint fails: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "someMeta",
+  "payload": [RequestError: [RSAA].endpoint function failed],
+  "type": "REQUEST",
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].endpoint fails: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].endpoint function failed],
+        "type": "REQUEST",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].endpoint function failed],
+        "type": "REQUEST",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].headers fails: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "someMeta",
+  "payload": [RequestError: [RSAA].headers function failed],
+  "type": "REQUEST",
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].headers fails: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].headers function failed],
+        "type": "REQUEST",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].headers function failed],
+        "type": "REQUEST",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].ok fails: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].ok fails: final result 1`] = `
+Object {
+  "error": true,
+  "meta": undefined,
+  "payload": [InternalError: [RSAA].ok function failed],
+  "type": "FAILURE",
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].ok fails: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [InternalError: [RSAA].ok function failed],
+        "type": "FAILURE",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [InternalError: [RSAA].ok function failed],
+        "type": "FAILURE",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].options fails: final result 1`] = `
+Object {
+  "error": true,
+  "meta": "someMeta",
+  "payload": [RequestError: [RSAA].options function failed],
+  "type": "REQUEST",
+}
+`;
+
+exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].options fails: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].options function failed],
+        "type": "REQUEST",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": "someMeta",
+        "payload": [RequestError: [RSAA].options function failed],
+        "type": "REQUEST",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must dispatch correct error payload when [RSAA].fetch wrapper returns an error response: final result 1`] = `
+Object {
+  "error": true,
+  "meta": undefined,
+  "payload": [ApiError: 500 - Internal Server Error],
+  "type": "FAILURE",
+}
+`;
+
+exports[`#apiMiddleware must dispatch correct error payload when [RSAA].fetch wrapper returns an error response: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [ApiError: 500 - Internal Server Error],
+        "type": "FAILURE",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "error": true,
+        "meta": undefined,
+        "payload": [ApiError: 500 - Internal Server Error],
+        "type": "FAILURE",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must pass actions without an [RSAA] property to the next handler: final result 1`] = `Object {}`;
+
+exports[`#apiMiddleware must pass actions without an [RSAA] property to the next handler: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {},
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "error": false,
+    "foo": "bar",
+    "id": 1,
+    "name": "Alan",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use a [RSAA].fetch custom fetch wrapper when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "error": false,
+          "foo": "bar",
+          "id": 1,
+          "name": "Alan",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "error": false,
+          "foo": "bar",
+          "id": 1,
+          "name": "Alan",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].bailout function when present: bailout() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": true,
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].body function when present: body() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": "mockBody",
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].body function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": "mockBody",
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].body function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].body function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].endpoint function when present: endpoint() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": "http://127.0.0.1/api/users/1",
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].endpoint function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].endpoint function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].endpoint function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].headers function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {
+          "Test-Header": "test",
+        },
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].headers function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].headers function when present: headers() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "Test-Header": "test",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].headers function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].ok function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].ok function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].ok function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].ok function when present: ok() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Body {
+        "_abort": false,
+        "_bytes": 16,
+        "_raw": Array [
+          Object {
+            "data": Array [
+              123,
+              34,
+              100,
+              97,
+              116,
+              97,
+              34,
+              58,
+              34,
+              49,
+              50,
+              51,
+              52,
+              53,
+              34,
+              125,
+            ],
+            "type": "Buffer",
+          },
+        ],
+        "body": "{\\"data\\":\\"12345\\"}",
+        "bodyUsed": true,
+        "headers": Headers {
+          "_headers": Object {
+            "content-type": Array [
+              "application/json",
+            ],
+          },
+        },
+        "ok": true,
+        "size": 0,
+        "status": 200,
+        "statusText": "OK",
+        "timeout": 0,
+        "url": undefined,
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": true,
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].options function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].options function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].options function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an [RSAA].options function when present: options() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use meta property of request type descriptor when it is a function: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use meta property of request type descriptor when it is a function: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use meta property of request type descriptor when it is a function: meta() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "@@redux-api-middleware/RSAA": Object {
+          "endpoint": "http://127.0.0.1/api/users/1",
+          "method": "GET",
+          "types": Array [
+            Object {
+              "meta": "requestMeta",
+              "payload": "requestPayload",
+              "type": "REQUEST",
+            },
+            "SUCCESS",
+            "FAILURE",
+          ],
+        },
+      },
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": "requestMeta",
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use meta property of request type descriptor when it is a function: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use payload property of request type descriptor when it is a function: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use payload property of request type descriptor when it is a function: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use payload property of request type descriptor when it is a function: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": "requestMeta",
+        "payload": "requestPayload",
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use payload property of request type descriptor when it is a function: payload() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "@@redux-api-middleware/RSAA": Object {
+          "endpoint": "http://127.0.0.1/api/users/1",
+          "method": "GET",
+          "types": Array [
+            Object {
+              "meta": "requestMeta",
+              "payload": "requestPayload",
+              "type": "REQUEST",
+            },
+            "SUCCESS",
+            "FAILURE",
+          ],
+        },
+      },
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": "requestPayload",
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware mustn't return a promise on actions without a [RSAA] property: final result 1`] = `Object {}`;
+
+exports[`#apiMiddleware mustn't return a promise on actions without a [RSAA] property: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {},
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {},
+    },
+  ],
+}
+`;

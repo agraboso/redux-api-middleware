@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#actionWith handles a synchronous meta function 1`] = `
+Object {
+  "meta": "someMeta",
+  "payload": undefined,
+  "type": "REQUEST",
+}
+`;
+
+exports[`#actionWith handles a synchronous payload function 1`] = `
+Object {
+  "meta": undefined,
+  "payload": "somePayload",
+  "type": "REQUEST",
+}
+`;
+
+exports[`#actionWith handles an asynchronous meta function 1`] = `
+Object {
+  "meta": Promise {},
+  "payload": undefined,
+  "type": "REQUEST",
+}
+`;
+
+exports[`#actionWith handles an asynchronous payload function 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Promise {},
+  "type": "REQUEST",
+}
+`;
+
+exports[`#actionWith handles an error in the meta function 1`] = `
+Object {
+  "error": true,
+  "payload": [InternalError: test error in meta function],
+  "type": "REQUEST",
+}
+`;
+
+exports[`#actionWith handles an error in the payload function 1`] = `
+Object {
+  "error": true,
+  "meta": undefined,
+  "payload": [InternalError: test error in payload function],
+  "type": "REQUEST",
+}
+`;
+
+exports[`#actionWith handles function payload and meta descriptor properties 1`] = `
+Object {
+  "meta": "someMetaFromFn",
+  "payload": "somePayloadFromFn",
+  "type": "REQUEST",
+}
+`;
+
+exports[`#actionWith handles string payload and meta descriptor properties 1`] = `
+Object {
+  "error": true,
+  "meta": "someMeta",
+  "payload": "somePayload",
+  "type": "REQUEST",
+}
+`;
+
+exports[`#getJSON returns the JSON body of a response with a JSONy 'Content-Type' header 1`] = `
+Object {
+  "message": "ok",
+}
+`;
+
+exports[`#normalizeTypeDescriptors handles object types 1`] = `
+Array [
+  Object {
+    "meta": "requestMeta",
+    "payload": "requestPayload",
+    "type": "REQUEST",
+  },
+  Object {
+    "meta": "successMeta",
+    "payload": "successPayload",
+    "type": "SUCCESS",
+  },
+  Object {
+    "meta": "failureMeta",
+    "payload": "failurePayload",
+    "type": "FAILURE",
+  },
+]
+`;
+
+exports[`#normalizeTypeDescriptors handles string types 1`] = `
+Array [
+  Object {
+    "type": "REQUEST",
+  },
+  Object {
+    "payload": [Function],
+    "type": "SUCCESS",
+  },
+  Object {
+    "payload": [Function],
+    "type": "FAILURE",
+  },
+]
+`;
