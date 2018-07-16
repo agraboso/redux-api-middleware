@@ -76,7 +76,7 @@ function createMiddleware(options = {}) {
         return next(
           await actionWith(
             {
-              ...requestType,
+              ...failureType,
               payload: new RequestError('[RSAA].bailout function failed'),
               error: true
             },
@@ -93,7 +93,7 @@ function createMiddleware(options = {}) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].endpoint function failed'),
                 error: true
               },
@@ -111,7 +111,7 @@ function createMiddleware(options = {}) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].body function failed'),
                 error: true
               },
@@ -129,7 +129,7 @@ function createMiddleware(options = {}) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].headers function failed'),
                 error: true
               },
@@ -147,7 +147,7 @@ function createMiddleware(options = {}) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].options function failed'),
                 error: true
               },
