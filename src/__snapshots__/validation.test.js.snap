@@ -6,15 +6,15 @@ Array [
 ]
 `;
 
-exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].credentials property 1`] = `
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].credentials property (invalid string) 1`] = `
 Array [
-  "[RSAA].credentials property must be undefined, or a string",
+  "Invalid [RSAA].credentials: InvalidCredentials",
 ]
 `;
 
-exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].credentials property 2`] = `
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].credentials property (object) 1`] = `
 Array [
-  "Invalid [RSAA].credentials: InvalidCredentials",
+  "[RSAA].credentials property must be undefined, or a string",
 ]
 `;
 
@@ -36,15 +36,15 @@ Array [
 ]
 `;
 
-exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].method property 1`] = `
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].method property (invalid string) 1`] = `
 Array [
-  "[RSAA].method property must be a string",
+  "Invalid [RSAA].method: INVALID_METHOD",
 ]
 `;
 
-exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].method property 2`] = `
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].method property (object) 1`] = `
 Array [
-  "Invalid [RSAA].method: INVALID_METHOD",
+  "[RSAA].method property must be a string",
 ]
 `;
 
@@ -60,19 +60,7 @@ Array [
 ]
 `;
 
-exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property 1`] = `
-Array [
-  "[RSAA].types property must be an array of length 3",
-]
-`;
-
-exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property 2`] = `
-Array [
-  "[RSAA].types property must be an array of length 3",
-]
-`;
-
-exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property 3`] = `
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property (invalid objects) 1`] = `
 Array [
   "Invalid request type",
   "Invalid success type",
@@ -80,18 +68,30 @@ Array [
 ]
 `;
 
-exports[`#validateRSAA / #isValidRSAA handles invalid RSAA value 1`] = `
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property (object) 1`] = `
 Array [
-  "[RSAA] property must be a plain JavaScript object",
+  "[RSAA].types property must be an array of length 3",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property (wrong length) 1`] = `
+Array [
+  "[RSAA].types property must be an array of length 3",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid RSAA value (invalid object) 1`] = `
+Array [
+  "Invalid [RSAA] key: invalidKey",
   "[RSAA] must have an endpoint property",
   "[RSAA] must have a method property",
   "[RSAA] must have a types property",
 ]
 `;
 
-exports[`#validateRSAA / #isValidRSAA handles invalid RSAA value 2`] = `
+exports[`#validateRSAA / #isValidRSAA handles invalid RSAA value (string) 1`] = `
 Array [
-  "Invalid [RSAA] key: invalidKey",
+  "[RSAA] property must be a plain JavaScript object",
   "[RSAA] must have an endpoint property",
   "[RSAA] must have a method property",
   "[RSAA] must have a types property",

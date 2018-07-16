@@ -13,7 +13,7 @@
     "clean": "rimraf es lib coverage",
     "test": "cross-env BABEL_ENV=test jest",
     "cover": "npm test -- --verbose --coverage --collectCoverageFrom \"src/**/*.js\"",
-    "lint": "eslint src test",
+    "lint": "eslint src",
     "prepublishOnly": "npm run lint && npm test && npm run clean && npm run build",
     "size": "size-limit"
   },
@@ -39,6 +39,7 @@
     "coveralls": "^3.0.1",
     "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
+    "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-prettier": "^2.6.0",
     "jest": "^23.4.1",
     "jest-fetch-mock": "^1.6.5",

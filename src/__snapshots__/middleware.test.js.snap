@@ -532,32 +532,6 @@ Object {
 }
 `;
 
-exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: fetch mock 2`] = `
-Object {
-  "calls": Array [
-    Array [
-      "http://127.0.0.1/api/users/1",
-      Object {
-        "body": undefined,
-        "credentials": undefined,
-        "headers": Object {},
-        "method": "GET",
-      },
-    ],
-  ],
-  "instances": Array [
-    undefined,
-  ],
-  "invocationCallOrder": Any<Object>,
-  "results": Array [
-    Object {
-      "isThrow": false,
-      "value": Promise {},
-    },
-  ],
-}
-`;
-
 exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: final result 1`] = `
 Object {
   "meta": "successMeta",
@@ -568,60 +542,7 @@ Object {
 }
 `;
 
-exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: final result 2`] = `
-Object {
-  "meta": "successMeta",
-  "payload": Object {
-    "username": "Alice",
-  },
-  "type": "SUCCESS",
-}
-`;
-
 exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: next mock 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [
-      Object {
-        "meta": "requestMeta",
-        "payload": "requestPayload",
-        "type": "REQUEST",
-      },
-    ],
-    Array [
-      Object {
-        "meta": "successMeta",
-        "payload": Object {
-          "username": "Alice",
-        },
-        "type": "SUCCESS",
-      },
-    ],
-  ],
-  "results": Array [
-    Object {
-      "isThrow": false,
-      "value": Object {
-        "meta": "requestMeta",
-        "payload": "requestPayload",
-        "type": "REQUEST",
-      },
-    },
-    Object {
-      "isThrow": false,
-      "value": Object {
-        "meta": "successMeta",
-        "payload": Object {
-          "username": "Alice",
-        },
-        "type": "SUCCESS",
-      },
-    },
-  ],
-}
-`;
-
-exports[`#apiMiddleware must dispatch a success FSA on a successful API call with a non-empty JSON response: next mock 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [

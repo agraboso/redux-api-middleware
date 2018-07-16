@@ -1,10 +1,13 @@
 {
   "plugins": [
-    "prettier"
+    "prettier",
+    "jest"
   ],
+  "extends": ["plugin:jest/recommended"],
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "jest/globals": true
   },
   "parserOptions": {
     "ecmaVersion": 2017,

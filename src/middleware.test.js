@@ -64,13 +64,13 @@ describe('#createMiddleware', () => {
     const actionHandler = nextHandler(doNext);
 
     expect(typeof middleware).toEqual('function');
-    expect(middleware.length).toEqual(1);
+    expect(middleware).toHaveLength(1);
 
     expect(typeof nextHandler).toEqual('function');
-    expect(nextHandler.length).toEqual(1);
+    expect(nextHandler).toHaveLength(1);
 
     expect(typeof actionHandler).toEqual('function');
-    expect(actionHandler.length).toEqual(1);
+    expect(actionHandler).toHaveLength(1);
   });
 });
 
@@ -82,13 +82,13 @@ describe('#apiMiddleware', () => {
     const actionHandler = nextHandler(doNext);
 
     expect(typeof apiMiddleware).toEqual('function');
-    expect(apiMiddleware.length).toEqual(1);
+    expect(apiMiddleware).toHaveLength(1);
 
     expect(typeof nextHandler).toEqual('function');
-    expect(nextHandler.length).toEqual(1);
+    expect(nextHandler).toHaveLength(1);
 
     expect(typeof actionHandler).toEqual('function');
-    expect(actionHandler.length).toEqual(1);
+    expect(actionHandler).toHaveLength(1);
   });
 
   it('must pass actions without an [RSAA] property to the next handler', async () => {
@@ -185,8 +185,6 @@ describe('#apiMiddleware', () => {
     });
   });
 
-  // FIXME this doesnt seem like it needs async/await,
-  // but actionHandler is returning a promise
   it('must dispatch an error request FSA when [RSAA].body fails', async () => {
     const action = {
       [RSAA]: {
@@ -678,38 +676,6 @@ describe('#apiMiddleware', () => {
     });
 
     expect(meta).toMatchSnapshot({}, 'meta()');
-  });
-
-  it('must dispatch a success FSA on a successful API call with a non-empty JSON response', async () => {
-    const action = {
-      [RSAA]: {
-        endpoint: 'http://127.0.0.1/api/users/1',
-        method: 'GET',
-        types: [
-          {
-            type: 'REQUEST',
-            payload: 'requestPayload',
-            meta: 'requestMeta'
-          },
-          {
-            type: 'SUCCESS',
-            meta: 'successMeta'
-          },
-          'FAILURE'
-        ]
-      }
-    };
-
-    await doTestMiddleware({
-      action,
-      response: {
-        body: JSON.stringify({ username: 'Alice' }),
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    });
   });
 
   it('must dispatch a success FSA on a successful API call with a non-empty JSON response', async () => {

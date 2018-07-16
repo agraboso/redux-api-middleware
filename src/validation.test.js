@@ -65,7 +65,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA('')).toMatchSnapshot();
   });
 
-  it('handles invalid RSAA value', () => {
+  it('handles invalid RSAA value (string)', () => {
     const action = {
       [RSAA]: ''
     };
@@ -74,7 +74,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid RSAA value', () => {
+  it('handles invalid RSAA value (invalid object)', () => {
     const action = {
       [RSAA]: { invalidKey: '' }
     };
@@ -105,7 +105,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid [RSAA].method property', () => {
+  it('handles invalid [RSAA].method property (object)', () => {
     const action = {
       [RSAA]: {
         endpoint: '',
@@ -118,7 +118,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid [RSAA].method property', () => {
+  it('handles invalid [RSAA].method property (invalid string)', () => {
     const action = {
       [RSAA]: {
         endpoint: '',
@@ -145,7 +145,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid [RSAA].credentials property', () => {
+  it('handles invalid [RSAA].credentials property (object)', () => {
     const action = {
       [RSAA]: {
         endpoint: '',
@@ -159,7 +159,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid [RSAA].credentials property', () => {
+  it('handles invalid [RSAA].credentials property (invalid string)', () => {
     const action = {
       [RSAA]: {
         endpoint: '',
@@ -187,7 +187,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid [RSAA].types property', () => {
+  it('handles invalid [RSAA].types property (object)', () => {
     const action = {
       [RSAA]: {
         endpoint: '',
@@ -200,7 +200,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid [RSAA].types property', () => {
+  it('handles invalid [RSAA].types property (wrong length)', () => {
     const action = {
       [RSAA]: {
         endpoint: '',
@@ -213,7 +213,7 @@ describe('#validateRSAA / #isValidRSAA', () => {
     expect(validateRSAA(action)).toMatchSnapshot();
   });
 
-  it('handles invalid [RSAA].types property', () => {
+  it('handles invalid [RSAA].types property (invalid objects)', () => {
     const action = {
       [RSAA]: {
         endpoint: '',
