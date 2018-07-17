@@ -1,5 +1,5 @@
 // Public package exports
-import { InvalidRSAA, InternalError, RequestError, ApiError } from './index.js';
+import { InvalidRSAA, InternalError, RequestError, ApiError } from '..';
 
 describe('InvalidRSAA', () => {
   const validationErrors = ['validation error 1', 'validation error 2'];

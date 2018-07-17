@@ -8,9 +8,10 @@
   "module": "es/index.js",
   "sideEffects": false,
   "scripts": {
-    "build": "babel src --out-dir es && microbundle --entry src/index.js --compress false --strict --format cjs,umd",
+    "build": "babel src --ignore **.test.js --out-dir es && microbundle --entry src/index.js --compress false --strict --format cjs,umd",
     "postbuild": "npm run size",
     "clean": "rimraf es lib coverage",
+    "pretest": "cross-env BABEL_ENV=test npm run build",
     "test": "cross-env BABEL_ENV=test jest",
     "cover": "npm test -- --verbose --coverage --collectCoverageFrom \"src/**/*.js\"",
     "lint": "eslint src",

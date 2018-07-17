@@ -4,7 +4,7 @@ import {
   apiMiddleware,
   createMiddleware,
   InternalError
-} from './index.js';
+} from '..';
 
 const fetchMockSnapshotMatcher = {
   invocationCallOrder: expect.any(Object)

@@ -1,5 +1,5 @@
 // Public package exports
-import { RSAA, isRSAA, validateRSAA, isValidRSAA } from './index.js';
+import { RSAA, isRSAA, validateRSAA, isValidRSAA } from '..';
 
 // Private package import
 import { isValidTypeDescriptor } from './validation';
