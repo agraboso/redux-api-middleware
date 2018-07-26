@@ -1,5 +1,10 @@
 // Public package exports
-import { InvalidRSAA, InternalError, RequestError, ApiError } from '..';
+import {
+  InvalidRSAA,
+  InternalError,
+  RequestError,
+  ApiError
+} from 'redux-api-middleware';
 
 describe('InvalidRSAA', () => {
   const validationErrors = ['validation error 1', 'validation error 2'];

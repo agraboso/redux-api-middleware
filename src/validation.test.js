@@ -1,5 +1,5 @@
 // Public package exports
-import { RSAA, isRSAA, validateRSAA, isValidRSAA } from '..';
+import { RSAA, isRSAA, validateRSAA, isValidRSAA } from 'redux-api-middleware';
 
 // Private package import
 import { isValidTypeDescriptor } from './validation';
