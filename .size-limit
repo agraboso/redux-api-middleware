@@ -1,24 +1,24 @@
 [
   {
-    "name": "lib/index.js (min)",
-    "path": "lib/index.js",
+    "name": "lib/index.cjs.js (min)",
+    "path": "lib/index.cjs.js",
     "limit": "10 KB",
     "gzip": false
   },
   {
-    "name": "lib/index.js (min + gzip)",
-    "path": "lib/index.js",
+    "name": "lib/index.cjs.js (min + gzip)",
+    "path": "lib/index.cjs.js",
     "limit": "4 KB"
   },
   {
     "name": "lib/index.umd.js (min)",
     "path": "lib/index.umd.js",
-    "limit": "10 KB",
+    "limit": "30 KB",
     "gzip": false
   },
   {
     "name": "lib/index.umd.js (min + gzip)",
     "path": "lib/index.umd.js",
-    "limit": "4 KB"
+    "limit": "12 KB"
   }
 ]

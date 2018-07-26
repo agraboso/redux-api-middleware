@@ -4,7 +4,7 @@ import {
   apiMiddleware,
   createMiddleware,
   InternalError
-} from './index.js';
+} from 'redux-api-middleware';
 
 const fetchMockSnapshotMatcher = {
   invocationCallOrder: expect.any(Object)

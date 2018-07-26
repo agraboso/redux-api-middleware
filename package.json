@@ -2,19 +2,19 @@
   "name": "redux-api-middleware",
   "version": "3.0.0-beta.3",
   "description": "Redux middleware for calling an API.",
-  "source": "src/index.js",
-  "main": "lib/index.js",
+  "main": "lib/index.cjs.js",
   "browser": "lib/index.umd.js",
   "module": "es/index.js",
   "sideEffects": false,
   "scripts": {
-    "build": "babel src --out-dir es && microbundle --entry src/index.js --compress false --strict --format cjs,umd",
+    "build": "babel src --out-dir es && rollup -c",
     "postbuild": "npm run size",
     "clean": "rimraf es lib coverage",
-    "test": "cross-env BABEL_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest src es",
+    "test:build": "cross-env TEST_LIB=true NODE_ENV=test jest src",
     "cover": "npm test -- --verbose --coverage --collectCoverageFrom \"src/**/*.js\"",
     "lint": "eslint src",
-    "prepublishOnly": "npm run lint && npm test && npm run clean && npm run build",
+    "prepublishOnly": "npm run lint && npm test && npm run clean && npm run build && npm run test:build",
     "size": "size-limit"
   },
   "repository": "agraboso/redux-api-middleware",
@@ -33,9 +33,10 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.0.0-beta.54",
+    "@babel/core": "^7.0.0-beta.54",
+    "@babel/preset-env": "^7.0.0-beta.54",
+    "babel-core": "^7.0.0-bridge.0",
     "coveralls": "^3.0.1",
     "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
@@ -43,9 +44,12 @@
     "eslint-plugin-prettier": "^2.6.0",
     "jest": "^23.4.1",
     "jest-fetch-mock": "^1.6.5",
-    "microbundle": "^0.5.1",
     "prettier": "^1.13.5",
     "rimraf": "^2.6.2",
+    "rollup": "^0.63.4",
+    "rollup-plugin-babel": "^4.0.0-beta.7",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "size-limit": "^0.18.2"
   },
   "files": [
@@ -53,14 +57,5 @@
     "LICENSE.md",
     "es",
     "lib"
-  ],
-  "jest": {
-    "automock": false,
-    "resetMocks": true,
-    "restoreMocks": true,
-    "resetModules": true,
-    "setupFiles": [
-      "./test/setupJest.js"
-    ]
-  }
+  ]
 }
