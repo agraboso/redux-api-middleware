@@ -176,7 +176,7 @@ function apiMiddleware({ getState }) {
       }
 
       // Process the server response
-      if (res.ok) {
+      if (res.ok || res.type === 'opaque') {
         return next(await actionWith(successType, [action, getState(), res]));
       } else {
         return next(
