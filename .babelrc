@@ -1,4 +1,0 @@
-{
-  "plugins": ["transform-runtime", "transform-object-rest-spread"],
-  "presets": ["env"]
-}

@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ApiError matches snapshot 1`] = `[ApiError: 404 - Not Found]`;
+
+exports[`ApiError matches snapshot: object.entries 1`] = `
+Array [
+  Array [
+    "name",
+    "ApiError",
+  ],
+  Array [
+    "status",
+    404,
+  ],
+  Array [
+    "statusText",
+    "Not Found",
+  ],
+  Array [
+    "response",
+    Object {
+      "error": "Resource not found",
+    },
+  ],
+  Array [
+    "message",
+    "404 - Not Found",
+  ],
+]
+`;
+
+exports[`InternalError matches snapshot 1`] = `[InternalError: error thrown in payload function]`;
+
+exports[`InternalError matches snapshot: object.entries 1`] = `
+Array [
+  Array [
+    "name",
+    "InternalError",
+  ],
+  Array [
+    "message",
+    "error thrown in payload function",
+  ],
+]
+`;
+
+exports[`InvalidRSAA matches snapshot 1`] = `[InvalidRSAA: Invalid RSAA]`;
+
+exports[`InvalidRSAA matches snapshot: object.entries 1`] = `
+Array [
+  Array [
+    "name",
+    "InvalidRSAA",
+  ],
+  Array [
+    "message",
+    "Invalid RSAA",
+  ],
+  Array [
+    "validationErrors",
+    Array [
+      "validation error 1",
+      "validation error 2",
+    ],
+  ],
+]
+`;
+
+exports[`RequestError matches snapshot 1`] = `[RequestError: Network request failed]`;
+
+exports[`RequestError matches snapshot: object.entries 1`] = `
+Array [
+  Array [
+    "name",
+    "RequestError",
+  ],
+  Array [
+    "message",
+    "Network request failed",
+  ],
+]
+`;

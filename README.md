@@ -26,6 +26,7 @@ See the changes in the [beta's documentation](https://github.com/agraboso/redux-
 
 - [Introduction](#introduction)
   - [Breaking Changes in 2.0 Release](#breaking-changes-in-20-release)
+  - [Breaking Changes in 3.0 Release](#breaking-changes-in-30-release)
 - [Installation](#installation)
     - [configureStore.js](#configurestorejs)
     - [app.js](#appjs)
@@ -50,6 +51,7 @@ See the changes in the [beta's documentation](https://github.com/agraboso/redux-
   - [Exports](#exports)
     - [`RSAA`](#rsaa)
     - [`apiMiddleware`](#apimiddleware)
+    - [`createMiddleware(options)`](#createmiddlewareoptions)
     - [`isRSAA(action)`](#isrsaaaction)
     - [`validateRSAA(action)`](#validatersaaaction)
     - [`isValidRSAA(action)`](#isvalidrsaaaction)
@@ -73,11 +75,13 @@ See the changes in the [beta's documentation](https://github.com/agraboso/redux-
     - [`[RSAA].credentials`](#rsaacredentials-1)
     - [`[RSAA].bailout`](#rsaabailout)
     - [`[RSAA].fetch`](#rsaafetch-1)
+    - [`[RSAA].ok`](#rsaaok)
     - [`[RSAA].types`](#rsaatypes)
     - [Type descriptors](#type-descriptors)
 - [History](#history)
 - [Tests](#tests)
 - [Upgrading from v1.0.x](#upgrading-from-v10x)
+- [Upgrading from v2.0.x](#upgrading-from-v20x)
 - [License](#license)
 - [Projects using redux-api-middleware](#projects-using-redux-api-middleware)
 - [Acknowledgements](#acknowledgements)
@@ -141,6 +145,10 @@ We have tiptoed around error-handling issues here. For a thorough walkthrough of
 ### Breaking Changes in 2.0 Release
 
 See the [2.0 Release Notes](https://github.com/agraboso/redux-api-middleware/releases/tag/v2.0.0), and [Upgrading from v1.0.x](#upgrading-from-v10x) for details on upgrading.
+
+### Breaking Changes in 3.0 Release
+
+See the [3.0 Release Notes](https://github.com/agraboso/redux-api-middleware/releases/tag/v3.0.0), and [Upgrading from v2.0.x](#upgrading-from-v20x) for details on upgrading.
 
 ## Installation
 
@@ -370,8 +378,8 @@ The `[RSAA].types` property controls the output of `redux-api-middleware`. The s
   - `fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[RSAA].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
-  If such an error occurs, a different *request* FSA will be dispatched (*instead* of the one described above). It will contain the following properties:
-  - `type`: the string constant in the first position of the `[RSAA].types` array;
+  If such an error occurs, a *failure* FSA will be dispatched containing the following properties:
+  - `type`: the string constant in the last position of the `[RSAA].types` array;
   - `payload`: a [`RequestError`](#requesterror) object containing an error message;
   - `error: true`.
 
@@ -409,7 +417,7 @@ See [the Redux docs on composition](https://github.com/reduxjs/redux-thunk#compo
 export function patchAsyncExampleThunkChainedActionCreator(values) {
   return async(dispatch, getState) => {
     const actionResponse = await dispatch({
-      [CALL_API]: {
+      [RSAA]: {
         endpoint: "...",
         method: "PATCH",
         body: JSON.stringify(values),
@@ -670,6 +678,7 @@ For example, if you want the status code and status message of a unsuccessful AP
   }
 }
 ```
+
 By default, *failure* FSAs will not contain a `meta` property, while their `payload` property will be evaluated from
 ```js
 (action, state, res) =>
@@ -677,6 +686,9 @@ By default, *failure* FSAs will not contain a `meta` property, while their `payl
     (json) => new ApiError(res.status, res.statusText, json)
   )
 ```
+
+
+Note that *failure* FSAs dispatched due to fetch errors will not have a `res` argument into `meta` or `payload`. The `res` parameter will exist for completed requests that have resulted in errors, but not for failed requests.
 
 ### Exports
 
@@ -689,6 +701,15 @@ A JavaScript `String` whose presence as a key in an action signals that `redux-a
 #### `apiMiddleware`
 
 The Redux middleware itself.
+
+#### `createMiddleware(options)`
+
+A function that creates an `apiMiddleware` with custom options.
+
+The following `options` properties are used:
+
+- `fetch` - provide a `fetch` API compatible function here to use instead of the default `window.fetch`
+- `ok` - provide a function here to use as a status check in the RSAA flow instead of `(res) => res.ok`
 
 #### `isRSAA(action)`
 
@@ -802,9 +823,9 @@ A *Redux Standard API-calling Action* MUST
 - be a plain JavaScript object,
 - have an `[RSAA]` property.
 
-A *Redux Standard API-calling Action* MUST NOT
+A *Redux Standard API-calling Action* MAY
 
-- include properties other than `[RSAA]`.
+- include properties other than `[RSAA]` (but will be ignored by redux-api-middleware).
 
 #### `[RSAA]`
 
@@ -822,11 +843,12 @@ The `[RSAA]` property MAY
 - have an `options` property,
 - have a `credentials` property,
 - have a `bailout` property,
-- have a `fetch` property.
+- have a `fetch` property,
+- have an `ok` property.
 
 The `[RSAA]` property MUST NOT
 
-- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, `bailout` and `fetch`.
+- include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, `bailout`, `fetch` and `ok`.
 
 #### `[RSAA].endpoint`
 
@@ -860,7 +882,11 @@ The optional `[RSAA].bailout` property MUST be a boolean or a function.
 
 #### `[RSAA].fetch`
 
-The optional `[RSAA].fetch` property MUST be a function.
+The optional `[RSAA].fetch` property MUST be a function that conforms to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+
+#### `[RSAA].ok`
+
+The optional `[RSAA].ok` property MUST be a function that accepts a response object and returns a boolean indicating if the request is a success or failure
 
 #### `[RSAA].types`
 
@@ -898,6 +924,13 @@ $ npm install && npm test
 - `redux-api-middleware` no longer brings its own `fetch` implementation and depends on a global `fetch` to be provided in the runtime
 - A new `options` config is added to pass your `fetch` implementation extra options other than `method`, `headers`, `body` and `credentials`
 - `apiMiddleware` no longer returns a promise on actions without [RSAA]
+
+## Upgrading from v2.0.x
+
+- The `CALL_API` alias has been removed
+- Error handling around failed fetches has been updated (#175)
+  - Previously, a failed `fetch` would dispatch a `REQUEST` FSA followed by another `REQUEST` FSA with an error flag
+  - Now, a failed `fetch` will dispatch a `REQUEST` FSA followed by a `FAILURE` FSA
 
 ## License
 

@@ -1,5 +1,20 @@
 import RSAA from './RSAA';
-import isPlainObject from 'lodash.isplainobject';
+
+/**
+ * Is the argument a plain object?
+ * Inspired by lodash.isplainobject
+ *
+ * @function isPlainObject
+ * @param {object} obj - The object to check
+ * @returns {boolean}
+ */
+function isPlainObject(obj) {
+  return (
+    obj &&
+    typeof obj == 'object' &&
+    Object.getPrototypeOf(obj) === Object.prototype
+  );
+}
 
 /**
  * Is the given action a plain JavaScript object with an [RSAA] property?
@@ -61,7 +76,8 @@ function validateRSAA(action) {
     'credentials',
     'bailout',
     'types',
-    'fetch'
+    'fetch',
+    'ok'
   ];
   const validMethods = [
     'GET',
@@ -79,12 +95,6 @@ function validateRSAA(action) {
       'RSAAs must be plain JavaScript objects with an [RSAA] property'
     );
     return validationErrors;
-  }
-
-  for (let key in action) {
-    if (key !== RSAA) {
-      validationErrors.push(`Invalid root key: ${key}`);
-    }
   }
 
   const callAPI = action[RSAA];
@@ -105,7 +115,8 @@ function validateRSAA(action) {
     credentials,
     types,
     bailout,
-    fetch
+    fetch,
+    ok
   } = callAPI;
   if (typeof endpoint === 'undefined') {
     validationErrors.push('[RSAA] must have an endpoint property');
@@ -191,6 +202,12 @@ function validateRSAA(action) {
   if (typeof fetch !== 'undefined') {
     if (typeof fetch !== 'function') {
       validationErrors.push('[RSAA].fetch property must be a function');
+    }
+  }
+
+  if (typeof ok !== 'undefined') {
+    if (typeof ok !== 'function') {
+      validationErrors.push('[RSAA].ok property must be a function');
     }
   }
 

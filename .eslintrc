@@ -1,17 +1,19 @@
 {
-  "parser": "babel-eslint",
   "plugins": [
-    "babel",
-    "prettier"
+    "prettier",
+    "jest"
   ],
+  "extends": ["plugin:jest/recommended"],
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "jest/globals": true
   },
   "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
     "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
-      "modules": true
+      "experimentalObjectRestSpread": true
     }
   },
   "root": true,

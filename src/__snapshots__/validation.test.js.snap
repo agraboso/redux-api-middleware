@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].bailout property 1`] = `
+Array [
+  "[RSAA].bailout property must be undefined, a boolean, or a function",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].credentials property (invalid string) 1`] = `
+Array [
+  "Invalid [RSAA].credentials: InvalidCredentials",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].credentials property (object) 1`] = `
+Array [
+  "[RSAA].credentials property must be undefined, or a string",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].endpoint property 1`] = `
+Array [
+  "[RSAA].endpoint property must be a string or a function",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].fetch property 1`] = `
+Array [
+  "[RSAA].fetch property must be a function",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].headers property 1`] = `
+Array [
+  "[RSAA].headers property must be undefined, a plain JavaScript object, or a function",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].method property (invalid string) 1`] = `
+Array [
+  "Invalid [RSAA].method: INVALID_METHOD",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].method property (object) 1`] = `
+Array [
+  "[RSAA].method property must be a string",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].ok property 1`] = `
+Array [
+  "[RSAA].ok property must be a function",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].options property 1`] = `
+Array [
+  "[RSAA].options property must be undefined, a plain JavaScript object, or a function",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property (invalid objects) 1`] = `
+Array [
+  "Invalid request type",
+  "Invalid success type",
+  "Invalid failure type",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property (object) 1`] = `
+Array [
+  "[RSAA].types property must be an array of length 3",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid [RSAA].types property (wrong length) 1`] = `
+Array [
+  "[RSAA].types property must be an array of length 3",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid RSAA value (invalid object) 1`] = `
+Array [
+  "Invalid [RSAA] key: invalidKey",
+  "[RSAA] must have an endpoint property",
+  "[RSAA] must have a method property",
+  "[RSAA] must have a types property",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid RSAA value (string) 1`] = `
+Array [
+  "[RSAA] property must be a plain JavaScript object",
+  "[RSAA] must have an endpoint property",
+  "[RSAA] must have a method property",
+  "[RSAA] must have a types property",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles invalid actions 1`] = `
+Array [
+  "RSAAs must be plain JavaScript objects with an [RSAA] property",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles missing RSAA properties 1`] = `
+Array [
+  "[RSAA] must have an endpoint property",
+  "[RSAA] must have a method property",
+  "[RSAA] must have a types property",
+]
+`;
+
+exports[`#validateRSAA / #isValidRSAA handles top-level string properties other than RSAA 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles top-level symbol properties other than RSAA 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with bailout boolean 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with bailout function 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with endpoint function 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with endpoint string 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with fetch function 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with headers function 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with headers object 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with options function 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with options object 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with types of symbols 1`] = `Array []`;
+
+exports[`#validateRSAA / #isValidRSAA handles valid RSAA with types of type descriptors 1`] = `Array []`;

@@ -1,16 +1,30 @@
 import RSAA from './RSAA';
 import { isRSAA, validateRSAA } from './validation';
-import { InvalidRSAA, RequestError } from './errors';
+import { InvalidRSAA, RequestError, InternalError } from './errors';
 import { normalizeTypeDescriptors, actionWith } from './util';
 
 /**
- * A Redux middleware that processes RSAA actions.
+ * Default options for redux-api-middleware
+ * These can be customized by passing options into `createMiddleware`
+ * @type {Object}
+ */
+const defaults = {
+  ok: res => res.ok,
+  fetch
+};
+
+/**
+ * A middleware creator used to create a ReduxApiMiddleware
+ * with custom defaults
  *
- * @type {ReduxMiddleware}
+ * @type {function}
+ * @returns {ReduxMiddleware}
  * @access public
  */
-function apiMiddleware({ getState }) {
-  return next => action => {
+function createMiddleware(options = {}) {
+  const middlewareOptions = Object.assign({}, defaults, options);
+
+  return ({ getState }) => next => action => {
     // Do not process actions without an [RSAA] property
     if (!isRSAA(action)) {
       return next(action);
@@ -42,7 +56,8 @@ function apiMiddleware({ getState }) {
         body,
         headers,
         options = {},
-        fetch: doFetch = fetch
+        fetch: doFetch = middlewareOptions.fetch,
+        ok = middlewareOptions.ok
       } = callAPI;
       const { method, credentials, bailout, types } = callAPI;
       const [requestType, successType, failureType] = normalizeTypeDescriptors(
@@ -61,7 +76,7 @@ function apiMiddleware({ getState }) {
         return next(
           await actionWith(
             {
-              ...requestType,
+              ...failureType,
               payload: new RequestError('[RSAA].bailout function failed'),
               error: true
             },
@@ -78,7 +93,7 @@ function apiMiddleware({ getState }) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].endpoint function failed'),
                 error: true
               },
@@ -96,7 +111,7 @@ function apiMiddleware({ getState }) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].body function failed'),
                 error: true
               },
@@ -114,7 +129,7 @@ function apiMiddleware({ getState }) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].headers function failed'),
                 error: true
               },
@@ -132,7 +147,7 @@ function apiMiddleware({ getState }) {
           return next(
             await actionWith(
               {
-                ...requestType,
+                ...failureType,
                 payload: new RequestError('[RSAA].options function failed'),
                 error: true
               },
@@ -152,9 +167,10 @@ function apiMiddleware({ getState }) {
         next(requestType);
       }
 
+      let res;
       try {
         // Make the API call
-        var res = await doFetch(endpoint, {
+        res = await doFetch(endpoint, {
           ...options,
           method,
           body: body || undefined,
@@ -166,7 +182,7 @@ function apiMiddleware({ getState }) {
         return next(
           await actionWith(
             {
-              ...requestType,
+              ...failureType,
               payload: new RequestError(e.message),
               error: true
             },
@@ -175,8 +191,24 @@ function apiMiddleware({ getState }) {
         );
       }
 
+      let isOk;
+      try {
+        isOk = ok(res);
+      } catch (e) {
+        return next(
+          await actionWith(
+            {
+              ...failureType,
+              payload: new InternalError('[RSAA].ok function failed'),
+              error: true
+            },
+            [action, getState(), res]
+          )
+        );
+      }
+
       // Process the server response
-      if (res.ok) {
+      if (isOk) {
         return next(await actionWith(successType, [action, getState(), res]));
       } else {
         return next(
@@ -193,4 +225,14 @@ function apiMiddleware({ getState }) {
   };
 }
 
-export { apiMiddleware };
+/**
+ * A Redux middleware that processes RSAA actions.
+ *
+ * @type {ReduxMiddleware}
+ * @access public
+ */
+function apiMiddleware({ getState }) {
+  return createMiddleware()({ getState });
+}
+
+export { createMiddleware, apiMiddleware };
