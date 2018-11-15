@@ -304,47 +304,26 @@ exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false
 [MockFunction] {
   "calls": Array [
     Array [
-      Body {
-        "_abort": false,
-        "_bytes": 16,
-        "_raw": Array [
-          Object {
-            "data": Array [
-              123,
-              34,
-              100,
-              97,
-              116,
-              97,
-              34,
-              58,
-              34,
-              49,
-              50,
-              51,
-              52,
-              53,
-              34,
-              125,
-            ],
-            "type": "Buffer",
-          },
-        ],
-        "body": "{\\"data\\":\\"12345\\"}",
-        "bodyUsed": true,
-        "headers": Headers {
-          "_headers": Object {
-            "content-type": Array [
-              "application/json",
-            ],
-          },
-        },
-        "ok": true,
+      Response {
         "size": 0,
-        "status": 200,
-        "statusText": "OK",
         "timeout": 0,
-        "url": undefined,
+        Symbol(Body internals): Object {
+          "body": "{\\"data\\":\\"12345\\"}",
+          "disturbed": true,
+          "error": null,
+        },
+        Symbol(Response internals): Object {
+          "headers": Headers {
+            Symbol(map): Object {
+              "Content-Type": Array [
+                "application/json",
+              ],
+            },
+          },
+          "status": 200,
+          "statusText": "OK",
+          "url": undefined,
+        },
       },
     ],
   ],
@@ -1549,47 +1528,26 @@ exports[`#apiMiddleware must use an [RSAA].ok function when present: ok() 1`] = 
 [MockFunction] {
   "calls": Array [
     Array [
-      Body {
-        "_abort": false,
-        "_bytes": 16,
-        "_raw": Array [
-          Object {
-            "data": Array [
-              123,
-              34,
-              100,
-              97,
-              116,
-              97,
-              34,
-              58,
-              34,
-              49,
-              50,
-              51,
-              52,
-              53,
-              34,
-              125,
-            ],
-            "type": "Buffer",
-          },
-        ],
-        "body": "{\\"data\\":\\"12345\\"}",
-        "bodyUsed": true,
-        "headers": Headers {
-          "_headers": Object {
-            "content-type": Array [
-              "application/json",
-            ],
-          },
-        },
-        "ok": true,
+      Response {
         "size": 0,
-        "status": 200,
-        "statusText": "OK",
         "timeout": 0,
-        "url": undefined,
+        Symbol(Body internals): Object {
+          "body": "{\\"data\\":\\"12345\\"}",
+          "disturbed": true,
+          "error": null,
+        },
+        Symbol(Response internals): Object {
+          "headers": Headers {
+            Symbol(map): Object {
+              "Content-Type": Array [
+                "application/json",
+              ],
+            },
+          },
+          "status": 200,
+          "statusText": "OK",
+          "url": undefined,
+        },
       },
     ],
   ],
