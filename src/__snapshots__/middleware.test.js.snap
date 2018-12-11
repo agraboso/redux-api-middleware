@@ -309,7 +309,7 @@ exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false
         "timeout": 0,
         Symbol(Body internals): Object {
           "body": "{\\"data\\":\\"12345\\"}",
-          "disturbed": true,
+          "disturbed": false,
           "error": null,
         },
         Symbol(Response internals): Object {
@@ -1533,7 +1533,7 @@ exports[`#apiMiddleware must use an [RSAA].ok function when present: ok() 1`] = 
         "timeout": 0,
         Symbol(Body internals): Object {
           "body": "{\\"data\\":\\"12345\\"}",
-          "disturbed": true,
+          "disturbed": false,
           "error": null,
         },
         Symbol(Response internals): Object {
