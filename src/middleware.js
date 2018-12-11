@@ -202,14 +202,14 @@ function createMiddleware(options = {}) {
               payload: new InternalError('[RSAA].ok function failed'),
               error: true
             },
-            [action, getState(), res]
+            [action, getState(), res.clone()]
           )
         );
       }
 
       // Process the server response
       if (isOk) {
-        return next(await actionWith(successType, [action, getState(), res]));
+        return next(await actionWith(successType, [action, getState(), res.clone()]));
       } else {
         return next(
           await actionWith(
@@ -217,7 +217,7 @@ function createMiddleware(options = {}) {
               ...failureType,
               error: true
             },
-            [action, getState(), res]
+            [action, getState(), res.clone()]
           )
         );
       }
