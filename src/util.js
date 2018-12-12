@@ -60,6 +60,19 @@ function normalizeTypeDescriptors(types) {
 }
 
 /**
+ * Makes argument lists safe to pass to callbacks by cloning responses
+ * so that multiple callbacks may read the body
+ *
+ * @function safeResponseArgs
+ * @access private
+ * @param {array} args - The array of arguments to be processed
+ * @returns {array}
+ */
+function safeResponseArgs(args = []) {
+  return args.map(arg => arg instanceof Response ? arg.clone() : arg);
+}
+
+/**
  * Evaluate a type descriptor to an FSA
  *
  * @function actionWith
@@ -72,7 +85,7 @@ async function actionWith(descriptor, args = []) {
   try {
     descriptor.payload =
       typeof descriptor.payload === 'function'
-        ? await descriptor.payload(...args)
+        ? await descriptor.payload(...safeResponseArgs(args))
         : descriptor.payload;
   } catch (e) {
     descriptor.payload = new InternalError(e.message);
@@ -82,7 +95,7 @@ async function actionWith(descriptor, args = []) {
   try {
     descriptor.meta =
       typeof descriptor.meta === 'function'
-        ? await descriptor.meta(...args)
+        ? await descriptor.meta(...safeResponseArgs(args))
         : descriptor.meta;
   } catch (e) {
     delete descriptor.meta;
