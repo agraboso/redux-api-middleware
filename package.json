@@ -5,6 +5,7 @@
   "main": "lib/index.cjs.js",
   "browser": "lib/index.umd.js",
   "module": "es/index.js",
+  "types": "es/index.js",
   "sideEffects": false,
   "scripts": {
     "build": "babel src --out-dir es && rollup -c",
