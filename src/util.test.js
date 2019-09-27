@@ -2,7 +2,7 @@
 import { RSAA, getJSON } from './index.js';
 
 // Private package import
-import { normalizeTypeDescriptors, actionWith } from './util';
+import { normalizeTypeDescriptors, actionWith, createAction } from './util';
 
 describe('#normalizeTypeDescriptors', () => {
   it('handles string types', () => {
@@ -165,5 +165,12 @@ describe('#getJSON', () => {
     };
     const result = await getJSON(res);
     expect(result).toBeUndefined();
+  });
+});
+
+describe('#createAction', () => {
+  it('returns valid RSAA action', () => {
+    const apiCall = {};
+    expect(createAction(apiCall)).toHaveProperty(RSAA, apiCall);
   });
 });
