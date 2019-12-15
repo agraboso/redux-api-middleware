@@ -936,4 +936,4 @@ If your opensource project uses (or works with) `redux-api-middleware` we would 
 
 ## Acknowledgements
 
-The code in this module was originally extracted from the [real-world](https://github.com/rackt/redux/blob/master/examples/real-world/middleware/api.js) example in the [redux](https://github.com/rackt/redux) repository, due to [Dan Abramov](https://github.com/gaearon). It has evolved thanks to issues filed by, and pull requests contributed by, other developers.
+The code in this module was originally extracted from the [real-world](https://github.com/reduxjs/redux/blob/master/examples/real-world/src/middleware/api.js) example in the [redux](https://github.com/rackt/redux) repository, due to [Dan Abramov](https://github.com/gaearon). It has evolved thanks to issues filed by, and pull requests contributed by, other developers.
