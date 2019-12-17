@@ -402,9 +402,62 @@ describe('#apiMiddleware', () => {
     expect(body).toMatchSnapshot({}, 'body()');
   });
 
+  it('must use an async [RSAA].body function when present', async () => {
+    const body = jest.fn();
+    body.mockResolvedValue('mockBody');
+
+    const action = {
+      [RSAA]: {
+        endpoint: 'http://127.0.0.1/api/users/1',
+        method: 'GET',
+        types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+        body
+      }
+    };
+
+    await doTestMiddleware({
+      action,
+      response: {
+        body: JSON.stringify({ data: '12345' }),
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    });
+
+    expect(body).toMatchSnapshot({}, 'body()');
+  });
+
   it('must use an [RSAA].endpoint function when present', async () => {
     const endpoint = jest.fn();
     endpoint.mockReturnValue('http://127.0.0.1/api/users/1');
+
+    const action = {
+      [RSAA]: {
+        endpoint,
+        method: 'GET',
+        types: ['REQUEST', 'SUCCESS', 'FAILURE']
+      }
+    };
+
+    await doTestMiddleware({
+      action,
+      response: {
+        body: JSON.stringify({ data: '12345' }),
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    });
+
+    expect(endpoint).toMatchSnapshot({}, 'endpoint()');
+  });
+
+  it('must use an async [RSAA].endpoint function when present', async () => {
+    const endpoint = jest.fn();
+    endpoint.mockResolvedValue('http://127.0.0.1/api/users/1');
 
     const action = {
       [RSAA]: {
@@ -455,9 +508,63 @@ describe('#apiMiddleware', () => {
     expect(headers).toMatchSnapshot({}, 'headers()');
   });
 
+  it('must use an async [RSAA].headers function when present', async () => {
+    const headers = jest.fn();
+    headers.mockResolvedValue({ 'Test-Header': 'test' });
+
+    const action = {
+      [RSAA]: {
+        endpoint: 'http://127.0.0.1/api/users/1',
+        method: 'GET',
+        types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+        headers
+      }
+    };
+
+    await doTestMiddleware({
+      action,
+      response: {
+        body: JSON.stringify({ data: '12345' }),
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    });
+
+    expect(headers).toMatchSnapshot({}, 'headers()');
+  });
+
   it('must use an [RSAA].options function when present', async () => {
     const options = jest.fn();
     options.mockReturnValue({});
+
+    const action = {
+      [RSAA]: {
+        endpoint: 'http://127.0.0.1/api/users/1',
+        method: 'GET',
+        types: ['REQUEST', 'SUCCESS', 'FAILURE'],
+        options
+      }
+    };
+
+    await doTestMiddleware({
+      action,
+      response: {
+        body: JSON.stringify({ data: '12345' }),
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    });
+
+    expect(options).toMatchSnapshot({}, 'options()');
+  });
+
+  it('must use an async [RSAA].options function when present', async () => {
+    const options = jest.fn();
+    options.mockResolvedValue({});
 
     const action = {
       [RSAA]: {
