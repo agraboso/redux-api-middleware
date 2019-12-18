@@ -13,7 +13,7 @@
   {
     "name": "lib/index.umd.js (min)",
     "path": "lib/index.umd.js",
-    "limit": "30 KB",
+    "limit": "31 KB",
     "gzip": false
   },
   {
