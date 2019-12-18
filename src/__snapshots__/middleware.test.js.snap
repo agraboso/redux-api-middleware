@@ -1651,6 +1651,372 @@ exports[`#apiMiddleware must use an [RSAA].options function when present: option
 }
 `;
 
+exports[`#apiMiddleware must use an async [RSAA].body function when present: body() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].body function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": "mockBody",
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].body function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].body function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].endpoint function when present: endpoint() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].endpoint function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].endpoint function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].endpoint function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].headers function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {
+          "Test-Header": "test",
+        },
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].headers function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].headers function when present: headers() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].headers function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].options function when present: fetch mock 1`] = `
+Object {
+  "calls": Array [
+    Array [
+      "http://127.0.0.1/api/users/1",
+      Object {
+        "body": undefined,
+        "credentials": undefined,
+        "headers": Object {},
+        "method": "GET",
+      },
+    ],
+  ],
+  "instances": Array [
+    undefined,
+  ],
+  "invocationCallOrder": Any<Object>,
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].options function when present: final result 1`] = `
+Object {
+  "meta": undefined,
+  "payload": Object {
+    "data": "12345",
+  },
+  "type": "SUCCESS",
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].options function when present: next mock 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "type": "REQUEST",
+      },
+    ],
+    Array [
+      Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "type": "REQUEST",
+      },
+    },
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "meta": undefined,
+        "payload": Object {
+          "data": "12345",
+        },
+        "type": "SUCCESS",
+      },
+    },
+  ],
+}
+`;
+
+exports[`#apiMiddleware must use an async [RSAA].options function when present: options() 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      undefined,
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Promise {},
+    },
+  ],
+}
+`;
+
 exports[`#apiMiddleware must use meta property of request type descriptor when it is a function: fetch mock 1`] = `
 Object {
   "calls": Array [

@@ -88,7 +88,7 @@ function createMiddleware(options = {}) {
       // Process [RSAA].endpoint function
       if (typeof endpoint === 'function') {
         try {
-          endpoint = endpoint(getState());
+          endpoint = await endpoint(getState());
         } catch (e) {
           return next(
             await actionWith(
@@ -106,7 +106,7 @@ function createMiddleware(options = {}) {
       // Process [RSAA].body function
       if (typeof body === 'function') {
         try {
-          body = body(getState());
+          body = await body(getState());
         } catch (e) {
           return next(
             await actionWith(
@@ -124,7 +124,7 @@ function createMiddleware(options = {}) {
       // Process [RSAA].headers function
       if (typeof headers === 'function') {
         try {
-          headers = headers(getState());
+          headers = await headers(getState());
         } catch (e) {
           return next(
             await actionWith(
@@ -142,7 +142,7 @@ function createMiddleware(options = {}) {
       // Process [RSAA].options function
       if (typeof options === 'function') {
         try {
-          options = options(getState());
+          options = await options(getState());
         } catch (e) {
           return next(
             await actionWith(
