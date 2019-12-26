@@ -24,13 +24,13 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
     - [app.js](#appjs)
 - [Usage](#usage)
   - [Defining the API call](#defining-the-api-call)
-    - [`[RSAA].endpoint`](#rsaaendpoint)
-    - [`[RSAA].method`](#rsaamethod)
-    - [`[RSAA].body`](#rsaabody)
-    - [`[RSAA].headers`](#rsaaheaders)
-    - [`[RSAA].options`](#rsaaoptions)
-    - [`[RSAA].credentials`](#rsaacredentials)
-    - [`[RSAA].fetch`](#rsaafetch)
+    - [`endpoint`](#endpoint-required)
+    - [`method`](#method-required)
+    - [`body`](#body)
+    - [`headers`](#headers)
+    - [`options`](#options)
+    - [`credentials`](#credentials)
+    - [`fetch`](#fetch)
   - [Bailing out](#bailing-out)
   - [Lifecycle](#lifecycle)
   - [Customizing the dispatched FSAs](#customizing-the-dispatched-fsas)
@@ -41,6 +41,7 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
   - [*Success* type descriptors](#success-type-descriptors)
   - [*Failure* type descriptors](#failure-type-descriptors)
   - [Exports](#exports)
+    - [`createAction`](#createactionapicall)
     - [`RSAA`](#rsaa)
     - [`apiMiddleware`](#apimiddleware)
     - [`createMiddleware(options)`](#createmiddlewareoptions)
@@ -59,16 +60,16 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
     - [`meta`](#meta)
   - [Redux Standard API-calling Actions](#redux-standard-api-calling-actions)
     - [`[RSAA]`](#rsaa)
-    - [`[RSAA].endpoint`](#rsaaendpoint-1)
-    - [`[RSAA].method`](#rsaamethod-1)
-    - [`[RSAA].body`](#rsaabody-1)
-    - [`[RSAA].headers`](#rsaaheaders-1)
-    - [`[RSAA].options`](#rsaaoptions-1)
-    - [`[RSAA].credentials`](#rsaacredentials-1)
-    - [`[RSAA].bailout`](#rsaabailout)
-    - [`[RSAA].fetch`](#rsaafetch-1)
-    - [`[RSAA].ok`](#rsaaok)
-    - [`[RSAA].types`](#rsaatypes)
+    - [`endpoint`](#endpoint-1)
+    - [`method`](#method-1)
+    - [`body`](#body-1)
+    - [`headers`](#headers-1)
+    - [`options`](#options-1)
+    - [`credentials`](#credentials-1)
+    - [`bailout`](#bailout)
+    - [`fetch`](#fetch-1)
+    - [`ok`](#ok)
+    - [`types`](#types)
     - [Type descriptors](#type-descriptors)
 - [History](#history)
 - [Tests](#tests)
@@ -85,15 +86,13 @@ RSAAs are identified by the presence of an `[RSAA]` property, where [`RSAA`](#rs
 The following is a minimal RSAA action:
 
 ```js
-import { RSAA } from `redux-api-middleware`; // RSAA = '@@redux-api-middleware/RSAA'
+import { createAction } from `redux-api-middleware`;
 
-{
-  [RSAA]: {
-    endpoint: 'http://www.example.com/api/users',
-    method: 'GET',
-    types: ['REQUEST', 'SUCCESS', 'FAILURE']
-  }
-}
+createAction({
+  endpoint: 'http://www.example.com/api/users',
+  method: 'GET',
+  types: ['REQUEST', 'SUCCESS', 'FAILURE']
+})
 ```
 
 Upon receiving this action, `redux-api-middleware` will
@@ -179,47 +178,45 @@ const store = configureStore(initialState);
 
 ### Defining the API call
 
-The parameters of the API call are specified by root properties of the `[RSAA]` property of an RSAA.
+You can create an API call by creating an action using `createAction` and passing the following options to it.
 
-#### `[RSAA].endpoint`
+#### `endpoint` (Required)
 
 The URL endpoint for the API call.
 
 It is usually a string, be it a plain old one or an ES2015 template string. It may also be a function taking the state of your Redux store as its argument, and returning such a string.
 
-####  `[RSAA].method`
+####  `method` (Required)
 
 The HTTP method for the API call.
 
 It must be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or `OPTIONS`, in any mixture of lowercase and uppercase letters.
 
-#### `[RSAA].body`
+#### `body`
 
 The body of the API call.
 
-`redux-api-middleware` uses the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to make the API call. `[RSAA].body` should hence be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
+`redux-api-middleware` uses the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to make the API call. `body` should hence be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org). In most cases, this will be a JSON-encoded string or a [`FormData`](https://developer.mozilla.org/en/docs/Web/API/FormData) object.
 
 It may also be a function taking the state of your Redux store as its argument, and returning a body as described above.
 
-#### `[RSAA].headers`
+#### `headers`
 
 The HTTP headers for the API call.
 
 It is usually an object, with the keys specifying the header names and the values containing their content. For example, you can let the server know your call contains a JSON-encoded string body in the following way.
 
 ```js
-{
-  [RSAA]: {
-    ...
-    headers: { 'Content-Type': 'application/json' }
-    ...
-  }
-}
+createAction({
+  // ...
+  headers: { 'Content-Type': 'application/json' }
+  // ...
+})
 ```
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of headers as above.
 
-#### `[RSAA].options`
+#### `options`
 
 The fetch options for the API call. What options are available depends on what fetch implementation is in use. See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options) for more information.
 
@@ -227,18 +224,16 @@ It is usually an object with the options keys/values. For example, you can speci
 in the following way.
 
 ```js
-{
-  [RSAA]: {
-    ...
-    options: { timeout: 3000 }
-    ...
-  }
-}
+createAction({
+  // ...
+  options: { timeout: 3000 }
+  // ...
+})
 ```
 
 It may also be a function taking the state of your Redux store as its argument, and returning an object of options as above.
 
-#### `[RSAA].credentials`
+#### `credentials`
 
 Whether or not to send cookies with the API call.
 
@@ -248,7 +243,7 @@ It must be one of the following strings:
 - `same-origin` only sends cookies for the current domain;
 - `include` always send cookies, even for cross-origin calls.
 
-#### `[RSAA].fetch`
+#### `fetch`
 
 A custom [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) implementation, useful for intercepting the fetch request to customize the response status, modify the response payload or skip the request altogether and provide a cached response instead.
 
@@ -260,32 +255,30 @@ If provided, the fetch option must be a function that conforms to the Fetch API.
 <summary>Modify a response payload and status</summary>
 
 ```js
-{
-  [RSAA]: {
-    ...
-    fetch: async (...args) => {
-      // `fetch` args may be just a Request instance or [URI, options] (see Fetch API docs above)
-      const res = await fetch(...args);
-      const json = await res.json();
+createAction({
+  // ...
+  fetch: async (...args) => {
+    // `fetch` args may be just a Request instance or [URI, options] (see Fetch API docs above)
+    const res = await fetch(...args);
+    const json = await res.json();
 
-      return new Response(
-        JSON.stringify({
-          ...json,
-          // Adding to the JSON response
-          foo: 'bar'
-        }),
-        {
-          // Custom success/error status based on an `error` key in the API response
-          status: json.error ? 500 : 200,
-          headers: {
-            'Content-Type': 'application/json'
-          }
+    return new Response(
+      JSON.stringify({
+        ...json,
+        // Adding to the JSON response
+        foo: 'bar'
+      }),
+      {
+        // Custom success/error status based on an `error` key in the API response
+        status: json.error ? 500 : 200,
+        headers: {
+          'Content-Type': 'application/json'
         }
-      );
-    }
-    ...
+      }
+    );
   }
-}
+  // ...
+})
 ```
 </details>
 
@@ -293,20 +286,19 @@ If provided, the fetch option must be a function that conforms to the Fetch API.
 <summary>Modify a response status based on response json</summary>
 
 ```js
-{
-  [RSAA]: {
-    ...
-    fetch: async (...args) => {
-      const res = await fetch(...args);
-      const returnRes = res.clone(); // faster then above example with JSON.stringify
-      const json = await res.json(); // we need json just to check status
+createAction({
+  // ...
+  fetch: async (...args) => {
+    const res = await fetch(...args);
+    const returnRes = res.clone(); // faster then above example with JSON.stringify
+    const json = await res.json(); // we need json just to check status
 
-      returnRes.status = json.error ? 500 : 200,
-      return returnRes;
-    }
-    ...
+    returnRes.status = json.error ? 500 : 200;
+
+    return returnRes;
   }
-}
+  // ...
+})
 ```
 </details>
 
@@ -314,30 +306,28 @@ If provided, the fetch option must be a function that conforms to the Fetch API.
 <summary>Skip the request in favor of a cached response</summary>
 
 ```js
-{
-  [RSAA]: {
-    ...
-    fetch: async (...args) => {
-      const cached = await getCache('someKey');
+createAction({
+  // ...
+  fetch: async (...args) => {
+    const cached = await getCache('someKey');
 
-      if (cached) {
-        // where `cached` is a JSON string: '{"foo": "bar"}'
-        return new Response(cached,
-          {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json'
-            }
+    if (cached) {
+      // where `cached` is a JSON string: '{"foo": "bar"}'
+      return new Response(cached,
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json'
           }
-        );
-      }
-
-      // Fetch as usual if not cached
-      return fetch(...args);
+        }
+      );
     }
-    ...
+
+    // Fetch as usual if not cached
+    return fetch(...args);
   }
-}
+  // ...
+})
 ```
 </details>
 
@@ -345,48 +335,48 @@ If provided, the fetch option must be a function that conforms to the Fetch API.
 
 In some cases, the data you would like to fetch from the server may already be cached in your Redux store. Or you may decide that the current user does not have the necessary permissions to make some request.
 
-You can tell `redux-api-middleware` to not make the API call through `[RSAA].bailout`. If the value is `true`, the RSAA will die here, and no FSA will be passed on to the next middleware.
+You can tell `redux-api-middleware` to not make the API call through `bailout` property. If the value is `true`, the RSAA will die here, and no FSA will be passed on to the next middleware.
 
-A more useful possibility is to give `[RSAA].bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, if the return value of the function is `true`, the API call will not be made.
+A more useful possibility is to give `bailout` a function. At runtime, it will be passed the state of your Redux store as its only argument, if the return value of the function is `true`, the API call will not be made.
 
 ### Lifecycle
 
-The `[RSAA].types` property controls the output of `redux-api-middleware`. The simplest form it can take is an array of length 3 consisting of string constants (or symbols), as in our [example](#a-simple-example) above. This results in the default behavior we now describe.
+The `types` property controls the output of `redux-api-middleware`. The simplest form it can take is an array of length 3 consisting of string constants (or symbols), as in our [example](#a-simple-example) above. This results in the default behavior we now describe.
 
 1. When `redux-api-middleware` receives an action, it first checks whether it has an `[RSAA]` property. If it does not, it was clearly not intended for processing with `redux-api-middleware`, and so it is unceremoniously passed on to the next middleware.
 
 2. It is now time to validate the action against the [RSAA definition](#redux-standard-api-calling-actions). If there are any validation errors, a *request* FSA will be dispatched (if at all possible) with the following properties:
-    - `type`: the string constant in the first position of the `[RSAA].types` array;
+    - `type`: the string constant in the first position of the `types` array;
     - `payload`: an [`InvalidRSAA`](#invalidrsaa) object containing a list of said validation errors;
     - `error: true`.
 
   `redux-api-middleware` will perform no further operations. In particular, no API call will be made, and the incoming RSAA will die here.
 
 3. Now that `redux-api-middleware` is sure it has received a valid RSAA, it will try making the API call. If everything is alright, a *request* FSA will be dispatched with the following property:
-  - `type`: the string constant in the first position of the `[RSAA].types` array.
+  - `type`: the string constant in the first position of the `types` array.
 
   But errors may pop up at this stage, for several reasons:
-  - `redux-api-middleware` has to call those of `[RSAA].bailout`, `[RSAA].endpoint`, `[RSAA].body`, `[RSAA].options` and `[RSAA].headers` that happen to be a function, which may throw an error;
-  - `fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `[RSAA].body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
+  - `redux-api-middleware` has to call those of `bailout`, `endpoint`, `body`, `options` and `headers` that happen to be a function, which may throw an error;
+  - `fetch` may throw an error: the RSAA definition is not strong enough to preclude that from happening (you may, for example, send in a `body` that is not valid according to the fetch specification &mdash; mind the SHOULDs in the [RSAA definition](#redux-standard-api-calling-actions));
   - a network failure occurs (the network is unreachable, the server responds with an error,...).
 
   If such an error occurs, a *failure* FSA will be dispatched containing the following properties:
-  - `type`: the string constant in the last position of the `[RSAA].types` array;
+  - `type`: the string constant in the last position of the `types` array;
   - `payload`: a [`RequestError`](#requesterror) object containing an error message;
   - `error: true`.
 
 4. If `redux-api-middleware` receives a response from the server with a status code in the 200 range, a *success* FSA will be dispatched with the following properties:
-  - `type`: the string constant in the second position of the `[RSAA].types` array;
+  - `type`: the string constant in the second position of the `types` array;
   - `payload`: if the `Content-Type` header of the response is set to something JSONy (see [*Success* type descriptors](#success-type-descriptors) below), the parsed JSON response of the server, or undefined otherwise.
 
   If the status code of the response falls outside that 200 range, a *failure* FSA will dispatched instead, with the following properties:
-  - `type`: the string constant in the third position of the `[RSAA].types` array;
+  - `type`: the string constant in the third position of the `types` array;
   - `payload`: an [`ApiError`](#apierror) object containing the message `` `${status} - ${statusText}` ``;
   - `error: true`.
 
 ### Customizing the dispatched FSAs
 
-It is possible to customize the output of `redux-api-middleware` by replacing one or more of the string constants (or symbols) in `[RSAA].types` by a type descriptor.
+It is possible to customize the output of `redux-api-middleware` by replacing one or more of the string constants (or symbols) in `types` by a type descriptor.
 
 A *type descriptor* is a plain JavaScript object that will be used as a blueprint for the dispatched FSAs. As such, type descriptors must have a `type` property, intended to house the string constant or symbol specifying the `type` of the resulting FSAs.
 
@@ -407,19 +397,17 @@ See [the Redux docs on composition](https://github.com/reduxjs/redux-thunk#compo
 
 ```js
 export function patchAsyncExampleThunkChainedActionCreator(values) {
-  return async(dispatch, getState) => {
-    const actionResponse = await dispatch({
-      [RSAA]: {
-        endpoint: "...",
-        method: "PATCH",
-        body: JSON.stringify(values),
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        types: [PATCH, PATCH_SUCCESS, PATCH_FAILED]
-      }
-    });
+  return async (dispatch, getState) => {
+    const actionResponse = await dispatch(createAction({
+      endpoint: "...",
+      method: "PATCH",
+      body: JSON.stringify(values),
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      types: [PATCH, PATCH_SUCCESS, PATCH_FAILED]
+    }));
 
     if (actionResponse.error) {
       // the last dispatched action has errored, break out of the promise chain.
@@ -447,17 +435,15 @@ export const USER_REQUEST = '@@user/USER_REQUEST'
 export const USER_SUCCESS = '@@user/USER_SUCCESS'
 export const USER_FAILURE = '@@user/USER_FAILURE'
 
-export const getUser = () => ({
-  [RSAA]: {
-    endpoint: 'https://hostname/api/users/',
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    types: [
-      USER_REQUEST,
-      USER_SUCCESS,
-      USER_FAILURE
-    ]
-  }
+export const getUser = () => createAction({
+  endpoint: 'https://hostname/api/users/',
+  method: 'GET',
+  headers: { 'Content-Type': 'application/json' },
+  types: [
+    USER_REQUEST,
+    USER_SUCCESS,
+    USER_FAILURE
+  ]
 })
 ```
 
@@ -518,20 +504,18 @@ For example, if you want your *request* FSA to have the URL endpoint of the API 
 
 ```js
 // Input RSAA
-{
-  [RSAA]: {
-    endpoint: 'http://www.example.com/api/users',
-    method: 'GET',
-    types: [
-      {
-        type: 'REQUEST',
-        payload: (action, state) => ({ endpoint: action.endpoint })
-      },
-      'SUCCESS',
-      'FAILURE'
-    ]
-  }
-}
+createAction({
+  endpoint: 'http://www.example.com/api/users',
+  method: 'GET',
+  types: [
+    {
+      type: 'REQUEST',
+      payload: (action, state) => ({ endpoint: action.endpoint })
+    },
+    'SUCCESS',
+    'FAILURE'
+  ]
+})
 
 // Output request FSA
 {
@@ -544,20 +528,18 @@ If you do not need access to the action itself or the state of your Redux store,
 
 ```js
 // Input RSAA
-{
-  [RSAA]: {
-    endpoint: 'http://www.example.com/api/users',
-    method: 'GET',
-    types: [
-      {
-        type: 'REQUEST',
-        meta: { source: 'userList' }
-      },
-      'SUCCESS',
-      'FAILURE'
-    ]
-  }
-}
+createAction({
+  endpoint: 'http://www.example.com/api/users',
+  method: 'GET',
+  types: [
+    {
+      type: 'REQUEST',
+      meta: { source: 'userList' }
+    },
+    'SUCCESS',
+    'FAILURE'
+  ]
+})
 
 // Output request FSA
 {
@@ -583,26 +565,24 @@ import { Schema, arrayOf, normalize } from 'normalizr';
 const userSchema = new Schema('users');
 
 // Input RSAA
-{
-  [RSAA]: {
-    endpoint: 'http://www.example.com/api/users',
-    method: 'GET',
-    types: [
-      'REQUEST',
-      {
-        type: 'SUCCESS',
-        payload: (action, state, res) => {
-          const contentType = res.headers.get('Content-Type');
-          if (contentType && ~contentType.indexOf('json')) {
-            // Just making sure res.json() does not raise an error
-            return res.json().then((json) => normalize(json, { users: arrayOf(userSchema) }));
-          }
+createAction({
+  endpoint: 'http://www.example.com/api/users',
+  method: 'GET',
+  types: [
+    'REQUEST',
+    {
+      type: 'SUCCESS',
+      payload: (action, state, res) => {
+        const contentType = res.headers.get('Content-Type');
+        if (contentType && ~contentType.indexOf('json')) {
+          // Just making sure res.json() does not raise an error
+          return res.json().then(json => normalize(json, { users: arrayOf(userSchema) }));
         }
-      },
-      'FAILURE'
-    ]
-  }
-}
+      }
+    },
+    'FAILURE'
+  ]
+})
 
 // Output success FSA
 {
@@ -627,9 +607,9 @@ const userSchema = new Schema('users');
 
 The above pattern of parsing the JSON body of the server response is probably quite common, so `redux-api-middleware` exports a utility function `getJSON` which allows for the above `payload` function to be written as
 ```js
-(action, state, res) => {
-  return getJSON(res).then((json) => normalize(json, { users: arrayOf(userSchema) }));
-}
+(action, state, res) =>
+  getJSON(res)
+  .then(json => normalize(json, { users: arrayOf(userSchema) }));
 ```
 
 By default, *success* FSAs will not contain a `meta` property, while their `payload` property will be evaluated from
@@ -644,39 +624,36 @@ By default, *success* FSAs will not contain a `meta` property, while their `payl
 For example, if you want the status code and status message of a unsuccessful API call in the `meta` property of your *failure* FSA, do the following.
 
 ```js
-{
-  [RSAA]: {
-    endpoint: 'http://www.example.com/api/users/1',
-    method: 'GET',
-    types: [
-      'REQUEST',
-      'SUCCESS',
-      {
-        type: 'FAILURE',
-        meta: (action, state, res) => {
-          if (res) {
-            return {
-              status: res.status,
-              statusText: res.statusText
-            };
-          } else {
-            return {
-              status: 'Network request failed'
-            }
+createAction({
+  endpoint: 'http://www.example.com/api/users/1',
+  method: 'GET',
+  types: [
+    'REQUEST',
+    'SUCCESS',
+    {
+      type: 'FAILURE',
+      meta: (action, state, res) => {
+        if (res) {
+          return {
+            status: res.status,
+            statusText: res.statusText
+          };
+        } else {
+          return {
+            status: 'Network request failed'
           }
         }
       }
-    ]
-  }
-}
+    }
+  ]
+})
 ```
 
 By default, *failure* FSAs will not contain a `meta` property, while their `payload` property will be evaluated from
 ```js
 (action, state, res) =>
-  getJSON(res).then(
-    (json) => new ApiError(res.status, res.statusText, json)
-  )
+  getJSON(res)
+  .then(json => new ApiError(res.status, res.statusText, json))
 ```
 
 
@@ -685,6 +662,10 @@ Note that *failure* FSAs dispatched due to fetch errors will not have a `res` ar
 ### Exports
 
 The following objects are exported by `redux-api-middleware`.
+
+#### `createAction(apiCall)`
+
+Function used to create RSAA action. This is the preferred way to create a RSAA action.
 
 #### `RSAA`
 
@@ -819,7 +800,7 @@ A *Redux Standard API-calling Action* MAY
 
 - include properties other than `[RSAA]` (but will be ignored by redux-api-middleware).
 
-#### `[RSAA]`
+#### Action object
 
 The `[RSAA]` property MUST
 
@@ -842,47 +823,47 @@ The `[RSAA]` property MUST NOT
 
 - include properties other than `endpoint`, `method`, `types`, `body`, `headers`, `options`, `credentials`, `bailout`, `fetch` and `ok`.
 
-#### `[RSAA].endpoint`
+#### `endpoint`
 
-The `[RSAA].endpoint` property MUST be a string or a function. In the second case, the function SHOULD return a string.
+The `endpoint` property MUST be a string or a function. In the second case, the function SHOULD return a string.
 
-#### `[RSAA].method`
+#### `method`
 
-The `[RSAA].method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or `OPTIONS`, in any mixture of lowercase and uppercase letters.
+The `method` property MUST be one of the strings `GET`, `HEAD`, `POST`, `PUT`, `PATCH`, `DELETE` or `OPTIONS`, in any mixture of lowercase and uppercase letters.
 
-#### `[RSAA].body`
+#### `body`
 
-The optional `[RSAA].body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org), or a function. In the second case, the function SHOULD return a valid body.
+The optional `body` property SHOULD be a valid body according to the [fetch specification](https://fetch.spec.whatwg.org), or a function. In the second case, the function SHOULD return a valid body.
 
-#### `[RSAA].headers`
+#### `headers`
 
-The optional `[RSAA].headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The optional `headers` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
 
-#### `[RSAA].options`
+#### `options`
 
-The optional `[RSAA].options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
+The optional `options` property MUST be a plain JavaScript object or a function. In the second case, the function SHOULD return a plain JavaScript object.
 The options object can contain any options supported by the effective fetch implementation.
 See [MDN fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) or [node-fetch](https://github.com/bitinn/node-fetch#options).
 
-#### `[RSAA].credentials`
+#### `credentials`
 
-The optional `[RSAA].credentials` property MUST be one of the strings `omit`, `same-origin` or `include`.
+The optional `credentials` property MUST be one of the strings `omit`, `same-origin` or `include`.
 
-#### `[RSAA].bailout`
+#### `bailout`
 
-The optional `[RSAA].bailout` property MUST be a boolean or a function.
+The optional `bailout` property MUST be a boolean or a function.
 
-#### `[RSAA].fetch`
+#### `fetch`
 
-The optional `[RSAA].fetch` property MUST be a function that conforms to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+The optional `fetch` property MUST be a function that conforms to the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
 
-#### `[RSAA].ok`
+#### `ok`
 
-The optional `[RSAA].ok` property MUST be a function that accepts a response object and returns a boolean indicating if the request is a success or failure
+The optional `ok` property MUST be a function that accepts a response object and returns a boolean indicating if the request is a success or failure
 
-#### `[RSAA].types`
+#### `types`
 
-The `[RSAA].types` property MUST be an array of length 3. Each element of the array MUST be a string, a `Symbol`, or a type descriptor.
+The `types` property MUST be an array of length 3. Each element of the array MUST be a string, a `Symbol`, or a type descriptor.
 
 #### Type descriptors
 
