@@ -10,7 +10,7 @@ import { normalizeTypeDescriptors, actionWith } from './util';
  */
 const defaults = {
   ok: res => res.ok,
-  fetch
+  fetch: global.fetch
 };
 
 /**
