@@ -3,6 +3,7 @@
  *
  * @constant {string}
  * @access public
+ * @deprecated To be made private (implementation detail). Use `createAction` instead.
  * @default
  */
 const RSAA = '@@redux-api-middleware/RSAA';

@@ -1,4 +1,5 @@
 import { InternalError, ApiError } from './errors';
+import RSAA from './RSAA';
 
 /**
  * Extract JSON body from a server response
@@ -93,4 +94,16 @@ async function actionWith(descriptor, args = []) {
   return descriptor;
 }
 
-export { getJSON, normalizeTypeDescriptors, actionWith };
+/**
+ * Create RSAA action
+ *
+ * @function createAction
+ * @access public
+ * @param {object} clientCall - The options for the RSAA action
+ * @returns {object} RSAA Action
+ */
+function createAction(clientCall) {
+  return { [RSAA]: clientCall };
+}
+
+export { getJSON, normalizeTypeDescriptors, actionWith, createAction };
