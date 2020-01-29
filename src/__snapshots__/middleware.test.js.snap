@@ -19,7 +19,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -56,7 +56,7 @@ exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -64,7 +64,7 @@ exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call 
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": "failureMeta",
@@ -95,7 +95,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -132,7 +132,7 @@ exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -140,7 +140,7 @@ exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call 
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": "failureMeta",
@@ -171,7 +171,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -208,7 +208,7 @@ exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -216,7 +216,7 @@ exports[`#apiMiddleware must dispatch a failure FSA on an unsuccessful API call 
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": "failureMeta",
@@ -247,7 +247,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -282,13 +282,13 @@ exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -308,11 +308,32 @@ exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false
         "size": 0,
         "timeout": 0,
         Symbol(Body internals): Object {
-          "body": "{\\"data\\":\\"12345\\"}",
+          "body": Object {
+            "data": Array [
+              123,
+              34,
+              100,
+              97,
+              116,
+              97,
+              34,
+              58,
+              34,
+              49,
+              50,
+              51,
+              52,
+              53,
+              34,
+              125,
+            ],
+            "type": "Buffer",
+          },
           "disturbed": true,
           "error": null,
         },
         Symbol(Response internals): Object {
+          "counter": undefined,
           "headers": Headers {
             Symbol(map): Object {
               "Content-Type": Array [
@@ -329,7 +350,7 @@ exports[`#apiMiddleware must dispatch a failure FSA when [RSAA].ok returns false
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": false,
     },
   ],
@@ -355,7 +376,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -392,7 +413,7 @@ exports[`#apiMiddleware must dispatch a failure FSA with an error on a request e
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "someMeta",
         "payload": "ignoredPayload",
@@ -400,7 +421,7 @@ exports[`#apiMiddleware must dispatch a failure FSA with an error on a request e
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -431,7 +452,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -466,7 +487,7 @@ exports[`#apiMiddleware must dispatch a success FSA on a successful API call wit
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -474,7 +495,7 @@ exports[`#apiMiddleware must dispatch a success FSA on a successful API call wit
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "successMeta",
         "payload": undefined,
@@ -504,7 +525,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -543,7 +564,7 @@ exports[`#apiMiddleware must dispatch a success FSA on a successful API call wit
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -551,7 +572,7 @@ exports[`#apiMiddleware must dispatch a success FSA on a successful API call wit
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "successMeta",
         "payload": Object {
@@ -583,7 +604,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -618,7 +639,7 @@ exports[`#apiMiddleware must dispatch a success FSA on a successful API call wit
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -626,7 +647,7 @@ exports[`#apiMiddleware must dispatch a success FSA on a successful API call wit
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "successMeta",
         "payload": Object {},
@@ -656,7 +677,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -693,7 +714,7 @@ exports[`#apiMiddleware must dispatch a success FSA with an error state on a suc
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -701,7 +722,7 @@ exports[`#apiMiddleware must dispatch a success FSA with an error state on a suc
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": "successMeta",
@@ -726,7 +747,7 @@ exports[`#apiMiddleware must dispatch an error request FSA for an invalid RSAA w
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "payload": [InvalidRSAA: Invalid RSAA],
@@ -750,7 +771,7 @@ exports[`#apiMiddleware must dispatch an error request FSA for an invalid RSAA w
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "payload": [InvalidRSAA: Invalid RSAA],
@@ -784,7 +805,7 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].bailout f
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -819,7 +840,7 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].body fail
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -854,7 +875,7 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].endpoint 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -889,7 +910,7 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].headers f
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -920,7 +941,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -955,13 +976,13 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].ok fails:
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -996,7 +1017,7 @@ exports[`#apiMiddleware must dispatch an error request FSA when [RSAA].options f
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -1036,13 +1057,13 @@ exports[`#apiMiddleware must dispatch correct error payload when [RSAA].fetch wr
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "error": true,
         "meta": undefined,
@@ -1065,7 +1086,7 @@ exports[`#apiMiddleware must pass actions without an [RSAA] property to the next
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {},
     },
   ],
@@ -1091,7 +1112,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1134,13 +1155,13 @@ exports[`#apiMiddleware must use a [RSAA].fetch custom fetch wrapper when presen
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -1165,7 +1186,7 @@ exports[`#apiMiddleware must use an [RSAA].bailout function when present: bailou
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": true,
     },
   ],
@@ -1181,7 +1202,7 @@ exports[`#apiMiddleware must use an [RSAA].body function when present: body() 1`
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": "mockBody",
     },
   ],
@@ -1207,8 +1228,8 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
-      "value": Promise {},
+      "type": "throw",
+      "value": [TypeError: Request with GET/HEAD method cannot have body],
     },
   ],
 }
@@ -1216,11 +1237,10 @@ Object {
 
 exports[`#apiMiddleware must use an [RSAA].body function when present: final result 1`] = `
 Object {
+  "error": true,
   "meta": undefined,
-  "payload": Object {
-    "data": "12345",
-  },
-  "type": "SUCCESS",
+  "payload": [RequestError: Request with GET/HEAD method cannot have body],
+  "type": "FAILURE",
 }
 `;
 
@@ -1234,29 +1254,27 @@ exports[`#apiMiddleware must use an [RSAA].body function when present: next mock
     ],
     Array [
       Object {
+        "error": true,
         "meta": undefined,
-        "payload": Object {
-          "data": "12345",
-        },
-        "type": "SUCCESS",
+        "payload": [RequestError: Request with GET/HEAD method cannot have body],
+        "type": "FAILURE",
       },
     ],
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
+        "error": true,
         "meta": undefined,
-        "payload": Object {
-          "data": "12345",
-        },
-        "type": "SUCCESS",
+        "payload": [RequestError: Request with GET/HEAD method cannot have body],
+        "type": "FAILURE",
       },
     },
   ],
@@ -1272,7 +1290,7 @@ exports[`#apiMiddleware must use an [RSAA].endpoint function when present: endpo
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": "http://127.0.0.1/api/users/1",
     },
   ],
@@ -1298,7 +1316,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1335,13 +1353,13 @@ exports[`#apiMiddleware must use an [RSAA].endpoint function when present: next 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -1375,7 +1393,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1401,7 +1419,7 @@ exports[`#apiMiddleware must use an [RSAA].headers function when present: header
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "Test-Header": "test",
       },
@@ -1430,13 +1448,13 @@ exports[`#apiMiddleware must use an [RSAA].headers function when present: next m
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -1468,7 +1486,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1505,13 +1523,13 @@ exports[`#apiMiddleware must use an [RSAA].ok function when present: next mock 1
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -1532,11 +1550,32 @@ exports[`#apiMiddleware must use an [RSAA].ok function when present: ok() 1`] = 
         "size": 0,
         "timeout": 0,
         Symbol(Body internals): Object {
-          "body": "{\\"data\\":\\"12345\\"}",
+          "body": Object {
+            "data": Array [
+              123,
+              34,
+              100,
+              97,
+              116,
+              97,
+              34,
+              58,
+              34,
+              49,
+              50,
+              51,
+              52,
+              53,
+              34,
+              125,
+            ],
+            "type": "Buffer",
+          },
           "disturbed": true,
           "error": null,
         },
         Symbol(Response internals): Object {
+          "counter": undefined,
           "headers": Headers {
             Symbol(map): Object {
               "Content-Type": Array [
@@ -1553,7 +1592,7 @@ exports[`#apiMiddleware must use an [RSAA].ok function when present: ok() 1`] = 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": true,
     },
   ],
@@ -1579,7 +1618,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1616,13 +1655,13 @@ exports[`#apiMiddleware must use an [RSAA].options function when present: next m
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -1644,7 +1683,7 @@ exports[`#apiMiddleware must use an [RSAA].options function when present: option
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {},
     },
   ],
@@ -1660,7 +1699,7 @@ exports[`#apiMiddleware must use an async [RSAA].body function when present: bod
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1686,8 +1725,8 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
-      "value": Promise {},
+      "type": "throw",
+      "value": [TypeError: Request with GET/HEAD method cannot have body],
     },
   ],
 }
@@ -1695,11 +1734,10 @@ Object {
 
 exports[`#apiMiddleware must use an async [RSAA].body function when present: final result 1`] = `
 Object {
+  "error": true,
   "meta": undefined,
-  "payload": Object {
-    "data": "12345",
-  },
-  "type": "SUCCESS",
+  "payload": [RequestError: Request with GET/HEAD method cannot have body],
+  "type": "FAILURE",
 }
 `;
 
@@ -1713,29 +1751,27 @@ exports[`#apiMiddleware must use an async [RSAA].body function when present: nex
     ],
     Array [
       Object {
+        "error": true,
         "meta": undefined,
-        "payload": Object {
-          "data": "12345",
-        },
-        "type": "SUCCESS",
+        "payload": [RequestError: Request with GET/HEAD method cannot have body],
+        "type": "FAILURE",
       },
     ],
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
+        "error": true,
         "meta": undefined,
-        "payload": Object {
-          "data": "12345",
-        },
-        "type": "SUCCESS",
+        "payload": [RequestError: Request with GET/HEAD method cannot have body],
+        "type": "FAILURE",
       },
     },
   ],
@@ -1751,7 +1787,7 @@ exports[`#apiMiddleware must use an async [RSAA].endpoint function when present:
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1777,7 +1813,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1814,13 +1850,13 @@ exports[`#apiMiddleware must use an async [RSAA].endpoint function when present:
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -1854,7 +1890,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1880,7 +1916,7 @@ exports[`#apiMiddleware must use an async [RSAA].headers function when present: 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1907,13 +1943,13 @@ exports[`#apiMiddleware must use an async [RSAA].headers function when present: 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -1945,7 +1981,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -1982,13 +2018,13 @@ exports[`#apiMiddleware must use an async [RSAA].options function when present: 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "type": "REQUEST",
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -2010,7 +2046,7 @@ exports[`#apiMiddleware must use an async [RSAA].options function when present: 
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -2036,7 +2072,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -2077,7 +2113,7 @@ exports[`#apiMiddleware must use meta property of request type descriptor when i
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": "requestMeta",
     },
   ],
@@ -2106,7 +2142,7 @@ exports[`#apiMiddleware must use meta property of request type descriptor when i
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -2114,7 +2150,7 @@ exports[`#apiMiddleware must use meta property of request type descriptor when i
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -2146,7 +2182,7 @@ Object {
   "invocationCallOrder": Any<Object>,
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Promise {},
     },
   ],
@@ -2185,7 +2221,7 @@ exports[`#apiMiddleware must use payload property of request type descriptor whe
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": "requestMeta",
         "payload": "requestPayload",
@@ -2193,7 +2229,7 @@ exports[`#apiMiddleware must use payload property of request type descriptor whe
       },
     },
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {
         "meta": undefined,
         "payload": Object {
@@ -2230,7 +2266,7 @@ exports[`#apiMiddleware must use payload property of request type descriptor whe
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": "requestPayload",
     },
   ],
@@ -2248,7 +2284,7 @@ exports[`#apiMiddleware mustn't return a promise on actions without a [RSAA] pro
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": Object {},
     },
   ],

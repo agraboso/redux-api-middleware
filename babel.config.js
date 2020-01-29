@@ -1,4 +1,4 @@
-module.exports = function (api) {
+module.exports = function(api) {
   const env = api.cache(() => process.env.NODE_ENV);
 
   const nodeTarget = env === 'test' ? 'current' : '8';
@@ -6,12 +6,14 @@ module.exports = function (api) {
 
   const presets = [
     [
-      "@babel/preset-env", {
+      '@babel/preset-env',
+      {
         modules: envModules,
-        "useBuiltIns": "usage",
-        "targets": {
-          "node": nodeTarget
-        },
+        useBuiltIns: 'entry',
+        corejs: '3.6.4',
+        targets: {
+          node: nodeTarget
+        }
       }
     ]
   ];
@@ -22,4 +24,4 @@ module.exports = function (api) {
     presets,
     plugins
   };
-}
+};

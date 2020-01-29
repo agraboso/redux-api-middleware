@@ -4,10 +4,8 @@ module.exports = {
   resetMocks: true,
   restoreMocks: true,
   resetModules: true,
-  setupFiles: [
-    "./test/setupJest.js"
-  ],
+  setupFiles: ["./test/setupJest.js"],
   moduleNameMapper: {
-    "^redux-api-middleware$": process.env.TEST_LIB ? '..' : './index'
+    "^redux-api-middleware$": process.env.TEST_LIB ? ".." : "./index"
   }
 };

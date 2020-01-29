@@ -1,16 +1,16 @@
 {
   "name": "redux-api-middleware",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Redux middleware for calling an API.",
   "main": "lib/index.cjs.js",
-  "browser": "lib/index.umd.js",
   "module": "es/index.js",
+  "unpkg": "lib/index.umd.js",
   "sideEffects": false,
   "scripts": {
     "build": "babel src --out-dir es && rollup -c",
     "postbuild": "npm run size",
     "clean": "rimraf es lib coverage",
-    "test": "cross-env NODE_ENV=test jest src es",
+    "test": "cross-env NODE_ENV=test jest",
     "test:build": "cross-env TEST_LIB=true NODE_ENV=test jest src",
     "cover": "npm test -- --verbose --coverage --collectCoverageFrom \"src/**/*.js\"",
     "lint": "eslint src",
@@ -31,7 +31,9 @@
     "email": "agraboso@gmail.com"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "core-js": "^3.6.4"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
@@ -45,12 +47,13 @@
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.7.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^23.6.0",
-    "jest-fetch-mock": "^1.7.5",
+    "jest": "^24.7.1",
+    "jest-fetch-mock": "^3.0.1",
     "prettier": "^1.19.1",
     "rimraf": "^2.7.1",
     "rollup": "^1.31.1",
     "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-terser": "^5.2.0",
     "size-limit": "^4.0.1"
   },
   "files": [

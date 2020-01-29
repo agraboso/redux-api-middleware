@@ -1,18 +1,19 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from 'rollup-plugin-babel';
+import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
-const pkgDeps = Object.keys(pkg.dependencies)
+const pkgDeps = Object.keys(pkg.dependencies);
 
 export default [
   // browser-friendly UMD build
   {
     input: 'src/index.js',
     output: {
-      file: pkg.browser,
+      file: pkg.unpkg,
       format: 'umd',
-      name: 'ReduxApiMiddleware',
+      name: 'ReduxApiMiddleware'
     },
     plugins: [
       resolve(),
@@ -21,13 +22,16 @@ export default [
         exclude: ['node_modules/**'],
         presets: [
           [
-            "@babel/preset-env", {
+            '@babel/preset-env',
+            {
               modules: false,
-              useBuiltIns: "usage"
+              useBuiltIns: 'entry',
+              corejs: '3.6.4'
             }
           ]
         ]
-      })
+      }),
+      terser()
     ]
   },
 
@@ -36,13 +40,14 @@ export default [
     input: 'src/index.js',
     output: {
       file: pkg.main,
-      format: 'cjs',
+      format: 'cjs'
     },
     external: pkgDeps,
     plugins: [
       babel({
         exclude: ['node_modules/**']
-      })
+      }),
+      terser()
     ]
   }
 ];

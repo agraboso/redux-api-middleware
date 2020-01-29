@@ -1,3 +1,5 @@
+/* eslint-disable jest/expect-expect */
+
 // Public package exports
 import {
   RSAA,
@@ -75,6 +77,10 @@ describe('#createMiddleware', () => {
 });
 
 describe('#apiMiddleware', () => {
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
+
   it('is a redux middleware', () => {
     const doGetState = () => {};
     const nextHandler = apiMiddleware({ getState: doGetState });
