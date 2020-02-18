@@ -21,6 +21,7 @@
     "no-undef": 2,
     "no-console": 1,
     "no-nested-ternary": 2,
+    "jest/expect-expect": 0,
     "prettier/prettier": [
       "error",
       {
