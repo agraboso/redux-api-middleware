@@ -9,8 +9,7 @@ import { normalizeTypeDescriptors, actionWith } from './util';
  * @type {Object}
  */
 const defaults = {
-  ok: res => res.ok,
-  fetch
+  ok: res => res.ok
 };
 
 /**
@@ -56,7 +55,7 @@ function createMiddleware(options = {}) {
         body,
         headers,
         options = {},
-        fetch: doFetch = middlewareOptions.fetch,
+        fetch: doFetch = middlewareOptions.fetch || fetch,
         ok = middlewareOptions.ok
       } = callAPI;
       const { method, credentials, bailout, types } = callAPI;
@@ -230,6 +229,7 @@ function createMiddleware(options = {}) {
  *
  * @type {ReduxMiddleware}
  * @access public
+ * @deprecated since v3.2.0 use `createMiddleware`
  */
 function apiMiddleware({ getState }) {
   return createMiddleware()({ getState });
