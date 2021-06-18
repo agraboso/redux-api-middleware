@@ -136,6 +136,14 @@ describe('#actionWith', () => {
 
     expect(fsa).toMatchSnapshot();
   });
+
+  it('allows both meta and payload functions to read the response body', async () => {
+    const fsa = await actionWith({
+      type: 'SUCCESS',
+      meta: (action, state, request) => request.text(), 
+      payload: (action, state, request) => request.text() 
+    }, [0, 0, new Response()]);
+  });
 });
 
 describe('#getJSON', () => {
